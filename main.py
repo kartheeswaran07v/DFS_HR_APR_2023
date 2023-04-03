@@ -1027,11 +1027,15 @@ def employee_report():
     employee_list = employeeMaster.query.all()
     date_test = '2022-09-01'
     roster_element = db.session.query(rosterMaster).filter_by(date=date_test).first()
-    roster_entries = db.session.query(rosterEntryMaster).filter_by(rosterID=roster_element.id).all()
-    off_days = 0
-    for i in roster_entries:
-        if i.absent != 'none':
-            off_days += 1
+    if roster_element:
+        roster_entries = db.session.query(rosterEntryMaster).filter_by(rosterID=roster_element.id).all()
+        off_days = 0
+        for i in roster_entries:
+            if i.absent != 'none':
+                off_days += 1
+    else:
+        off_days = 0
+        roster_entries = []
 
     data = {'Task': 'Hours per Day', 'Absent': off_days, 'Present': len(roster_entries)}
     department = []
