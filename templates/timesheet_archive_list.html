@@ -1,0 +1,38 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+{% include "header.html" %}
+
+  <div class="welcome">
+    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
+    <span>Welcome: xyz123</span>
+  </div>
+
+  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Timesheet Archives</h1>
+
+
+  <div class="row" style="margin-bottom: 50px; margin-left: 100px; text-align: center;">
+    <div class="col-2"><p>S. No. </p></div>
+    <div class="col-2"><p>Timesheet Date</p></div>
+    <div class="col-2"><p>Hotel</p></div>
+    <div class="col-2"><p>View TS</p></div>
+    <div class="col-2"><p>Edit TS</p></div>
+  </div>
+  {% for i in len %}
+    <div class="row" style="margin-bottom: 30px; margin-left: 100px; text-align: center;">
+      <div class="col-2"><p>{{ i+1 }}</p></div>
+      <div class="col-2"><p>{{ ts[i].date }}</p></div>
+      <div class="col-2"><p>{{ hotels[i] }}</p></div>
+      <div class="col-2"><p><a href="{{url_for('timesheet_single', timesheet_id=ts[i].id)}}">View</a></p></div>
+      <div class="col-2"><p><a href="{{url_for('timesheet_single_edit', timesheet_id=ts[i].id)}}">Edit</a></p></div>
+    </div>
+  {% endfor %}
+
+
+
+
+
+
+{% include "footer.html" %}
+{% endblock %}
