@@ -36,8 +36,8 @@
               <p>{{ form.employee_id(value=data.employeeID) }}</p>
               <p>{{ form.address_uae(value=data.addressUae) }}</p>
               <p>{{ form.po_box(value=data.poBox) }}</p>
-              <p>{{ form.mobile_p(value=data.mobilePersonal) }}</p>
-              <p>{{ form.mobile_h(value=data.mobileHome) }}</p>
+              <p>{{ form.mobile_p(value=mob_det[1]) }}</p>
+              <p>{{ form.mobile_h(value=mob_det[2]) }}</p>
               <p>{{ form.personal_mail(value=data.personalMail) }}</p>
               <p>{{ form.address_home(value=data.addressHome) }}</p>
               <p>{{ form.passport_no(value=passport) }}</p>
@@ -67,8 +67,8 @@
             <p>Details</p>
             <p>{{ form.e_uae_name(value=data.emUaeName) }}</p>
             <p>{{ form.e_uae_rel(value=data.emUaeRel) }}</p>
-            <p>{{ form.e_uae_addr(value=data.emUaeAddr) }}</p>
-            <p>{{ form.e_uae_mob(value=data.emUaeMobileNumber) }}</p>
+            <p>{{ form.e_uae_addr(value=mob_det[0]) }}</p>
+            <p>{{ form.e_uae_mob(value=mob_det[3]) }}</p>
             <p>{{ form.e_uae_hom(value=data.emUaeHomeNumber) }}</p>
         </div>
         <div class="col-lg-3 con2">
@@ -84,7 +84,7 @@
               <p>{{ form.e_co_name(value=data.emCoName) }}</p>
               <p>{{ form.e_co_rel(value=data.emCoRel) }}</p>
               <p>{{ form.e_co_addr(value=data.emCoAddr) }}</p>
-              <p>{{ form.e_co_mob(value=data.emCoMobileNumber) }}</p>
+              <p>{{ form.e_co_mob(value=mob_det[4]) }}</p>
               <p>{{ form.e_co_hom(value=data.emCoHomeNumber) }}</p>
         </div>
       </div>

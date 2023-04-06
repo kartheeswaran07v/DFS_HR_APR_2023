@@ -446,6 +446,7 @@ def registration():
         department = db.session.query(departmentMaster).filter_by(id=1).first()
         a_date = datetime.datetime.strptime(request.form.get('joining_date'), '%Y-%m-%d').date()
         nationality_passportNo = f"{request.form.get('nationality')}+{request.form.get('passport_no')}"
+        mobile_string = f"{request.form.get('e_uae_addr')}+{request.form.get('mobile_p')}+{request.form.get('mobile_h')}+{request.form.get('e_uae_mob')}+{request.form.get('e_co_mob')}"
         if request.form.get('own_car') == 'y':
             own_car = True
         else:
@@ -459,8 +460,8 @@ def registration():
             name=request.form.get("name"),
             addressUae=request.form.get('address_uae'),
             poBox=request.form.get('po_box'),
-            mobilePersonal=request.form.get('mobile_p'),
-            mobileHome=request.form.get('mobile_h'),
+            mobilePersonal=1,
+            mobileHome=1,
             personalMail=request.form.get('personal_mail'),
             addressHome=request.form.get('address_home'),
             passportNumber=0,
@@ -469,14 +470,14 @@ def registration():
             carRent=car_rent,
             emUaeName=request.form.get('e_uae_name'),
             emUaeRel=request.form.get('e_uae_rel'),
-            emUaeAddr=request.form.get('e_uae_addr'),
-            emUaeMobileNumber=request.form.get('e_uae_mob'),
+            emUaeAddr=mobile_string,
+            emUaeMobileNumber=1,
             emUaeHomeNumber=request.form.get('e_uae_hom'),
             originCountry=request.form.get('origin_country'),
             emCoName=request.form.get('e_co_name'),
             emCoRel=request.form.get('e_co_rel'),
             emCoAddr=request.form.get('e_co_addr'),
-            emCoMobileNumber=request.form.get('e_co_mob'),
+            emCoMobileNumber=1,
             emCoHomeNumber=request.form.get('e_co_hom'),
             employeeID=request.form.get('employee_id'),
             joining_date=a_date,
@@ -1069,8 +1070,13 @@ def employee_edit(employee_id):
     nationality_string = employee_element.nationality
     nationality_ = nationality_string.split('+')[0]
     passport_ = nationality_string.split('+')[1]
+
+    mobile_details_string = employee_element.emUaeAddr
+    em_uae_addr, mobile_p, mobile_h, e_uae_mob, e_co_mob = mobile_details_string.split('+')[0], mobile_details_string.split('+')[1], mobile_details_string.split('+')[2], mobile_details_string.split('+')[3], mobile_details_string.split('+')[4]
+    mob_det = [em_uae_addr, mobile_p, mobile_h, e_uae_mob, e_co_mob]
     if request.method == "POST":
         nationality_passportNo = f"{request.form.get('nationality')}+{request.form.get('passport_no')}"
+        mobile_string = f"{request.form.get('e_uae_addr')}+{request.form.get('mobile_p')}+{request.form.get('mobile_h')}+{request.form.get('e_uae_mob')}+{request.form.get('e_co_mob')}"
         if request.form.get('own_car') == 'y':
             own_car = True
         else:
@@ -1084,8 +1090,8 @@ def employee_edit(employee_id):
         employee_element.name = request.form.get("name")
         employee_element.addressUae = request.form.get('address_uae')
         employee_element.poBox = request.form.get('po_box')
-        employee_element.mobilePersonal = request.form.get('mobile_p')
-        employee_element.mobileHome = request.form.get('mobile_h')
+        employee_element.mobilePersonal = 1
+        employee_element.mobileHome = 1
         employee_element.personalMail = request.form.get('personal_mail')
         employee_element.addressHome = request.form.get('address_home')
         employee_element.passportNumber = 0
@@ -1094,14 +1100,14 @@ def employee_edit(employee_id):
         employee_element.carRent = car_rent
         employee_element.emUaeName = request.form.get('e_uae_name')
         employee_element.emUaeRel = request.form.get('e_uae_rel')
-        employee_element.emUaeAddr = request.form.get('e_uae_addr')
-        employee_element.emUaeMobileNumber = request.form.get('e_uae_mob')
+        employee_element.emUaeAddr = mobile_string
+        employee_element.emUaeMobileNumber = 1
         employee_element.emUaeHomeNumber = request.form.get('e_uae_hom')
         employee_element.originCountry = request.form.get('origin_country')
         employee_element.emCoName = request.form.get('e_co_name')
         employee_element.emCoRel = request.form.get('e_co_rel')
         employee_element.emCoAddr = request.form.get('e_co_addr')
-        employee_element.emCoMobileNumber = request.form.get('e_co_mob')
+        employee_element.emCoMobileNumber = 1
         employee_element.emCoHomeNumber = request.form.get('e_co_hom')
         employee_element.employeeID = request.form.get('employee_id')
         employee_element.joining_date = a_date
@@ -1110,7 +1116,7 @@ def employee_edit(employee_id):
         employee_element.user = current_user
         db.session.commit()
         return redirect(url_for("employee_report"))
-    return render_template("employee_edit.html", data=employee_element, form=form, date_str=date_str, nationality=nationality_, passport=passport_)
+    return render_template("employee_edit.html", data=employee_element, form=form, date_str=date_str, nationality=nationality_, passport=passport_, mob_det=mob_det)
 
 
 @app.route("/employee_view/<employee_id>", methods=["GET", "POST"])
