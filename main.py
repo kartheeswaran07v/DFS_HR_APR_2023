@@ -445,7 +445,16 @@ def registration():
     if request.method == "POST":
         department = db.session.query(departmentMaster).filter_by(id=1).first()
         a_date = datetime.datetime.strptime(request.form.get('joining_date'), '%Y-%m-%d').date()
+        nationality_passportNo = f"{request.form.get('nationality')}+{request.form.get('passport_no')}"
+        if request.form.get('own_car') == 'y':
+            own_car = True
+        else:
+            own_car = False
 
+        if request.form.get('car_rent') == 'y':
+            car_rent = True
+        else:
+            car_rent = False
         new_employee = employeeMaster(
             name=request.form.get("name"),
             addressUae=request.form.get('address_uae'),
@@ -454,10 +463,10 @@ def registration():
             mobileHome=request.form.get('mobile_h'),
             personalMail=request.form.get('personal_mail'),
             addressHome=request.form.get('address_home'),
-            passportNumber=request.form.get('passport_no'),
-            nationality=request.form.get('nationality'),
-            ownCar=request.form.get('own_car'),
-            carRent=request.form.get('car_rent'),
+            passportNumber=0,
+            nationality=nationality_passportNo,
+            ownCar=own_car,
+            carRent=car_rent,
             emUaeName=request.form.get('e_uae_name'),
             emUaeRel=request.form.get('e_uae_rel'),
             emUaeAddr=request.form.get('e_uae_addr'),
@@ -503,8 +512,8 @@ def doc():
         # '/home / User / Documents'
         os.mkdir(path)
 
-        UPLOAD_FOLDER = f"{home_directory}/{directory}"
-        app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+        # UPLOAD_FOLDER = f"{home_directory}/{directory}"
+        # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
         files = request.files.getlist("file")  # other multiple files
         photo = request.files.get('photo')  # photo file
@@ -1057,7 +1066,20 @@ def employee_edit(employee_id):
     a = str(employee_element.joining_date)
     date_str = a[:10]
     print(date_str)
+    nationality_string = employee_element.nationality
+    nationality_ = nationality_string.split('+')[0]
+    passport_ = nationality_string.split('+')[1]
     if request.method == "POST":
+        nationality_passportNo = f"{request.form.get('nationality')}+{request.form.get('passport_no')}"
+        if request.form.get('own_car') == 'y':
+            own_car = True
+        else:
+            own_car = False
+
+        if request.form.get('car_rent') == 'y':
+            car_rent = True
+        else:
+            car_rent = False
         a_date = datetime.datetime.strptime(request.form.get('joining_date'), '%Y-%m-%d').date()
         employee_element.name = request.form.get("name")
         employee_element.addressUae = request.form.get('address_uae')
@@ -1066,10 +1088,10 @@ def employee_edit(employee_id):
         employee_element.mobileHome = request.form.get('mobile_h')
         employee_element.personalMail = request.form.get('personal_mail')
         employee_element.addressHome = request.form.get('address_home')
-        employee_element.passportNumber = request.form.get('passport_no')
-        employee_element.nationality = request.form.get('nationality')
-        employee_element.ownCar = request.form.get('own_car')
-        employee_element.carRent = request.form.get('car_rent')
+        employee_element.passportNumber = 0
+        employee_element.nationality = nationality_passportNo
+        employee_element.ownCar = own_car
+        employee_element.carRent = car_rent
         employee_element.emUaeName = request.form.get('e_uae_name')
         employee_element.emUaeRel = request.form.get('e_uae_rel')
         employee_element.emUaeAddr = request.form.get('e_uae_addr')
@@ -1088,7 +1110,7 @@ def employee_edit(employee_id):
         employee_element.user = current_user
         db.session.commit()
         return redirect(url_for("employee_report"))
-    return render_template("employee_edit.html", data=employee_element, form=form, date_str=date_str)
+    return render_template("employee_edit.html", data=employee_element, form=form, date_str=date_str, nationality=nationality_, passport=passport_)
 
 
 @app.route("/employee_view/<employee_id>", methods=["GET", "POST"])
