@@ -1050,7 +1050,7 @@ def employee_report():
     department = []
     for ts in employee_list:
         department_element = departmentMaster.query.get(ts.departmentId)
-        department_name = department_element.name
+        department_name = 'F&B'
         department.append(department_name)
     return render_template("employee_report.html", ts=employee_list, len=range(len(department)), departments=department,
                            data=data)
