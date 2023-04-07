@@ -31,21 +31,21 @@
               <p>{{ form.company_mobile.label() }}</p>
           </div>
           <div class="col-lg-3">
-              <p>{{ form.name }}</p>
-              <p>{{ form.joining_date }}</p>
-              <p>{{ form.employee_id }}</p>
-              <p>{{ form.address_uae }}</p>
-              <p>{{ form.po_box }}</p>
-              <p>{{ form.mobile_p }}</p>
-              <p>{{ form.mobile_h }}</p>
-              <p>{{ form.personal_mail }}</p>
-              <p>{{ form.address_home }}</p>
-              <p>{{ form.passport_no }}</p>
-              <p>{{ form.nationality }}</p>
+              <p>{{ form.name(value='-') }}</p>
+              <p>{{ form.joining_date(value='2023-01-01') }}</p>
+              <p>{{ form.employee_id(value='-') }}</p>
+              <p>{{ form.address_uae(value='-') }}</p>
+              <p>{{ form.po_box(value='-') }}</p>
+              <p>{{ form.mobile_p(value=0) }}</p>
+              <p>{{ form.mobile_h(value=0) }}</p>
+              <p>{{ form.personal_mail(value='test@test.com') }}</p>
+              <p>{{ form.address_home(value='-') }}</p>
+              <p>{{ form.passport_no(value='-') }}</p>
+              <p>{{ form.nationality(value='-') }}</p>
               <p>{{ form.own_car }}</p>
               <p>{{ form.car_rent }}</p>
-              <p>{{ form.company_laptop }}</p>
-              <p>{{ form.company_mobile }}</p>
+              <p>{{ form.company_laptop(value='-') }}</p>
+              <p>{{ form.company_mobile(value='-') }}</p>
           </div>
 
 
@@ -65,11 +65,11 @@
         </div>
         <div class="col-lg-3">
             <p>Details</p>
-            <p>{{ form.e_uae_name }}</p>
-            <p>{{ form.e_uae_rel }}</p>
-            <p>{{ form.e_uae_addr }}</p>
-            <p>{{ form.e_uae_mob }}</p>
-            <p>{{ form.e_uae_hom }}</p>
+            <p>{{ form.e_uae_name(value='-') }}</p>
+            <p>{{ form.e_uae_rel(value='-') }}</p>
+            <p>{{ form.e_uae_addr(value='-') }}</p>
+            <p>{{ form.e_uae_mob(value=0) }}</p>
+            <p>{{ form.e_uae_hom(value=0) }}</p>
         </div>
         <div class="col-lg-3 con2">
               <p>{{ form.origin_country.label() }}</p>
@@ -80,12 +80,12 @@
               <p>{{ form.e_co_hom.label() }}</p>
         </div>
         <div class="col-lg-3">
-              <p>{{ form.origin_country }}</p>
-              <p>{{ form.e_co_name }}</p>
-              <p>{{ form.e_co_rel }}</p>
-              <p>{{ form.e_co_addr }}</p>
-              <p>{{ form.e_co_mob }}</p>
-              <p>{{ form.e_co_hom }}</p>
+              <p>{{ form.origin_country(value='-') }}</p>
+              <p>{{ form.e_co_name(value='-') }}</p>
+              <p>{{ form.e_co_rel(value='-') }}</p>
+              <p>{{ form.e_co_addr(value='-') }}</p>
+              <p>{{ form.e_co_mob(value=0) }}</p>
+              <p>{{ form.e_co_hom(value=0) }}</p>
         </div>
       </div>
 
