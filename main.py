@@ -499,19 +499,19 @@ def registration():
 def doc():
     if request.method == 'POST':
 
-        directory = request.form.get('name')
-        employee_element = db.session.query(employeeMaster).filter_by(name=directory).first()
-
-        # Parent Directory path
-        parent_dir = home_directory
-
-        # Path
-        path = os.path.join(parent_dir, directory)
+        # directory = request.form.get('name')
+        # employee_element = db.session.query(employeeMaster).filter_by(name=directory).first()
+        #
+        # # Parent Directory path
+        # parent_dir = home_directory
+        #
+        # # Path
+        # path = os.path.join(parent_dir, directory)
 
         # Create the directory
         # 'GeeksForGeeks' in
         # '/home / User / Documents'
-        os.mkdir(path)
+        # os.mkdir(path)
 
         # UPLOAD_FOLDER = f"{home_directory}/{directory}"
         # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
