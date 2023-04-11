@@ -1012,7 +1012,7 @@ def timesheet_single_edit(timesheet_id):
         if employee:
             employee_list.append(employee.name)
         else:
-            employee_1 = db.session.query(employeeMaster).filter_by(id=1).first()
+            employee_1 = employeeMaster.query.get(1)
             employee_list.append(employee_1.name)
     return render_template("timesheet_entries_edit.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
