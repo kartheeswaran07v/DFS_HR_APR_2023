@@ -655,7 +655,7 @@ def timesheet():
 
         for i in range(len(a['name'])):
             if a['name'][i] != '':
-                employee_element = db.session.query(employeeMaster).filter_by(name=a['name'][i]).first()
+                employee_element = db.session.query(employeeMaster).filter_by(id=a['name'][i]).first()
                 ts_element = new_timesheet
                 new_entry = timesheetEntryMaster(timeIn1=a['timeIn1'][i], timeIn2=a['timeIn2'][i],
                                                  timeOut1=a['timeOut1'][i], timeOut2=a['timeOut2'][i],
@@ -979,7 +979,11 @@ def timesheet_single(timesheet_id):
     employee_list = []
     for i in timesheet_entries:
         employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
-        employee_list.append(employee.name)
+        if employee:
+            employee_list.append(employee.name)
+        else:
+            employee_1 = db.session.query(employeeMaster).filter_by(id=1).first()
+            employee_list.append(employee_1.name)
     return render_template("timesheet_entries.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
                            len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no)
@@ -1005,7 +1009,11 @@ def timesheet_single_edit(timesheet_id):
     data_ = [employees, hotels]
     for i in timesheet_entries:
         employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
-        employee_list.append(employee.name)
+        if employee:
+            employee_list.append(employee.name)
+        else:
+            employee_1 = db.session.query(employeeMaster).filter_by(id=1).first()
+            employee_list.append(employee_1.name)
     return render_template("timesheet_entries_edit.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
                            len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, data=data_)
