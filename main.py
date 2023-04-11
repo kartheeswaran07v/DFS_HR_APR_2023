@@ -643,7 +643,7 @@ def timesheet():
         data = request.form.to_dict(flat=False)
         a = jsonify(data).json
 
-        hotel_element = db.session.query(hotelMaster).filter_by(name=a['hotel'][0]).first()
+        hotel_element = db.session.query(hotelMaster).filter_by(id=a['hotel'][0]).first()
         new_timesheet = timesheetMaster(date=a['date'][0], sheet_no=a['sheetNo'][0], user=current_user,
                                         hotel=hotel_element)
 
@@ -953,7 +953,11 @@ def timesheet_archive():
     hotels = []
     for ts in timesheet_list:
         hotel_element = hotelMaster.query.get(ts.hotelID)
-        hotel_name = hotel_element.name
+        if hotel_element:
+            hotel_name = hotel_element.name
+        else:
+            hotel_element_1 = hotelMaster.query.get(1)
+            hotel_name = hotel_element_1.name
         hotels.append(hotel_name)
     return render_template("timesheet_archive_list.html", ts=timesheet_list, len=range(len(hotels)), hotels=hotels)
 
