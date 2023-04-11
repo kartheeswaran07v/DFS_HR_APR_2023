@@ -971,7 +971,11 @@ def timesheet_single(timesheet_id):
     sheet_no = ts_element.sheet_no
     date__ = ts_element.date
     hotel_element = hotelMaster.query.get(ts_element.hotelID)
-    hotel_name = hotel_element.name
+    if hotel_element:
+        hotel_name = hotel_element.name
+    else:
+        hotel_element_1 = hotelMaster.query.get(1)
+        hotel_name = hotel_element_1.name
     employee_list = []
     for i in timesheet_entries:
         employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
@@ -990,7 +994,11 @@ def timesheet_single_edit(timesheet_id):
     sheet_no = ts_element.sheet_no
     date__ = ts_element.date
     hotel_element = hotelMaster.query.get(ts_element.hotelID)
-    hotel_name = hotel_element.name
+    if hotel_element:
+        hotel_name = hotel_element.name
+    else:
+        hotel_element_1 = hotelMaster.query.get(1)
+        hotel_name = hotel_element_1.name
     employee_list = []
     employees = employeeMaster.query.all()
     hotels = hotelMaster.query.all()
