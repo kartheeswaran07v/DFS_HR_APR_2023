@@ -982,7 +982,7 @@ def timesheet_single(timesheet_id):
         if employee:
             employee_list.append(employee.name)
         else:
-            employee_1 = db.session.query(employeeMaster).filter_by(id=1).first()
+            employee_1 = employee_1 = employeeMaster.query.get(1)
             employee_list.append(employee_1.name)
     return render_template("timesheet_entries.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
@@ -1026,7 +1026,7 @@ def add_ts_element(ts_id):
     if request.method == 'POST':
         ts_element = timesheetMaster.query.get(ts_id)
         hotel_element = hotelMaster.query.get(ts_element.hotelID)
-        employee_element = db.session.query(employeeMaster).filter_by(name=request.form.get('name')).first()
+        employee_element = db.session.query(employeeMaster).filter_by(id=request.form.get('name')).first()
         new_entry = timesheetEntryMaster(timeIn1=request.form.get('timeIn1'), timeOut1=request.form.get('timeOut1'),
                                          timeIn2=request.form.get('timeIn2'),
                                          timeOut2=request.form.get('timeOut2'),
@@ -1219,6 +1219,17 @@ def action_item_del(entry_id):
     db.session.delete(entry_to_delete)
     db.session.commit()
     return redirect(url_for("employee_view", employee_id=employee_id))
+
+
+timesheet_entries = timesheetEntryMaster.query.all()
+for i in timesheet_entries:
+    db.session.delete(i)
+    db.session.commit()
+
+timesheets__ = timesheetMaster.query.all()
+for i in timesheets__:
+    db.session.delete(i)
+    db.session.commit()
 
 
 if __name__ == "__main__":
