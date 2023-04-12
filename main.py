@@ -498,7 +498,6 @@ def registration():
 @admin_only
 def doc():
     if request.method == 'POST':
-
         # directory = request.form.get('name')
         # employee_element = db.session.query(employeeMaster).filter_by(name=directory).first()
         #
@@ -655,7 +654,7 @@ def timesheet():
 
         for i in range(len(a['name'])):
             if a['name'][i] != '':
-                employee_element = db.session.query(employeeMaster).filter_by(id=a['name'][i]).first()
+                employee_element = db.session.query(employeeMaster).filter_by(name=a['name'][i]).first()
                 ts_element = new_timesheet
                 new_entry = timesheetEntryMaster(timeIn1=a['timeIn1'][i], timeIn2=a['timeIn2'][i],
                                                  timeOut1=a['timeOut1'][i], timeOut2=a['timeOut2'][i],
@@ -953,12 +952,10 @@ def timesheet_archive():
     hotels = []
     for ts in timesheet_list:
         hotel_element = hotelMaster.query.get(ts.hotelID)
-        if hotel_element:
-            hotel_name = hotel_element.name
-        else:
-            hotel_element_1 = hotelMaster.query.get(1)
-            hotel_name = hotel_element_1.name
+
+        hotel_name = hotel_element.name
         hotels.append(hotel_name)
+
     return render_template("timesheet_archive_list.html", ts=timesheet_list, len=range(len(hotels)), hotels=hotels)
 
 
@@ -971,19 +968,11 @@ def timesheet_single(timesheet_id):
     sheet_no = ts_element.sheet_no
     date__ = ts_element.date
     hotel_element = hotelMaster.query.get(ts_element.hotelID)
-    if hotel_element:
-        hotel_name = hotel_element.name
-    else:
-        hotel_element_1 = hotelMaster.query.get(1)
-        hotel_name = hotel_element_1.name
+    hotel_name = hotel_element.name
     employee_list = []
     for i in timesheet_entries:
         employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
-        if employee:
-            employee_list.append(employee.name)
-        else:
-            employee_1 = employee_1 = employeeMaster.query.get(1)
-            employee_list.append(employee_1.name)
+        employee_list.append(employee.name)
     return render_template("timesheet_entries.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
                            len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no)
@@ -998,22 +987,14 @@ def timesheet_single_edit(timesheet_id):
     sheet_no = ts_element.sheet_no
     date__ = ts_element.date
     hotel_element = hotelMaster.query.get(ts_element.hotelID)
-    if hotel_element:
-        hotel_name = hotel_element.name
-    else:
-        hotel_element_1 = hotelMaster.query.get(1)
-        hotel_name = hotel_element_1.name
+    hotel_name = hotel_element.name
     employee_list = []
     employees = employeeMaster.query.all()
     hotels = hotelMaster.query.all()
     data_ = [employees, hotels]
     for i in timesheet_entries:
         employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
-        if employee:
-            employee_list.append(employee.name)
-        else:
-            employee_1 = employeeMaster.query.get(1)
-            employee_list.append(employee_1.name)
+        employee_list.append(employee.name)
     return render_template("timesheet_entries_edit.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
                            len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, data=data_)
@@ -1026,7 +1007,7 @@ def add_ts_element(ts_id):
     if request.method == 'POST':
         ts_element = timesheetMaster.query.get(ts_id)
         hotel_element = hotelMaster.query.get(ts_element.hotelID)
-        employee_element = db.session.query(employeeMaster).filter_by(id=request.form.get('name')).first()
+        employee_element = db.session.query(employeeMaster).filter_by(name=request.form.get('name')).first()
         new_entry = timesheetEntryMaster(timeIn1=request.form.get('timeIn1'), timeOut1=request.form.get('timeOut1'),
                                          timeIn2=request.form.get('timeIn2'),
                                          timeOut2=request.form.get('timeOut2'),
@@ -1092,7 +1073,11 @@ def employee_edit(employee_id):
     passport_ = nationality_string.split('+')[1]
 
     mobile_details_string = employee_element.emUaeAddr
-    em_uae_addr, mobile_p, mobile_h, e_uae_mob, e_co_mob = mobile_details_string.split('+')[0], mobile_details_string.split('+')[1], mobile_details_string.split('+')[2], mobile_details_string.split('+')[3], mobile_details_string.split('+')[4]
+    em_uae_addr, mobile_p, mobile_h, e_uae_mob, e_co_mob = mobile_details_string.split('+')[0], \
+                                                           mobile_details_string.split('+')[1], \
+                                                           mobile_details_string.split('+')[2], \
+                                                           mobile_details_string.split('+')[3], \
+                                                           mobile_details_string.split('+')[4]
     mob_det = [em_uae_addr, mobile_p, mobile_h, e_uae_mob, e_co_mob]
     if request.method == "POST":
         nationality_passportNo = f"{request.form.get('nationality')}+{request.form.get('passport_no')}"
@@ -1136,7 +1121,8 @@ def employee_edit(employee_id):
         employee_element.user = current_user
         db.session.commit()
         return redirect(url_for("employee_report"))
-    return render_template("employee_edit.html", data=employee_element, form=form, date_str=date_str, nationality=nationality_, passport=passport_, mob_det=mob_det)
+    return render_template("employee_edit.html", data=employee_element, form=form, date_str=date_str,
+                           nationality=nationality_, passport=passport_, mob_det=mob_det)
 
 
 @app.route("/employee_view/<employee_id>", methods=["GET", "POST"])
@@ -1210,6 +1196,7 @@ def employee_delete(employee_id):
     db.session.commit()
     return redirect(url_for("employee_report"))
 
+
 @app.route("/action_item_del/<entry_id>", methods=["GET", "POST"])
 # Mark with decorator
 @admin_only
@@ -1221,21 +1208,7 @@ def action_item_del(entry_id):
     return redirect(url_for("employee_view", employee_id=employee_id))
 
 
-timesheet_entries = timesheetEntryMaster.query.all()
-for i in timesheet_entries:
-    db.session.delete(i)
-    db.session.commit()
-
-timesheets__ = timesheetMaster.query.all()
-for i in timesheets__:
-    db.session.delete(i)
-    db.session.commit()
-
-
 if __name__ == "__main__":
     app.run(debug=True)
 
-
 # Jan 2023
-
-

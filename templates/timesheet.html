@@ -56,7 +56,7 @@
         <div class="col-lg-2">
           <select name="hotel" id="hotel">
             {% for i in data[1] %}
-              <option value="{{i.id}}">{{i.name}}</option>
+              <option value="{{i.name}}">{{i.name}}</option>
             {% endfor %}
           </select>
         </div>
@@ -70,7 +70,7 @@
         <div class="col-lg-2">
           <select name="name" id="name" class="name">
             {% for i in data[0] %}
-              <option value="{{i.id}}">{{i.name}}</option>
+              <option value="{{i.name}}">{{i.name}}</option>
             {% endfor %}
           </select>
         </div>
@@ -137,7 +137,7 @@
       $('#addButton2').click(function() {
         var numItems = $('.item').length + 1;
         var numStr = numItems.toString();
-        var divString = '<div class="item row"><div class="col-lg-2 con1"><label for="name">Name:</label></div><div class="col-lg-2"><select name="name" id="name" class="name"> {% for i in data[0] %} <option value="{{i.id}}">{{i.name}}</option> {% endfor %} </select></div><div class="col-lg-2 con1"><label for="timeIn1">Time In 1:</label></div><div class="col-lg-2"><input type="number" id="timeIn1" name="timeIn1" value="0"></div><div class="col-lg-2 con1"><label for="timeOut1">Time Out 1:</label></div><div class="col-lg-2"><input type="number" id="timeOut1" name="timeOut1" value="0"></div><div class="col-lg-2 con1"><label for="timeIn2">Time In 2: </label></div><div class="col-lg-2"><input type="number" id="timeIn2" name="timeIn2" value="0"></div><div class="col-lg-2 con1"><label for="timeOut2">Time Out 2: </label></div><div class="col-lg-2"><input type="number" id="timeOut2" name="timeOut2" value="0"></div></div>';
+        var divString = '<div class="item row"><div class="col-lg-2 con1"><label for="name">Name:</label></div><div class="col-lg-2"><select name="name" id="name" class="name"> {% for i in data[0] %} <option value="{{i.name}}">{{i.name}}</option> {% endfor %} </select></div><div class="col-lg-2 con1"><label for="timeIn1">Time In 1:</label></div><div class="col-lg-2"><input type="number" id="timeIn1" name="timeIn1" value="0"></div><div class="col-lg-2 con1"><label for="timeOut1">Time Out 1:</label></div><div class="col-lg-2"><input type="number" id="timeOut1" name="timeOut1" value="0"></div><div class="col-lg-2 con1"><label for="timeIn2">Time In 2: </label></div><div class="col-lg-2"><input type="number" id="timeIn2" name="timeIn2" value="0"></div><div class="col-lg-2 con1"><label for="timeOut2">Time Out 2: </label></div><div class="col-lg-2"><input type="number" id="timeOut2" name="timeOut2" value="0"></div></div>';
         var newDiv1 = $(divString);
 
         $('#divOutsideAdd').append(newDiv1);
