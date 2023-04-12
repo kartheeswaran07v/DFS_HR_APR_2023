@@ -697,7 +697,7 @@ def roster():
 
         for i in range(len(a['hotel'])):
             if a['hotel'][i] != '':  # check if there's no entry
-                hotel_element = db.session.query(hotelMaster).filter_by(id=a['hotel'][i]).first()
+                hotel_element = db.session.query(hotelMaster).filter_by(name=a['hotel'][i]).first()
                 nameStr = "name" + str(i + 1)
                 timeInStr1 = "timeInA" + str(i + 1)
                 timeOutStr1 = "timeOutA" + str(i + 1)
@@ -709,7 +709,7 @@ def roster():
 
                 for j in range(len(a[nameStr])):
                     if a[nameStr][j] != '':
-                        employee_element = db.session.query(employeeMaster).filter_by(id=a[nameStr][j]).first()
+                        employee_element = db.session.query(employeeMaster).filter_by(name=a[nameStr][j]).first()
                         new_entry = rosterEntryMaster(timeIn1=a[timeInStr1][j], timeOut1=a[timeOutStr1][j],
                                                       timeIn2=a[timeInStr2][j],
                                                       timeOut2=a[timeOutStr2][j], pickUp=a[pickup][j],
