@@ -912,11 +912,11 @@ def roster_single(roster_id):
         hotel = i.hotel
         hotel_list.append(hotel.name)
         employee_list.append(employee.name)
-        i.timeIn1 = getTimeStr(i.timeIn1)
-        i.timeIn2 = getTimeStr(i.timeIn2)
-        i.timeOut1 = getTimeStr(i.timeOut1)
-        i.timeOut2 = getTimeStr(i.timeOut2)
-        i.pickUp = getTimeStr(i.pickUp)
+        # i.timeIn1 = getTimeStr(i.timeIn1)
+        # i.timeIn2 = getTimeStr(i.timeIn2)
+        # i.timeOut1 = getTimeStr(i.timeOut1)
+        # i.timeOut2 = getTimeStr(i.timeOut2)
+        # i.pickUp = getTimeStr(i.pickUp)
     return render_template("roster_entries.html", entries=roster_entries, employees=employee_list, hotels=hotel_list,
                            len=range(len(roster_entries)), date=roster_full_date, day=roster_day)
 
