@@ -936,7 +936,8 @@ def roster_single_edit(roster_id):
     roster_day = datetime.datetime.strptime(roster_date, "%Y-%d-%m").strftime('%A')
     roster_full_date = datetime.datetime.strptime(roster_date, '%Y-%d-%m').strftime('%B %d, %Y')
     for i in roster_entries:
-        employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
+        roster_dict = {''}
+        employee = i.employee
         hotel = db.session.query(hotelMaster).filter_by(id=i.hotelID).first()
         hotel_list.append(hotel.name)
         employee_list.append(employee.name)
