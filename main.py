@@ -1285,7 +1285,7 @@ def delete_roster_timesheet():
         db.session.commit()
 
 
-delete_roster_timesheet()
+# delete_roster_timesheet()
 
 
 if __name__ == "__main__":
