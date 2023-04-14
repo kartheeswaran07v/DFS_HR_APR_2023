@@ -908,8 +908,8 @@ def roster_single(roster_id):
     employee_list = []
     hotel_list = []
     for i in roster_entries:
-        employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
-        hotel = db.session.query(hotelMaster).filter_by(id=i.hotelID).first()
+        employee = i.employee
+        hotel = i.hotel
         hotel_list.append(hotel.name)
         employee_list.append(employee.name)
         i.timeIn1 = getTimeStr(i.timeIn1)
@@ -938,7 +938,7 @@ def roster_single_edit(roster_id):
     for i in roster_entries:
         roster_dict = {''}
         employee = i.employee
-        hotel = db.session.query(hotelMaster).filter_by(id=i.hotelID).first()
+        hotel = i.hotel
         hotel_list.append(hotel.name)
         employee_list.append(employee.name)
         i.timeIn1 = getTimeStr(i.timeIn1)
