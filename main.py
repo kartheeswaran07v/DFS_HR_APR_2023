@@ -907,18 +907,21 @@ def roster_single(roster_id):
     roster_full_date = datetime.datetime.strptime(roster_date, '%Y-%d-%m').strftime('%B %d, %Y')
     employee_list = []
     hotel_list = []
+    time_lists = []
     for i in roster_entries:
         employee = i.employee
         hotel = i.hotel
         hotel_list.append(hotel.name)
         employee_list.append(employee.name)
-        # i.timeIn1 = getTimeStr(i.timeIn1)
-        # i.timeIn2 = getTimeStr(i.timeIn2)
-        # i.timeOut1 = getTimeStr(i.timeOut1)
-        # i.timeOut2 = getTimeStr(i.timeOut2)
-        # i.pickUp = getTimeStr(i.pickUp)
+        ti1 = getTimeStr(i.timeIn1)
+        ti2 = getTimeStr(i.timeIn2)
+        to1 = getTimeStr(i.timeOut1)
+        to2 = getTimeStr(i.timeOut2)
+        pu = getTimeStr(i.pickUp)
+        time_dict = {'timeIn1': ti1, 'timeIn2': ti2, 'timeOut1': to1, 'timeOut2': to2, 'pickUp': pu}
+        time_lists.append(time_dict)
     return render_template("roster_entries.html", entries=roster_entries, employees=employee_list, hotels=hotel_list,
-                           len=range(len(roster_entries)), date=roster_full_date, day=roster_day)
+                           len=range(len(roster_entries)), date=roster_full_date, day=roster_day, time_data=time_lists)
 
 
 @app.route("/roster_single_edit/<roster_id>", methods=["GET", "POST"])
