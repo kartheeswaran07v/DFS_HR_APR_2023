@@ -368,6 +368,35 @@ class rosterEntryMaster(db.Model):
 
 # db.create_all()
 
+# to convert time to int
+def getTimeInt(time):
+    b = time.split(':')
+    if int(b[0]) < 10:
+        b[0] = '0' + b[0]
+    else:
+        b[0] = b[0]
+    c = b[0] + b[1]
+    d = int(c)
+    print(d)
+    return d
+
+
+def getTimeStr(time):
+    time = int(time)
+    hour = time // 100
+    minutes = time - (hour * 100)
+    if hour < 10:
+        hour_str = '0' + str(hour)
+    else:
+        hour_str = str(hour)
+    if minutes < 10:
+        min_str = '0' + str(minutes)
+    else:
+        min_str = str(minutes)
+    time_str = hour_str + ':' + min_str
+    print(time_str)
+    return time_str
+
 
 # Website routes
 @app.route('/', methods=["GET", "POST"])
@@ -656,8 +685,8 @@ def timesheet():
             if a['name'][i] != '':
                 employee_element = db.session.query(employeeMaster).filter_by(name=a['name'][i]).first()
                 ts_element = new_timesheet
-                new_entry = timesheetEntryMaster(timeIn1=a['timeIn1'][i], timeIn2=a['timeIn2'][i],
-                                                 timeOut1=a['timeOut1'][i], timeOut2=a['timeOut2'][i],
+                new_entry = timesheetEntryMaster(timeIn1=getTimeInt(a['timeIn1'][i]), timeIn2=getTimeInt(a['timeIn2'][i]),
+                                                 timeOut1=getTimeInt(a['timeOut1'][i]), timeOut2=getTimeInt(a['timeOut2'][i]),
                                                  employee=employee_element, timesheet=ts_element)
                 db.session.add(new_entry)
                 db.session.commit()
@@ -710,9 +739,9 @@ def roster():
                 for j in range(len(a[nameStr])):
                     if a[nameStr][j] != '':
                         employee_element = db.session.query(employeeMaster).filter_by(name=a[nameStr][j]).first()
-                        new_entry = rosterEntryMaster(timeIn1=a[timeInStr1][j], timeOut1=a[timeOutStr1][j],
-                                                      timeIn2=a[timeInStr2][j],
-                                                      timeOut2=a[timeOutStr2][j], pickUp=a[pickup][j],
+                        new_entry = rosterEntryMaster(timeIn1=getTimeInt(a[timeInStr1][j]), timeOut1=getTimeInt(a[timeOutStr1][j]),
+                                                      timeIn2=getTimeInt(a[timeInStr2][j]),
+                                                      timeOut2=getTimeInt(a[timeOutStr2][j]), pickUp=getTimeInt(a[pickup][j]),
                                                       remark=a[remarks][j], absent=a[absent][j],
                                                       employee=employee_element, roster=roster_element,
                                                       hotel=hotel_element)
@@ -883,6 +912,11 @@ def roster_single(roster_id):
         hotel = db.session.query(hotelMaster).filter_by(id=i.hotelID).first()
         hotel_list.append(hotel.name)
         employee_list.append(employee.name)
+        i.timeIn1 = getTimeStr(i.timeIn1)
+        i.timeIn2 = getTimeStr(i.timeIn2)
+        i.timeOut1 = getTimeStr(i.timeOut1)
+        i.timeOut2 = getTimeStr(i.timeOut2)
+        i.pickUp = getTimeStr(i.pickUp)
     return render_template("roster_entries.html", entries=roster_entries, employees=employee_list, hotels=hotel_list,
                            len=range(len(roster_entries)), date=roster_full_date, day=roster_day)
 
@@ -906,6 +940,11 @@ def roster_single_edit(roster_id):
         hotel = db.session.query(hotelMaster).filter_by(id=i.hotelID).first()
         hotel_list.append(hotel.name)
         employee_list.append(employee.name)
+        i.timeIn1 = getTimeStr(i.timeIn1)
+        i.timeIn12 = getTimeStr(i.timeIn2)
+        i.timeOut1 = getTimeStr(i.timeOut1)
+        i.timeOut2 = getTimeStr(i.timeOut2)
+        i.pickUp = getTimeStr(i.pickUp)
     return render_template("roster_entries_edit.html", entries=roster_entries, employees=employee_list,
                            hotels=hotel_list,
                            len=range(len(roster_entries)), date=roster_full_date, day=roster_day, data=data_)
@@ -919,9 +958,9 @@ def add_roster_element(roster_id):
         hotel_element = db.session.query(hotelMaster).filter_by(name=request.form.get('hotel')).first()
         employee_element = db.session.query(employeeMaster).filter_by(name=request.form.get('name')).first()
         roster_element = db.session.query(rosterMaster).filter_by(id=roster_id).first()
-        new_entry = rosterEntryMaster(timeIn1=request.form.get('timeIn1'), timeOut1=request.form.get('timeOut1'),
-                                      timeIn2=request.form.get('timeIn2'),
-                                      timeOut2=request.form.get('timeOut2'), pickUp=request.form.get('pickUp'),
+        new_entry = rosterEntryMaster(timeIn1=getTimeInt(request.form.get('timeIn1')), timeOut1=getTimeInt(request.form.get('timeOut1')),
+                                      timeIn2=getTimeInt(request.form.get('timeIn2')),
+                                      timeOut2=getTimeInt(request.form.get('timeOut2')), pickUp=getTimeInt(request.form.get('pickUp')),
                                       remark=request.form.get('remarks'), absent=request.form.get('absent'),
                                       employee=employee_element, roster=roster_element,
                                       hotel=hotel_element)
@@ -973,6 +1012,10 @@ def timesheet_single(timesheet_id):
     for i in timesheet_entries:
         employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
         employee_list.append(employee.name)
+        i.timeIn1 = getTimeStr(i.timeIn1)
+        i.timeIn2 = getTimeStr(i.timeIn2)
+        i.timeOut1 = getTimeStr(i.timeOut1)
+        i.timeOut2 = getTimeStr(i.timeOut2)
     return render_template("timesheet_entries.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
                            len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no)
@@ -995,6 +1038,10 @@ def timesheet_single_edit(timesheet_id):
     for i in timesheet_entries:
         employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
         employee_list.append(employee.name)
+        i.timeIn1 = getTimeStr(i.timeIn1)
+        i.timeIn2 = getTimeStr(i.timeIn2)
+        i.timeOut1 = getTimeStr(i.timeOut1)
+        i.timeOut2 = getTimeStr(i.timeOut2)
     return render_template("timesheet_entries_edit.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
                            len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, data=data_)
@@ -1008,9 +1055,9 @@ def add_ts_element(ts_id):
         ts_element = timesheetMaster.query.get(ts_id)
         hotel_element = hotelMaster.query.get(ts_element.hotelID)
         employee_element = db.session.query(employeeMaster).filter_by(name=request.form.get('name')).first()
-        new_entry = timesheetEntryMaster(timeIn1=request.form.get('timeIn1'), timeOut1=request.form.get('timeOut1'),
-                                         timeIn2=request.form.get('timeIn2'),
-                                         timeOut2=request.form.get('timeOut2'),
+        new_entry = timesheetEntryMaster(timeIn1=getTimeInt(request.form.get('timeIn1')), timeOut1=getTimeInt(request.form.get('timeOut1')),
+                                         timeIn2=getTimeInt(request.form.get('timeIn2')),
+                                         timeOut2=getTimeInt(request.form.get('timeOut2')),
                                          employee=employee_element, timesheet=ts_element)
         db.session.add(new_entry)
         db.session.commit()
