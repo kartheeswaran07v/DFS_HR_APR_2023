@@ -398,6 +398,16 @@ def getTimeStr(time):
     return time_str
 
 
+def total_time_hrs(time):
+    c__ = time // 100
+    # print(f"c__: {c__}")
+    d__ = time - c__ * 100
+    # print(f"d__: {d__}")
+    e___ = d__ / 60
+    # print(f"e___: {e___}")
+    total_hrs = c__ + e___
+    return round(total_hrs, 2)
+
 # Website routes
 @app.route('/', methods=["GET", "POST"])
 def cover():
@@ -882,7 +892,9 @@ def archives():
 
 
                 else:
-                    hours = ts_entry_element.timeOut1 - ts_entry_element.timeIn1 + ts_entry_element.timeOut2 - ts_entry_element.timeIn2
+                    hours_ = ts_entry_element.timeOut1 - ts_entry_element.timeIn1 + ts_entry_element.timeOut2 - ts_entry_element.timeIn2
+                    hours = total_time_hrs(hours_)
+
                     # print(ts_entry_element.timeOut1)
 
                 ms_dict['hours'].append(hours)
@@ -958,7 +970,8 @@ def roster_single_edit(roster_id):
         time_lists.append(time_dict)
     return render_template("roster_entries_edit.html", entries=roster_entries, employees=employee_list,
                            hotels=hotel_list,
-                           len=range(len(roster_entries)), date=roster_full_date, day=roster_day, data=data_, time_data=time_lists)
+                           len=range(len(roster_entries)), date=roster_full_date, day=roster_day, data=data_,
+                           time_data=time_lists)
 
 
 @app.route("/add_roster_element/<roster_id>", methods=["GET", "POST"])
@@ -1065,7 +1078,8 @@ def timesheet_single_edit(timesheet_id):
         time_lists.append(time_dict)
     return render_template("timesheet_entries_edit.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
-                           len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, data=data_, time_data=time_lists)
+                           len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, data=data_,
+                           time_data=time_lists)
 
 
 @app.route("/add_ts_element/<ts_id>", methods=["GET", "POST"])
