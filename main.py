@@ -903,8 +903,8 @@ def roster_single(roster_id):
     roster_entries = db.session.query(rosterEntryMaster).filter_by(rosterID=roster_id).all()
     roster_element = rosterMaster.query.get(roster_id)
     roster_date = roster_element.date
-    roster_day = datetime.datetime.strptime(roster_date, "%Y-%m-%d").strftime('%A')
-    roster_full_date = datetime.datetime.strptime(roster_date, '%Y-%m-%d').strftime('%B %d, %Y')
+    roster_day = datetime.datetime.strptime(roster_date, "%Y-%d-%m").strftime('%A')
+    roster_full_date = datetime.datetime.strptime(roster_date, '%Y-%d-%m').strftime('%B %d, %Y')
     employee_list = []
     hotel_list = []
     for i in roster_entries:
