@@ -942,20 +942,23 @@ def roster_single_edit(roster_id):
     roster_date = roster_element.date
     roster_day = datetime.datetime.strptime(roster_date, "%Y-%d-%m").strftime('%A')
     roster_full_date = datetime.datetime.strptime(roster_date, '%Y-%d-%m').strftime('%B %d, %Y')
+    time_lists = []
     for i in roster_entries:
         roster_dict = {''}
         employee = i.employee
         hotel = i.hotel
         hotel_list.append(hotel.name)
         employee_list.append(employee.name)
-        i.timeIn1 = getTimeStr(i.timeIn1)
-        i.timeIn12 = getTimeStr(i.timeIn2)
-        i.timeOut1 = getTimeStr(i.timeOut1)
-        i.timeOut2 = getTimeStr(i.timeOut2)
-        i.pickUp = getTimeStr(i.pickUp)
+        ti1 = getTimeStr(i.timeIn1)
+        ti2 = getTimeStr(i.timeIn2)
+        to1 = getTimeStr(i.timeOut1)
+        to2 = getTimeStr(i.timeOut2)
+        pu = getTimeStr(i.pickUp)
+        time_dict = {'timeIn1': ti1, 'timeIn2': ti2, 'timeOut1': to1, 'timeOut2': to2, 'pickUp': pu}
+        time_lists.append(time_dict)
     return render_template("roster_entries_edit.html", entries=roster_entries, employees=employee_list,
                            hotels=hotel_list,
-                           len=range(len(roster_entries)), date=roster_full_date, day=roster_day, data=data_)
+                           len=range(len(roster_entries)), date=roster_full_date, day=roster_day, data=data_, time_data=time_lists)
 
 
 @app.route("/add_roster_element/<roster_id>", methods=["GET", "POST"])
@@ -1019,16 +1022,19 @@ def timesheet_single(timesheet_id):
     hotel_element = hotelMaster.query.get(ts_element.hotelID)
     hotel_name = hotel_element.name
     employee_list = []
+    time_lists = []
     for i in timesheet_entries:
         employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
         employee_list.append(employee.name)
-        i.timeIn1 = getTimeStr(i.timeIn1)
-        i.timeIn2 = getTimeStr(i.timeIn2)
-        i.timeOut1 = getTimeStr(i.timeOut1)
-        i.timeOut2 = getTimeStr(i.timeOut2)
+        ti1 = getTimeStr(i.timeIn1)
+        ti2 = getTimeStr(i.timeIn2)
+        to1 = getTimeStr(i.timeOut1)
+        to2 = getTimeStr(i.timeOut2)
+        time_dict = {'timeIn1': ti1, 'timeIn2': ti2, 'timeOut1': to1, 'timeOut2': to2}
+        time_lists.append(time_dict)
     return render_template("timesheet_entries.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
-                           len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no)
+                           len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, time_data=time_lists)
 
 
 @app.route("/timesheet_single_edit/<timesheet_id>", methods=["GET", "POST"])
@@ -1045,16 +1051,21 @@ def timesheet_single_edit(timesheet_id):
     employees = employeeMaster.query.all()
     hotels = hotelMaster.query.all()
     data_ = [employees, hotels]
+    time_lists = []
     for i in timesheet_entries:
         employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
         employee_list.append(employee.name)
-        i.timeIn1 = getTimeStr(i.timeIn1)
-        i.timeIn2 = getTimeStr(i.timeIn2)
-        i.timeOut1 = getTimeStr(i.timeOut1)
-        i.timeOut2 = getTimeStr(i.timeOut2)
+        employee = db.session.query(employeeMaster).filter_by(id=i.employeeID).first()
+        employee_list.append(employee.name)
+        ti1 = getTimeStr(i.timeIn1)
+        ti2 = getTimeStr(i.timeIn2)
+        to1 = getTimeStr(i.timeOut1)
+        to2 = getTimeStr(i.timeOut2)
+        time_dict = {'timeIn1': ti1, 'timeIn2': ti2, 'timeOut1': to1, 'timeOut2': to2}
+        time_lists.append(time_dict)
     return render_template("timesheet_entries_edit.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
-                           len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, data=data_)
+                           len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, data=data_, time_data=time_lists)
 
 
 @app.route("/add_ts_element/<ts_id>", methods=["GET", "POST"])

@@ -30,10 +30,10 @@
       <div class="col-2"><p>{{ i + 1 }}</p></div>
       <div class="col-3"><p>{{ employees[i] }}</p></div>
       <div class="col-3"><p>{{ hotel_name }}</p></div>
-      {% if entries[i].timeIn2 == '00:00' %}
-        <div class="col-3"><p>{{ entries[i].timeIn1 }} - {{ entries[i].timeOut1 }}</p></div>
+      {% if time_data[i].timeIn2 == '00:00' %}
+        <div class="col-3"><p>{{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}</p></div>
       {% else %}
-        <div class="col-3"><p>{{ entries[i].timeIn1 }} - {{ entries[i].timeOut1 }}/{{ entries[i].timeIn2 }} - {{ entries[i].timeOut2 }}</p></div>
+        <div class="col-3"><p>{{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}/{{ time_data[i].timeIn2 }} - {{ time_data[i].timeOut2 }}</p></div>
       {% endif %}
     {% endfor %}
   </div>
