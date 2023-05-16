@@ -7,7 +7,7 @@
 
   <div class="welcome">
     <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: xyz123</span>
+    <span>Welcome: {{user.name}}</span>
   </div>
   <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Master Timesheet</h1>
   <div class="masterTs" >
@@ -20,17 +20,53 @@
           <p>{{ i }}</p>
         </div>
         {% endfor %}
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>Total Hours</p>
+        </div>
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>Minimum Hours</p>
+        </div>
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>Extra Hours</p>
+        </div>
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>Rate</p>
+        </div>
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>Total</p>
+        </div>
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>Productivity</p>
+        </div>
       </div>
-      {% for i in data %}
+      {% for i in len %}
       <div class="row">
         <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>{{ i.name }}</p>
+          <p>{{ data[i].name }}</p>
         </div>
         {% for j in len %}
         <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>{{i.hours[j]}}</p>
+          <p>{{data[i].hours[j]}}</p>
         </div>
         {% endfor %}
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>{{new_data[i]['total_hours']}}</p>
+        </div>
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>260</p>
+        </div>
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>{{new_data[i]['extra_hours']}}</p>
+        </div>
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>5</p>
+        </div>
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>{{new_data[i]['total_extra']}}</p>
+        </div>
+        <div class="col-lg-1 hahaha" style="border-style: solid;">
+          <p>{{new_data[i]['productivity']}}</p>
+        </div>
       </div>
     {% endfor %}
 

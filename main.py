@@ -1,11 +1,11 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
+from flask import Flask, render_template, redirect, url_for, flash, request, jsonify, Response
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from forms import *
 from datetime import date, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, ForeignKey, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, String, Boolean, DateTime, Text, Float
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from functools import wraps
@@ -22,7 +22,7 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///dfx_db_seis.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///dfx_may_23.db")
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///dfx_db_seis.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -177,6 +177,9 @@ class hotelMaster(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(300))
     address = Column(String(300))
+    # TODO - add interval and rate to the table
+    interval = Column(String(300))
+    rate = Column(Float)
 
     # relationship as parent
     rosterEntry = relationship("rosterEntryMaster", back_populates="hotel")
@@ -203,6 +206,14 @@ class documentMaster(db.Model):
     employee = relationship("employeeMaster", back_populates="document")
 
 
+class Img(db.Model):
+    id = Column(Integer, primary_key=True)
+    img = Column(Text, unique=True, nullable=False)
+    name = Column(Text, nullable=False)
+    mimetype = Column(Text, nullable=False)
+    employeeID = Column(Integer)
+
+
 class actionItemMaster(db.Model):
     __tablename__ = "actionItemMaster"
     id = Column(Integer, primary_key=True)
@@ -222,7 +233,7 @@ class leaveApplicationMaster(db.Model):
     dept = Column(String(300))
     designation = Column(String(300))
     nationality = Column(String(300))
-    pass_no = Column(Integer)
+    pass_no = Column(String(300))  # TODO change to string
     emp = Column(String(300))
 
     # type of leave
@@ -354,6 +365,7 @@ class rosterEntryMaster(db.Model):
     pickUp = Column(Integer)
     remark = Column(String(300))
     absent = Column(String(300))
+    pickUp2 = Column(Integer)  # TODO add pickup2
 
     # relationships as child
     employeeID = Column(Integer, ForeignKey("employeeMaster.id"))
@@ -367,6 +379,198 @@ class rosterEntryMaster(db.Model):
 
 
 # db.create_all()
+
+
+# Forms
+class LeaveForm(FlaskForm):
+    employees = employeeMaster.query.all()
+    employee_name = [i.name for i in employees]
+    # details
+    date = DateField("Date: ")
+    name = SelectField(u'Name of the Employee',
+                       choices=employee_name)
+    company = StringField("Company: ")
+    dept = StringField("Department: ")
+    designation = StringField("Designation: ")
+    nationality = StringField("Nationality: ")
+    pass_no = StringField("Passport No.: ")
+    emp = StringField("EMP No.: ")
+
+    # type of leave
+    leave_type = SelectField(u'Leave Type',
+                             choices=['Vacation', 'Emergency Leave', "Annual Leave", "Cash-in Lieu", "Leave w/o Pay",
+                                      "Sick Leave", "Public Holiday"])
+
+    # Personal Details
+    addr_wol = StringField("Address While on Leave")
+    con_per = StringField("Contact person")
+    rel = StringField("Relation")
+    pol = StringField("Purpose of Leave")
+    # sign = StringField("Signature and Date")
+    dot = DateField("Date of Travel")
+    con_wol = StringField("Contact Number(s) While on Leave")
+    sub_emp = StringField("Substitute Employee")
+    leave_f = DateField("Leave From")
+    leave_t = DateField("Leave To")
+    no_days = IntegerField("Number of Days:")
+    air_tic = StringField("Air Ticket Details")
+
+    # Guarantors
+    g1_name = SelectField(u'Guarantor 1',
+                          choices=employee_name)
+    g1_dept = StringField("Department: ")
+    g1_id_no = IntegerField("ID No.: ")
+    # g1_sign = IntegerField("Sign and Date")
+    g2_name = SelectField(u'Guarantor 2',
+                          choices=employee_name)
+    g2_dept = StringField("Department: ")
+    g2_id_no = IntegerField("ID No.: ")
+    # g2_sign = IntegerField("Sign and Date")
+
+    # HR Dept
+    doj = DateField("Date of Joining: ")
+    tla = IntegerField("Total Leave Available")
+    less_this = IntegerField("Less this leave: ")
+    nod_app = IntegerField("No. of Days Approved")
+    dor = DateField("Date of Return")
+    eligibility = StringField("Eligibility")
+    last_leave = StringField("Period/Date of Last Leave: ")
+    balance_leave = IntegerField("Balance: ")
+    release_date = DateField("Release Date: ")
+    # sign_hr = StringField("Sign & Date HR Assistant: ")
+
+    # If Annual Leave not Approved
+    amt_appr = IntegerField("Amount Approved: ")
+    cheq_no = IntegerField("Cheque No.: ")
+    # empl_sign = StringField("Employee Signature: ")
+    pbc = StringField("Paid by Cash:")
+    bank_tr = StringField("Bank Transfer")
+    date_tr = DateField("Date: ")
+
+    # Approval
+    approved_by = SelectField(u'Approved By',
+                              choices=employee_name)
+    # lm_sign = StringField("Sign & Date Line Manager")
+    approved_by_2 = SelectField(u'Approved By',
+                                choices=employee_name)
+    # md_sign = StringField("Sing & Date Managing Director ")
+
+    # submit
+    submit = SubmitField("Submit Leave Form")
+
+
+class PassportForm(FlaskForm):
+    employees = employeeMaster.query.all()
+    employee_name = [i.name for i in employees]
+    date = DateField("Date: ")
+    emp_no = IntegerField("Emp No.: ")
+    name = SelectField(u'Name of the Employee:',
+                       choices=employee_name)
+    pow = StringField("Purpose of Withdrawal")
+    # sign = StringField("Signature")
+    days_req = StringField("Days Required")
+    remarks = StringField("Remarks")
+
+    # guarantors
+    g1_name = SelectField(u'Name: ',
+                          choices=employee_name)
+    g1_dept = StringField("Department: ")
+    g1_id_no = IntegerField("ID No.: ")
+    # g1_sign = IntegerField("Sign and Date")
+    g2_name = SelectField(u'Name: ',
+                          choices=employee_name)
+    g2_dept = StringField("Department: ")
+    g2_id_no = IntegerField("ID No.: ")
+    # g2_sign = IntegerField("Sign and Date")
+
+    # approval
+    checked_by = SelectField(u"Checked By | Name: ",
+                             choices=employee_name)
+    # checked_by_sign = StringField("Sign: ")
+    appr_by_lm = SelectField(u"Approved By | Line Manager: ",
+                             choices=employee_name)
+    # appr_by_lm_sign = StringField("Sign: ")
+    appr_by_hr = SelectField(u"Approved By | HR Manager: ",
+                             choices=employee_name)
+    # appr_by_hr_sign = StringField("Sign: ")
+    dir_op = SelectField(u"CEO: ",
+                         choices=employee_name)
+    # dir_op_sign = StringField("Sign")
+
+    # issue
+    pass_rec = SelectField(u"Passport Received | Name: ",
+                           choices=employee_name)
+    date_pass_rec = DateField('Date: ')
+    lc_rec = SelectField(u"Labor Card Received by HRD: ",
+                         choices=employee_name)
+    date_lc_rec = DateField("Date: ")
+
+    # sign_pass = StringField("Signature: ")
+    # sign_lc = StringField("Signature: ")
+
+    # return
+    pass_rec_e = SelectField(u"Passport Received | Name: ",
+                             choices=employee_name)
+    date_pass_rec_e = DateField('Date: ')
+    lc_rec_e = SelectField(u"Labor Card Received by Employee: ",
+                           choices=employee_name)
+    date_lc_rec_e = DateField("Date: ")
+
+    # sign_pass_e = StringField("Signature: ")
+    # sign_lc_e = StringField("Signature: ")
+
+    # submit
+    submit = SubmitField("Submit Passport Request Form")
+
+
+class RegistrationForm(FlaskForm):
+    department_ = departmentMaster.query.all()
+    department_name = [i.name for i in department_]
+    print(department_name)
+    name = StringField("Name:       ", validators=[DataRequired()])
+    joining_date = DateField("Joining Date:")
+    department_e = SelectField(u"Department: ",
+                               choices=department_name)
+    employee_id = StringField("Employee ID: ")
+    address_uae = StringField("Address UAE:     ", validators=[DataRequired()])
+    po_box = StringField("P. O. Box:    ", validators=[DataRequired()])
+    mobile_p = IntegerField("Personal Mobile No.:   ", validators=[DataRequired()])
+    mobile_h = IntegerField("Home Mobile No.:", validators=[DataRequired()])
+    personal_mail = EmailField("Personal Mail ID: ")
+    address_home = StringField("Home Address (Country of Origin):")
+    passport_no = StringField("Passport No.: ")
+    nationality = StringField("Nationality: ")
+    own_car = BooleanField("Driving Own Car?: ")
+    car_rent = BooleanField("Company Car:")
+    company_laptop = StringField("Company Laptop Details: ")
+    company_mobile = StringField("Company Mobile Details: ")
+    e_uae_name = StringField("Name: ")
+    e_uae_rel = StringField("Relationship: ")
+    e_uae_addr = StringField("Address: ")
+    e_uae_mob = IntegerField("Mobile No.:")
+    e_uae_hom = IntegerField("Home No.:")
+    origin_country = StringField("Country of Origin:")
+    e_co_name = StringField("Name: ")
+    e_co_rel = StringField("Relationship: ")
+    e_co_addr = StringField("Address: ")
+    e_co_mob = IntegerField("Mobile No.:")
+    e_co_hom = IntegerField("Home No.:")
+    upload = MultipleFileField("Upload Multiple Documents")
+    submit = SubmitField("Complete Registration")
+
+    """
+    use this code to determine which submit field is selected in main1.py
+     if form.validate_on_submit():
+        if form.user_stats.data:
+            return redirect(url_for('user_stats'))
+        elif form.room_stats.data:
+            return redirect(url_for('room_stats'))
+
+    return render_template('stats.html', form=form)
+
+    Or rather can have another page for uploading documents - that's better
+    """
+
 
 # to convert time to int
 def getTimeInt(time):
@@ -407,6 +611,7 @@ def total_time_hrs(time):
     # print(f"e___: {e___}")
     total_hrs = c__ + e___
     return round(total_hrs, 2)
+
 
 # Website routes
 @app.route('/', methods=["GET", "POST"])
@@ -473,7 +678,7 @@ def logout():
 # Mark with decorator
 @admin_only
 def home():
-    return render_template("home.html")
+    return render_template("home.html", user=current_user)
 
 
 @app.route('/registration', methods=["GET", "POST"])
@@ -482,7 +687,8 @@ def home():
 def registration():
     form = RegistrationForm()
     if request.method == "POST":
-        department = db.session.query(departmentMaster).filter_by(id=1).first()
+        department_ = request.form.get("department_e")
+        department = db.session.query(departmentMaster).filter_by(name=department_).first()
         a_date = datetime.datetime.strptime(request.form.get('joining_date'), '%Y-%m-%d').date()
         nationality_passportNo = f"{request.form.get('nationality')}+{request.form.get('passport_no')}"
         mobile_string = f"{request.form.get('e_uae_addr')}+{request.form.get('mobile_p')}+{request.form.get('mobile_h')}+{request.form.get('e_uae_mob')}+{request.form.get('e_co_mob')}"
@@ -527,9 +733,9 @@ def registration():
         )
         db.session.add(new_employee)
         db.session.commit()
-        return render_template("upload_doc.html", name=form.name.data)
+        return render_template("upload_doc.html", name=form.name.data, user=current_user)
 
-    return render_template("reg2.html", form=form)
+    return render_template("reg2.html", form=form, user=current_user)
 
 
 @app.route("/doc", methods=["GET", "POST"])
@@ -537,8 +743,8 @@ def registration():
 @admin_only
 def doc():
     if request.method == 'POST':
-        # directory = request.form.get('name')
-        # employee_element = db.session.query(employeeMaster).filter_by(name=directory).first()
+        directory = request.form.get('name')
+        employee_element = db.session.query(employeeMaster).filter_by(name=directory).first()
         #
         # # Parent Directory path
         # parent_dir = home_directory
@@ -555,7 +761,13 @@ def doc():
         # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
         files = request.files.getlist("file")  # other multiple files
-        photo = request.files.get('photo')  # photo file
+        pic = request.files.get('photo')  # photo file
+        filename = secure_filename(pic.filename)
+        mimetype = pic.mimetype
+
+        img__ = Img(img=pic.read(), name=filename, mimetype=mimetype, employeeID=int(employee_element.id))
+        db.session.add(img__)
+        db.session.commit()
         # photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
         # for file in files:
         #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
@@ -565,7 +777,18 @@ def doc():
         # db.session.add(new_doc)
         # db.session.commit()
 
-        return render_template("reg_suc.html", name=request.form.get('name'))
+        return render_template("reg_suc.html", name=request.form.get('name'), user=current_user,
+                               employee=employee_element)
+
+
+@app.route('/image/<int:id>')
+def get_img(id):
+    with app.app_context():
+        img = Img.query.filter_by(id=id).first()
+        if not img:
+            return 'Img Not Found!', 404
+
+        return Response(img.img, mimetype=img.mimetype)
 
 
 @app.route('/leave', methods=["GET", "POST"])
@@ -573,6 +796,8 @@ def doc():
 @admin_only
 def leave():
     form = LeaveForm()
+    employees = employeeMaster.query.all()
+
     if form.validate_on_submit():
         employee = db.session.query(employeeMaster).filter_by(name=form.name.data).first()
 
@@ -623,8 +848,87 @@ def leave():
         )
         db.session.add(new_leave)
         db.session.commit()
-        return render_template("reg_suc.html", name=form.name.data)
-    return render_template("leave.html", form=form)
+        return redirect(url_for('leaveList'))
+    return render_template("leave.html", form=form, employee=employees, user=current_user)
+
+
+@app.route('/leave-list', methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def leaveList():
+    leave_list = leaveApplicationMaster.query.all()
+    return render_template('leave_list.html', data=leave_list, len=range(len(leave_list)), user=current_user)
+
+
+@app.route('/leave-edit/<leave_id>', methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def leaveEdit(leave_id):
+    form = LeaveForm()
+    leave_element = leaveApplicationMaster.query.get(leave_id)
+    leave_date = leave_element.date
+    leave_f_date = leave_element.leave_f
+    leave_t_date = leave_element.leave_t
+    leave_dot_date = leave_element.dot
+    leave_dor_date = leave_element.dor
+    leave_rd_date = leave_element.release_date
+    leave_tr_date = leave_element.date_tr
+    leave_date_str = str(leave_date)[:10]
+    leave_f_str = str(leave_f_date)[:10]
+    leave_t_str = str(leave_t_date)[:10]
+    leave_dot_str = str(leave_dot_date)[:10]
+    leave_dor_str = str(leave_dor_date)[:10]
+    leave_rd_str = str(leave_rd_date)[:10]
+    leave_tr_str = str(leave_tr_date)[:10]
+    date_data = [leave_date_str, leave_f_str, leave_t_str, leave_dot_str, leave_dor_str, leave_rd_str, leave_tr_str]
+    if request.method == 'POST':
+        employee = db.session.query(employeeMaster).filter_by(name=form.name.data).first()
+        leave_element.date = form.date.data
+        leave_element.company = form.company.data
+        leave_element.dept = form.dept.data
+        leave_element.designation = form.designation.data
+        leave_element.nationality = form.nationality.data
+        leave_element.pass_no = form.pass_no.data
+        leave_element.emp = form.emp.data
+        leave_element.leave_type = form.leave_type.data
+        leave_element.addr_wol = form.addr_wol.data
+        leave_element.con_per = form.con_per.data
+        leave_element.rel = form.rel.data
+        leave_element.pol = form.pol.data
+        leave_element.dot = form.dot.data
+        leave_element.con_wol = form.con_wol.data
+        leave_element.sub_emp = form.sub_emp.data
+        leave_element.leave_f = form.leave_f.data
+        leave_element.leave_t = form.leave_t.data
+        leave_element.no_days = form.no_days.data
+        leave_element.air_tic = form.air_tic.data
+        leave_element.g1_name = form.g1_name.data
+        leave_element.g1_dept = form.g1_dept.data
+        leave_element.g1_id_no = form.g1_id_no.data
+        leave_element.g2_name = form.g2_name.data
+        leave_element.g2_dept = form.g2_dept.data
+        leave_element.g2_id_no = form.g2_id_no.data
+        leave_element.doj = form.doj.data
+        leave_element.tla = form.tla.data
+        leave_element.less_this = form.less_this.data
+        leave_element.nod_app = form.nod_app.data
+        leave_element.dor = form.dor.data
+        leave_element.eligibility = form.eligibility.data
+        leave_element.last_leave = form.last_leave.data
+        leave_element.balance_leave = form.balance_leave.data
+        leave_element.release_date = form.release_date.data
+        leave_element.amt_appr = form.amt_appr.data
+        leave_element.cheq_no = form.cheq_no.data
+        leave_element.pbc = form.pbc.data
+        leave_element.bank_tr = form.bank_tr.data
+        leave_element.date_tr = form.date_tr.data
+        leave_element.approved_by = form.approved_by.data
+        leave_element.approved_by_2 = form.approved_by_2.data
+        leave_element.employee = employee
+        leave_element.user = current_user
+        db.session.commit()
+        return redirect(url_for("leaveList"))
+    return render_template('leave_edit.html', data=leave_element, form=form, date_str=date_data, user=current_user)
 
 
 @app.route('/passport', methods=["GET", "POST"])
@@ -664,8 +968,65 @@ def passport():
         )
         db.session.add(new_pp)
         db.session.commit()
-        return render_template("reg_suc.html", name=form.name.data)
-    return render_template("passport.html", form=form)
+        redirect(url_for('passportList'))
+    return render_template("passport.html", form=form, user=current_user)
+
+
+@app.route('/pp-list', methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def passportList():
+    leave_list = passportApplicationMaster.query.all()
+    return render_template('pp_list.html', data=leave_list, len=range(len(leave_list)), user=current_user)
+
+
+@app.route('/pp-edit/<pp_id>', methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def ppEdit(pp_id):
+    form = PassportForm()
+    passport_element = passportApplicationMaster.query.get(pp_id)
+    pp_date = passport_element.date
+    pp_pass_date = passport_element.date_pass_rec
+    pp_lc_date = passport_element.date_lc_rec
+    pp_pass_e_dot_date = passport_element.date_pass_rec_e
+    pp_lc_e_date = passport_element.date_lc_rec_e
+    pp_date_str = str(pp_date)[:10]
+    pp_pass_str = str(pp_pass_date)[:10]
+    pp_lc_str = str(pp_lc_date)[:10]
+    pp_pass_e_str = str(pp_pass_e_dot_date)[:10]
+    pp_lc_e_str = str(pp_lc_e_date)[:10]
+    date_data = [pp_date_str, pp_pass_str, pp_lc_str, pp_pass_e_str, pp_lc_e_str]
+    if request.method == 'POST':
+        employee = db.session.query(employeeMaster).filter_by(name=form.name.data).first()
+        passport_element.date = form.date.data
+        passport_element.emp_no = form.emp_no.data
+        passport_element.pow = form.pow.data
+        passport_element.days_req = form.days_req.data
+        passport_element.remarks = form.remarks.data
+        passport_element.g1_name = form.g1_name.data
+        passport_element.g1_dept = form.g1_dept.data
+        passport_element.g1_id_no = form.g1_id_no.data
+        passport_element.g2_name = form.g2_name.data
+        passport_element.g2_dept = form.g2_dept.data
+        passport_element.g2_id_no = form.g2_id_no.data
+        passport_element.checked_by = form.checked_by.data
+        passport_element.appr_by_lm = form.appr_by_lm.data
+        passport_element.appr_by_hr = form.appr_by_hr.data
+        passport_element.dir_op = form.dir_op.data
+        passport_element.pass_rec = form.pass_rec.data
+        passport_element.date_pass_rec = form.date_pass_rec_e.data
+        passport_element.lc_rec = form.lc_rec.data
+        passport_element.date_lc_rec = form.date_lc_rec_e.data
+        passport_element.pass_rec_e = form.pass_rec_e.data
+        passport_element.date_pass_rec_e = form.date_pass_rec_e.data
+        passport_element.lc_rec_e = form.lc_rec_e.data
+        passport_element.date_lc_rec_e = form.date_lc_rec_e.data
+        passport_element.employee = employee
+        passport_element.user = current_user
+        db.session.commit()
+        return redirect(url_for("passportList"))
+    return render_template('pp_edit.html', data=passport_element, form=form, date_str=date_data, user=current_user)
 
 
 @app.route("/ts", methods=["GET", "POST"])
@@ -703,9 +1064,9 @@ def timesheet():
                 db.session.add(new_entry)
                 db.session.commit()
 
-        return render_template("ts_success_db.html", data=a, len=range(len(a['name'])))
+        return render_template("ts_success_db.html", data=a, len=range(len(a['name'])), user=current_user)
 
-    return render_template("timesheet.html", array=employee_name, data=data_)
+    return render_template("timesheet.html", array=employee_name, data=data_, user=current_user)
 
 
 @app.route("/roster", methods=["GET", "POST"])
@@ -744,7 +1105,8 @@ def roster():
                 timeOutStr1 = "timeOutA" + str(i + 1)
                 timeInStr2 = "timeInB" + str(i + 1)
                 timeOutStr2 = "timeOutB" + str(i + 1)
-                pickup = "pickUp" + str(i + 1)
+                pickupA = "pickUpA" + str(i + 1)
+                pickupB = "pickUpB" + str(i + 1)
                 remarks = "remarks" + str(i + 1)
                 absent = "absent" + str(i + 1)
 
@@ -755,10 +1117,12 @@ def roster():
                                                       timeOut1=getTimeInt(a[timeOutStr1][j]),
                                                       timeIn2=getTimeInt(a[timeInStr2][j]),
                                                       timeOut2=getTimeInt(a[timeOutStr2][j]),
-                                                      pickUp=getTimeInt(a[pickup][j]),
+                                                      pickUp=getTimeInt(a[pickupA][j]),
+                                                      pickUp2=getTimeInt(a[pickupB][j]),
                                                       remark=a[remarks][j], absent=a[absent][j],
                                                       employee=employee_element, roster=roster_element,
                                                       hotel=hotel_element)
+                        # Add pickup 2 TODO
                         db.session.add(new_entry)
                         db.session.commit()
 
@@ -796,9 +1160,9 @@ def roster_date():
             dates.append(i)
         if date_roster in dates:
             return render_template("roster_date.html", array=dates_list,
-                                   msg="Roster with the same date exists. Choose new one.")
+                                   msg="Roster with the same date exists. Choose new one.", user=current_user)
         elif date_roster:
-            return render_template('roster_new_picklist.html', date_roster=date_roster, data=data_)
+            return render_template('roster_new_picklist.html', date_roster=date_roster, data=data_, user=current_user)
         else:
             return render_template("roster_date.html", array=dates_list, msg="Choose a date to continue")
 
@@ -811,11 +1175,37 @@ def roster_date():
 @admin_only
 def add_hotel():
     if request.method == "POST":
-        new_hotel = hotelMaster(name=request.form.get('name'), address=request.form.get('address'))
+        new_hotel = hotelMaster(name=request.form.get('name'), address=request.form.get('address'),
+                                interval=request.form.get('interval'), rate=request.form.get('rate'))
         db.session.add(new_hotel)
         db.session.commit()
         return redirect(url_for("hotel_report"))
-    return render_template("add_hotel.html")
+    return render_template("add_hotel.html", user=current_user)
+
+
+@app.route("/del_hotel/<hotel_id>", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def del_hotel(hotel_id):
+    entry_to_delete = hotelMaster.query.get(hotel_id)
+    db.session.delete(entry_to_delete)
+    db.session.commit()
+    return redirect(url_for("hotel_report"))
+
+
+@app.route("/edit_hotel/<hotel_id>", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def edit_hotel(hotel_id):
+    hotel_element = hotelMaster.query.get(hotel_id)
+    if request.method == 'POST':
+        hotel_element.name = request.form.get('name')
+        hotel_element.address = request.form.get('address')
+        hotel_element.interval = request.form.get('interval')
+        hotel_element.rate = request.form.get('rate')
+        db.session.commit()
+        return redirect(url_for('hotel_report'))
+    return render_template('hotel_edit.html', hotel=hotel_element, user=current_user)
 
 
 @app.route("/hotel_report", methods=["GET", "POST"])
@@ -823,7 +1213,7 @@ def add_hotel():
 @admin_only
 def hotel_report():
     hotel_list = hotelMaster.query.all()
-    return render_template("hotel_report.html", ts=hotel_list, len=range(len(hotel_list)))
+    return render_template("hotel_report.html", ts=hotel_list, len=range(len(hotel_list)), user=current_user)
 
 
 # Department Report
@@ -836,7 +1226,29 @@ def add_department():
         db.session.add(new_department)
         db.session.commit()
         return redirect(url_for("department_report"))
-    return render_template("add_dept.html")
+    return render_template("add_dept.html", user=current_user)
+
+
+@app.route("/del_dept/<dept_id>", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def del_dept(dept_id):
+    entry_to_delete = departmentMaster.query.get(dept_id)
+    db.session.delete(entry_to_delete)
+    db.session.commit()
+    return redirect(url_for("department_report"))
+
+
+@app.route("/edit_dept/<dept_id>", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def edit_dept(dept_id):
+    dept_element = departmentMaster.query.get(dept_id)
+    if request.method == 'POST':
+        dept_element.name = request.form.get('name')
+        db.session.commit()
+        return redirect(url_for("department_report"))
+    return render_template('dept_edit.html', dept=dept_element, user=current_user)
 
 
 @app.route("/department_report", methods=["GET", "POST"])
@@ -844,14 +1256,14 @@ def add_department():
 @admin_only
 def department_report():
     hotel_list = departmentMaster.query.all()
-    return render_template("department_report.html", ts=hotel_list, len=range(len(hotel_list)))
+    return render_template("department_report.html", ts=hotel_list, len=range(len(hotel_list)), user=current_user)
 
 
 @app.route("/reports", methods=["GET", "POST"])
 # Mark with decorator
 @admin_only
 def reports():
-    return render_template("reports.html")
+    return render_template("reports.html", user=current_user)
 
 
 @app.route("/archives", methods=["GET", "POST"])
@@ -868,13 +1280,13 @@ def archives():
         for i in date_list:
             ts_element = db.session.query(timesheetMaster).filter_by(date=i).first()
             if not ts_element:
-                return render_template("archives.html", form=form, msg="Choose correct dates")
+                return render_template("archives.html", form=form, msg="Choose correct dates", user=current_user)
             else:
                 ts_list.append(ts_element)
 
         master_ts_list = []
         for i in range(len(employee_list)):
-            ms_dict = {"name": employee_list[i].name, "hours": []}
+            ms_dict = {"name": employee_list[i].name, "hours": [], 'hotel': []}
             for j in range(len(ts_list)):
                 ts_entry_element = db.session.query(timesheetEntryMaster).filter_by(employeeID=employee_list[i].id,
                                                                                     timesheetID=ts_list[j].id).first()
@@ -882,26 +1294,58 @@ def archives():
                     roster_element = db.session.query(rosterMaster).filter_by(date=ts_list[j].date).first()
                     if not roster_element:
                         hours = "N/A"
+                        hotel = hotelMaster.query.get(1)
                     else:
                         rs_entry_element = db.session.query(rosterEntryMaster).filter_by(employeeID=employee_list[i].id,
                                                                                          rosterID=roster_element.id).first()
                         if (not rs_entry_element) or (rs_entry_element.absent == "none"):
                             hours = "N/A"
+                            hotel = hotelMaster.query.get(1)
                         else:
                             hours = rs_entry_element.absent
+                        hotel = rs_entry_element.hotel
 
 
                 else:
                     hours_ = ts_entry_element.timeOut1 - ts_entry_element.timeIn1 + ts_entry_element.timeOut2 - ts_entry_element.timeIn2
                     hours = total_time_hrs(hours_)
+                    hotel = ts_element.hotel
 
                     # print(ts_entry_element.timeOut1)
 
                 ms_dict['hours'].append(hours)
+                ms_dict['hotel'].append(hotel)
             master_ts_list.append(ms_dict)
+            print(master_ts_list)
 
-        return render_template("masterTs.html", data=master_ts_list, dates=date_list, len=range(len(date_list)))
-    return render_template("archives.html", form=form, msg="")
+        hours_sum = []
+        for i in master_ts_list:
+            sum_hours = 0
+            for j in i['hours']:
+                print(type(j))
+                if type(j) != str:
+                    sum_hours = sum_hours + j
+
+            hours_sum.append(sum_hours)
+        print(hours_sum)
+
+        analytic_data = []
+        for i in range(len(hours_sum)):
+            total_hours = hours_sum[i]
+            extra_hours = hours_sum[i] - 260
+            total_extra = 5 * extra_hours
+            if master_ts_list[i]['hotel'][0].interval == 'monthly':
+                productivity = master_ts_list[i]['hotel'][0].rate
+            else:
+                productivity = hours_sum[i] * master_ts_list[i]['hotel'][0].rate
+
+            analytic_data_dict = {'productivity': productivity, 'total_hours': total_hours, 'extra_hours': extra_hours,
+                                  'total_extra': total_extra}
+            analytic_data.append(analytic_data_dict)
+
+        return render_template("masterTs.html", data=master_ts_list, dates=date_list, len=range(len(date_list)),
+                               user=current_user, new_data=analytic_data)
+    return render_template("archives.html", form=form, msg="", user=current_user)
 
 
 @app.route("/roster_archive", methods=["GET", "POST"])
@@ -909,7 +1353,8 @@ def archives():
 @admin_only
 def roster_archive():
     rosters_list = rosterMaster.query.all()
-    return render_template("roster_archive_list.html", rosters=rosters_list, len=range(len(rosters_list)))
+    return render_template("roster_archive_list.html", rosters=rosters_list, len=range(len(rosters_list)),
+                           user=current_user)
 
 
 @app.route("/roster_single/<roster_id>", methods=["GET", "POST"])
@@ -924,6 +1369,8 @@ def roster_single(roster_id):
     employee_list = []
     hotel_list = []
     time_lists = []
+    roster_color = {'Off': '#16FF00', 'Absent': '#FF0303', 'Sick': '#FFED00', 'Vacation': '#82CD47',
+                    'Public Holiday': '#146C94', 'Office': '#83764F'}
     for i in roster_entries:
         employee = i.employee
         hotel = i.hotel
@@ -934,10 +1381,13 @@ def roster_single(roster_id):
         to1 = getTimeStr(i.timeOut1)
         to2 = getTimeStr(i.timeOut2)
         pu = getTimeStr(i.pickUp)
-        time_dict = {'timeIn1': ti1, 'timeIn2': ti2, 'timeOut1': to1, 'timeOut2': to2, 'pickUp': pu}
+        pu2 = getTimeStr(i.pickUp2)
+        # TODO Add pickup 2
+        time_dict = {'timeIn1': ti1, 'timeIn2': ti2, 'timeOut1': to1, 'timeOut2': to2, 'pickUp': pu, 'pickUp2': pu2}
         time_lists.append(time_dict)
     return render_template("roster_entries.html", entries=roster_entries, employees=employee_list, hotels=hotel_list,
-                           len=range(len(roster_entries)), date=roster_full_date, day=roster_day, time_data=time_lists)
+                           len=range(len(roster_entries)), date=roster_full_date, day=roster_day, time_data=time_lists,
+                           user=current_user, color=roster_color)
 
 
 @app.route("/roster_single_edit/<roster_id>", methods=["GET", "POST"])
@@ -954,6 +1404,8 @@ def roster_single_edit(roster_id):
     roster_date = roster_element.date
     roster_day = datetime.datetime.strptime(roster_date, "%Y-%d-%m").strftime('%A')
     roster_full_date = datetime.datetime.strptime(roster_date, '%Y-%d-%m').strftime('%B %d, %Y')
+    roster_color = {'Off': '#16FF00', 'Absent': '#FF0303', 'Sick': '#FFED00', 'Vacation': '#82CD47',
+                    'Public Holiday': '#146C94', 'Office': '#83764F'}
     time_lists = []
     for i in roster_entries:
         roster_dict = {''}
@@ -966,12 +1418,14 @@ def roster_single_edit(roster_id):
         to1 = getTimeStr(i.timeOut1)
         to2 = getTimeStr(i.timeOut2)
         pu = getTimeStr(i.pickUp)
-        time_dict = {'timeIn1': ti1, 'timeIn2': ti2, 'timeOut1': to1, 'timeOut2': to2, 'pickUp': pu}
+        pu2 = getTimeStr(i.pickUp2)
+        # TODO Add pickup 2
+        time_dict = {'timeIn1': ti1, 'timeIn2': ti2, 'timeOut1': to1, 'timeOut2': to2, 'pickUp': pu, 'pickUp2': pu2}
         time_lists.append(time_dict)
     return render_template("roster_entries_edit.html", entries=roster_entries, employees=employee_list,
                            hotels=hotel_list,
                            len=range(len(roster_entries)), date=roster_full_date, day=roster_day, data=data_,
-                           time_data=time_lists)
+                           time_data=time_lists, user=current_user, color=roster_color)
 
 
 @app.route("/add_roster_element/<roster_id>", methods=["GET", "POST"])
@@ -987,9 +1441,11 @@ def add_roster_element(roster_id):
                                       timeIn2=getTimeInt(request.form.get('timeIn2')),
                                       timeOut2=getTimeInt(request.form.get('timeOut2')),
                                       pickUp=getTimeInt(request.form.get('pickUp')),
+                                      pickUp2=getTimeInt(request.form.get('pickUp2')),
                                       remark=request.form.get('remarks'), absent=request.form.get('absent'),
                                       employee=employee_element, roster=roster_element,
                                       hotel=hotel_element)
+        # TODO Add pick up 2
         db.session.add(new_entry)
         db.session.commit()
 
@@ -1021,7 +1477,8 @@ def timesheet_archive():
         hotel_name = hotel_element.name
         hotels.append(hotel_name)
 
-    return render_template("timesheet_archive_list.html", ts=timesheet_list, len=range(len(hotels)), hotels=hotels)
+    return render_template("timesheet_archive_list.html", user=current_user, ts=timesheet_list, len=range(len(hotels)),
+                           hotels=hotels)
 
 
 @app.route("/timesheet_single/<timesheet_id>", methods=["GET", "POST"])
@@ -1045,7 +1502,8 @@ def timesheet_single(timesheet_id):
         to2 = getTimeStr(i.timeOut2)
         time_dict = {'timeIn1': ti1, 'timeIn2': ti2, 'timeOut1': to1, 'timeOut2': to2}
         time_lists.append(time_dict)
-    return render_template("timesheet_entries.html", entries=timesheet_entries, employees=employee_list,
+    return render_template("timesheet_entries.html", user=current_user, entries=timesheet_entries,
+                           employees=employee_list,
                            hotel_name=hotel_name,
                            len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, time_data=time_lists)
 
@@ -1079,7 +1537,7 @@ def timesheet_single_edit(timesheet_id):
     return render_template("timesheet_entries_edit.html", entries=timesheet_entries, employees=employee_list,
                            hotel_name=hotel_name,
                            len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, data=data_,
-                           time_data=time_lists)
+                           time_data=time_lists, user=current_user)
 
 
 @app.route("/add_ts_element/<ts_id>", methods=["GET", "POST"])
@@ -1138,7 +1596,7 @@ def employee_report():
         department_name = department_element.name
         department.append(department_name)
     return render_template("employee_report.html", ts=employee_list, len=range(len(department)), departments=department,
-                           data=data)
+                           data=data, user=current_user)
 
 
 @app.route("/employee_edit/<employee_id>", methods=["GET", "POST"])
@@ -1175,6 +1633,8 @@ def employee_edit(employee_id):
         else:
             car_rent = False
         a_date = datetime.datetime.strptime(request.form.get('joining_date'), '%Y-%m-%d').date()
+        department_ = request.form.get("department_e")
+        department = db.session.query(departmentMaster).filter_by(name=department_).first()
         employee_element.name = request.form.get("name")
         employee_element.addressUae = request.form.get('address_uae')
         employee_element.poBox = request.form.get('po_box')
@@ -1202,10 +1662,11 @@ def employee_edit(employee_id):
         employee_element.company_laptop = request.form.get('company_laptop')
         employee_element.company_mobile = request.form.get('company_mobile')
         employee_element.user = current_user
+        employee_element.department = department
         db.session.commit()
         return redirect(url_for("employee_report"))
     return render_template("employee_edit.html", data=employee_element, form=form, date_str=date_str,
-                           nationality=nationality_, passport=passport_, mob_det=mob_det)
+                           nationality=nationality_, passport=passport_, mob_det=mob_det, user=current_user)
 
 
 @app.route("/employee_view/<employee_id>", methods=["GET", "POST"])
@@ -1218,6 +1679,8 @@ def employee_view(employee_id):
     date_str = a[:10]
     actionItems = db.session.query(actionItemMaster).filter_by(employeeID=employee_id).all()
     doc_element = db.session.query(documentMaster).filter_by(employeeID=employee_id).first()
+    img_element = db.session.query(Img).filter_by(employeeID=employee_id).first()
+    img_id = int(img_element.id)
     # img_url = doc_element.documentName
     img_url = "file:///C:/Users/karth/Downloads/Images/1image.jpg"
     # get total hours worked
@@ -1266,8 +1729,8 @@ def employee_view(employee_id):
         return redirect(url_for("employee_view", employee_id=employee_id))
 
     return render_template("employee_view.html", employee=employee_element, form=form, date_str=date_str,
-                           workedHours=totalHours, profile=round(profilePercent, 0), items=actionItems, img_url=img_url,
-                           len=range(len(actionItems)))
+                           workedHours=totalHours, profile=round(profilePercent, 0), items=actionItems, img_url=img_id,
+                           len=range(len(actionItems)), user=current_user)
 
 
 @app.route("/employee_delete/<employee_id>", methods=["GET", "POST"])
@@ -1275,6 +1738,8 @@ def employee_view(employee_id):
 @admin_only
 def employee_delete(employee_id):
     entry_to_delete = employeeMaster.query.get(employee_id)
+    img__ = db.session.query(Img).filter_by(employeeID=employee_id).first()
+    # db.session.delete(img__)
     db.session.delete(entry_to_delete)
     db.session.commit()
     return redirect(url_for("employee_report"))

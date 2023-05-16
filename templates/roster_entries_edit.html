@@ -6,7 +6,7 @@
 
   <div class="welcome">
     <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: xyz123</span>
+    <span>Welcome: {{user.name}}</span>
   </div>
 
   <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Roster Archives Edit</h1>
@@ -33,10 +33,11 @@
   </div>
   <div class="row">
     <div class="col-1"><p>S. No.</p></div>
-    <div class="col-3"><p>Staff</p></div>
-    <div class="col-3"><p>Hotel</p></div>
+    <div class="col-2"><p>Staff</p></div>
+    <div class="col-2"><p>Hotel</p></div>
     <div class="col-2"><p>Duty Time</p></div>
-    <div class="col-2"><p>Pick-Up Time</p></div>
+    <div class="col-2"><p>Pick-Up Time1</p></div>
+    <div class="col-2"><p>Pick-Up Time2</p></div>
     <div class="col-1">Remark</div>
   </div>
 
@@ -44,19 +45,20 @@
     {% for i in len %}
       {% if entries[i].absent == 'none' %}
         <div class="col-1"><p>{{ i + 1 }}</p></div>
-        <div class="col-3"><p>{{ employees[i] }}</p></div>
-        <div class="col-3"><p>{{ hotels[i] }}</p></div>
+        <div class="col-2"><p>{{ employees[i] }}</p></div>
+        <div class="col-2"><p>{{ hotels[i] }}</p></div>
         {% if time_data[i].timeIn2 == '00:00' %}
           <div class="col-2"><p>{{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}</p></div>
         {% else %}
           <div class="col-2"><p>{{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}/{{ time_data[i].timeIn2 }} - {{ time_data[i].timeOut2 }}</p></div>
         {% endif %}
         <div class="col-2"><p>{{ time_data[i].pickUp }}</p></div>
+        <div class="col-2"><p>{{ time_data[i].pickUp2 }}</p></div>
         <div class="col-1">{{ entries[i].remark }}</div>
       {% else %}
         <div class="col-1"><p>{{ i + 1 }}</p></div>
         <div class="col-3"><p>{{ employees[i] }}</p></div>
-        <div class="col-8" style="text-align: center; background-color: yellow;"><p>{{ entries[i].absent }}</p></div>
+        <div class="col-8" style="text-align: center; background-color: {{color[entries[i].absent]}};"><p>{{ entries[i].absent }}</p></div>
       {% endif %}
     {% endfor %}
   </div>
@@ -68,9 +70,10 @@
               <div class="col-1"><label for="hotel">Hotel:</label></div>
               <div class="col-1"><label for="timeIn1">TimeIn1:</label></div>
               <div class="col-1"><label for="timeOut1">TimeOut1:</label></div>
+              <div class="col-1"><label for="pickUp">Pick Up:</label></div>
               <div class="col-1"><label for="timeIn2">TimeIn2:</label></div>
               <div class="col-1"><label for="timeOut2">TimeOut2:</label></div>
-              <div class="col-1"><label for="pickUp">Pick Up:</label></div>
+              <div class="col-1"><label for="pickUp2">Pick Up 2:</label></div>
               <div class="col-1"><label for="remarks">Remarks:</label></div>
               <div class="col-1"><label for="absent">Absence Reason: </label></div>
           </div>
@@ -91,9 +94,10 @@
               </div>
               <div class="col-1"><input type="time" id="timeIn1" name="timeIn1" style="width: 90px;" value="00:00"></div>
               <div class="col-1"><input type="time" id="timeOut1" name="timeOut1" style="width: 90px;" value="00:00"></div>
+              <div class="col-1"><input type="time" id="pickUp" name="pickUp" style="width: 90px;" value="00:00"><br></div>
               <div class="col-1"><input type="time" id="timeIn2" name="timeIn2" style="width: 90px;" value="00:00"></div>
               <div class="col-1"><input type="time" id="timeOut2" name="timeOut2" style="width: 90px;" value="00:00"></div>
-              <div class="col-1"><input type="time" id="pickUp" name="pickUp" style="width: 90px;" value="00:00"><br></div>
+              <div class="col-1"><input type="time" id="pickUp2" name="pickUp2" style="width: 90px;" value="00:00"><br></div>
               <div class="col-1"><input type="text" id="remarks" name="remarks" style="width: 90px;" value="-"><br></div>
               <div class="col-1">
                   <select name="absent" id="absent" style="width: 90px;">

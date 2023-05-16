@@ -10,31 +10,36 @@
     <span>Welcome: {{user.name}}</span>
   </div>
 
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Add Hotel</h1>
+  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Edit Hotel</h1>
   <!-- buttons -->
 
   </div>
-  <form action="/add_hotel" method="post">
+  <form action="/edit_hotel/{{hotel.id}}" method="post">
       <div class="row" style="margin-bottom: 100px;">
           <div class="col-2 abut">
               <label for="name">Hotel Name: </label>
           </div>
           <div class="col-2 bbut">
-              <input type="text" id="name" name="name">
+              <input type="text" id="name" name="name" value="{{hotel.name}}">
           </div>
           <div class="col-2 abut">
               <label for="address">Address: </label>
           </div>
           <div class="col-2 bbut">
-              <input type="text" id="address" name="address">
+              <input type="text" id="address" name="address" value="{{hotel.address}}">
           </div>
           <div class="col-2 abut">
               <label for="interval">Interval: </label>
           </div>
           <div class="col-2 bbut">
               <select name="interval" id="interval">
-                  <option value="hourly">Hourly</option>
-                  <option value="monthly">Monthly</option>
+                  {% if hotel.interval == 'hourly' %}
+                      <option value="hourly" selected>Hourly</option>
+                      <option value="monthly">Monthly</option>
+                  {% else %}
+                      <option value="hourly">Hourly</option>
+                      <option value="monthly" selected>Monthly</option>
+                  {% endif %}
               </select>
           </div>
           <br><br>
@@ -42,10 +47,10 @@
               <label for="rate">Rate: </label>
           </div>
           <div class="col-2 bbut">
-              <input type="text" id="rate" name="rate" value="">
+              <input type="text" id="rate" name="rate" value="{{hotel.rate}}">
           </div>
           <div class="col-2" style="text-align: right">
-              <button type="submit" style="text-align: right">Submit </button>
+              <button type="submit">Submit</button>
           </div>
       </div>
 

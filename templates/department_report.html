@@ -8,20 +8,25 @@
 
   <div class="welcome">
     <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: xyz123</span>
+    <span>Welcome: {{user.name}}</span>
   </div>
 
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Hotels</h1>
+  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Departments</h1>
 
   <div class="row" style="margin-bottom: 50px; margin-left: 100px; font-size: 1.5rem; text-align: center;">
-    <div class="col-4"><p><em>S. No.</em></p></div>
-    <div class="col-4"><p><em>Name</em></p></div>
+    <div class="col-2"><p><em>S. No.</em></p></div>
+    <div class="col-2"><p><em>Name</em></p></div>
+    <div class="col-2"><h3>ID</h3></div>
+    <div class="col-2"><h3>Edit</h3></div>
+    <div class="col-2"><h3>Delete</h3></div>
   </div>
   {% for i in len %}
       <div class="row" style="margin-bottom: 50px; margin-left: 100px; text-align: center;">
-        <div class="col-4"><p>{{i + 1}}</p></div>
-        <div class="col-4"><p>{{ ts[i].name }}</p></div>
-        <div class="col-4"><p>{{ ts[i].id }}</p></div>
+        <div class="col-2"><p>{{i + 1}}</p></div>
+        <div class="col-2"><p>{{ ts[i].name }}</p></div>
+        <div class="col-2"><p>{{ ts[i].id }}</p></div>
+        <div class="col-2"><p><a href="{{url_for('edit_dept', dept_id=ts[i].id)}}">Edit</a></p></div>
+        <div class="col-2"><p><a href="{{url_for('del_dept', dept_id=ts[i].id)}}">Delete</a></p></div>
       </div>
   {% endfor %}
 

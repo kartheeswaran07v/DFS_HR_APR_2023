@@ -10,20 +10,20 @@
     <span>Welcome: {{user.name}}</span>
   </div>
 
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Add Hotel</h1>
+  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Edit Department</h1>
   <!-- buttons -->
 
   </div>
-  <form action="/add_department" method="post">
+  <form action="/edit_dept/{{dept.id}}" method="post">
       <div class="row" style="margin-bottom: 100px;">
           <div class="col-2 abut">
               <label for="name">Department Name: </label>
           </div>
           <div class="col-2 bbut">
-              <input type="text" id="name" name="name">
+              <input type="text" id="name" name="name" value="{{dept.name}}">
           </div>
           <div class="col-2">
-              <button type="submit">Add Department</button>
+              <button type="submit">Edit Department</button>
           </div>
       </div>
 

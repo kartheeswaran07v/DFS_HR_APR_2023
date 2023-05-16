@@ -24,10 +24,10 @@
         <p>{{ form.remarks.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.date }}</p>
-        <p>{{ form.name }}</p>
-        <p>{{ form.pow }}</p>
-        <p>{{ form.remarks }}</p>
+        <p>{{ form.date(value=date_str[0]) }}</p>
+        <p>{{ form.name(value=data.name) }}</p>
+        <p>{{ form.pow(value=data.pw)  }}</p>
+        <p>{{ form.remarks(value=data.remarks)  }}</p>
       </div>
       <div class="col-lg-3 con2">
         <br>
@@ -37,9 +37,9 @@
       </div>
       <div class="col-lg-3">
         <br>
-        <p>{{ form.emp_no }}</p>
+        <p>{{ form.emp_no(value=data.emp_no)  }}</p>
         <br>
-        <p>{{ form.days_req }}</p>
+        <p>{{ form.days_req(value=data.days_req)  }}</p>
       </div>
     </div>
 
@@ -48,7 +48,7 @@
     <div class="persDet row">
       <div class="col-lg-12">
         <p>
-          This is to acknowledge that the udersigned herewith guarantees:
+          This is to acknowledge that the undersigned herewith guarantees:
         </p>
       </div>
 
@@ -58,9 +58,9 @@
         <p>{{ form.g1_id_no.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.g1_name }}</p>
-        <p>{{ form.g1_dept }}</p>
-        <p>{{ form.g1_id_no }}</p>
+        <p>{{ form.g1_name(value=data.g1_name)  }}</p>
+        <p>{{ form.g1_dept(value=data.g1_dept)  }}</p>
+        <p>{{ form.g1_id_no(value=data.g1_id_no)  }}</p>
       </div>
       <div class="col-lg-3 con2">
         <p>{{ form.g2_name.label() }}</p>
@@ -68,14 +68,14 @@
         <p>{{ form.g2_id_no.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.g2_name }}</p>
-        <p>{{ form.g2_dept }}</p>
-        <p>{{ form.g2_id_no }}</p>
+        <p>{{ form.g2_name(value=data.g2_name)  }}</p>
+        <p>{{ form.g2_dept(value=data.g2_dept)  }}</p>
+        <p>{{ form.g2_id_no(value=data.g2_id_no)  }}</p>
       </div>
 
       <div class="col-lg-12">
         <p>
-          The guarantors assures that incase the emloyee fails to return the passport on due date, the employee will bear the cost of absconding/visa charges/advances/loans any other dues from employee to company.
+          The guarantors assures that incase the employee fails to return the passport on due date, the employee will bear the cost of absconding/visa charges/advances/loans any other dues from employee to company.
         </p>
       </div>
     </div>
@@ -92,10 +92,10 @@
         <p>{{ form.dir_op.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.checked_by }}</p>
-        <p>{{ form.appr_by_lm }}</p>
-        <p>{{ form.appr_by_hr }}</p>
-        <p>{{ form.dir_op }}</p>
+        <p>{{ form.checked_by(value=data.checked_by)  }}</p>
+        <p>{{ form.appr_by_lm(value=data.appr_by_lm)  }}</p>
+        <p>{{ form.appr_by_hr(value=data.appr_by_hr)  }}</p>
+        <p>{{ form.dir_op(value=data.dir_op)  }}</p>
       </div>
 
 
@@ -113,10 +113,10 @@
         <p>{{ form.date_lc_rec.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.pass_rec }}</p>
-        <p>{{ form.date_pass_rec }}</p>
-        <p>{{ form.lc_rec }}</p>
-        <p>{{ form.date_lc_rec }}</p>
+        <p>{{ form.pass_rec(value=data.pass_rec)  }}</p>
+        <p>{{ form.date_pass_rec(value=date_str[1])  }}</p>
+        <p>{{ form.lc_rec(value=date_str[2])  }}</p>
+        <p>{{ form.date_lc_rec(value=data.dir_op)  }}</p>
       </div>
 
     </div>
@@ -133,10 +133,10 @@
         <p>{{ form.date_lc_rec_e.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.pass_rec_e }}</p>
-        <p>{{ form.date_pass_rec_e }}</p>
-        <p>{{ form.lc_rec_e }}</p>
-        <p>{{ form.date_lc_rec_e }}</p>
+        <p>{{ form.pass_rec_e(value=data.pass_rec_e) }}</p>
+        <p>{{ form.date_pass_rec_e(value=date_str[3]) }}</p>
+        <p>{{ form.lc_rec_e(value=data.lc_rec_e) }}</p>
+        <p>{{ form.date_lc_rec_e(value=date_str[4]) }}</p>
       </div>
 
     </div>

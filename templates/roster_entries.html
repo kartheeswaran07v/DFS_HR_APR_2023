@@ -6,7 +6,7 @@
 
   <div class="welcome">
     <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: xyz123</span>
+    <span>Welcome: {{user.name}}</span>
   </div>
 
 
@@ -60,7 +60,7 @@
       {% else %}
         <div class="col-1"><p>{{ i + 1 }}</p></div>
         <div class="col-3"><p>{{ employees[i] }}</p></div>
-        <div class="col-8" style="text-align: center; background-color: yellow;"><p>{{ entries[i].absent }}</p></div>
+        <div class="col-8" style="text-align: center; background-color: {{color[entries[i].absent]}};"><p>{{ entries[i].absent }}</p></div>
       {% endif %}
     {% endfor %}
   </div>

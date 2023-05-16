@@ -6,7 +6,7 @@
 
   <div class="welcome">
     <span>Dashfix | <a href="{{ url_for('home') }}">Home</a></span>
-    <span>Welcome: xyz123</span>
+    <span>Welcome: {{user.name}}</span>
   </div>
 
   <form action="" method="post">
@@ -16,6 +16,7 @@
           <div class="col-lg-3 con1">
               <p>{{ form.name.label() }}</p>
               <p>{{ form.joining_date.label() }}</p>
+              <p>{{ form.department_e.label() }}</p>
               <p>{{ form.employee_id.label() }}</p>
               <p>{{ form.address_uae.label() }}</p>
               <p>{{ form.po_box.label() }}</p>
@@ -33,6 +34,7 @@
           <div class="col-lg-3">
               <p>{{ form.name(value='-') }}</p>
               <p>{{ form.joining_date(value='2023-01-01') }}</p>
+              <p>{{ form.department_e }}</p>
               <p>{{ form.employee_id(value='-') }}</p>
               <p>{{ form.address_uae(value='-') }}</p>
               <p>{{ form.po_box(value='-') }}</p>
