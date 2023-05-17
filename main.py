@@ -379,7 +379,7 @@ class rosterEntryMaster(db.Model):
 
 
 
-db.create_all()
+# db.create_all()
 
 
 # Forms
