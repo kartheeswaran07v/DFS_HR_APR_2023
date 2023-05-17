@@ -379,7 +379,6 @@ class rosterEntryMaster(db.Model):
     hotel = relationship("hotelMaster", back_populates="rosterEntry")
 
 
-
 db.create_all()
 
 
@@ -1667,7 +1666,8 @@ def employee_edit(employee_id):
         db.session.commit()
         return redirect(url_for("employee_report"))
     return render_template("employee_edit.html", data=employee_element, form=form, date_str=date_str,
-                           nationality=nationality_, passport=passport_, mob_det=mob_det, user=current_user, depts=department_name)
+                           nationality=nationality_, passport=passport_, mob_det=mob_det, user=current_user,
+                           depts=department_name)
 
 
 @app.route("/employee_view/<employee_id>", methods=["GET", "POST"])
@@ -1680,7 +1680,8 @@ def employee_view(employee_id):
     date_str = a[:10]
     actionItems = db.session.query(actionItemMaster).filter_by(employeeID=employee_id).all()
     doc_element = db.session.query(documentMaster).filter_by(employeeID=employee_id).first()
-    img_element = db.session.query(Img).filter_by(employeeID=employee_id).first()
+    img_element__ = db.session.query(Img).filter_by(employeeID=employee_id).all()
+    img_element = img_element__[-1]
     if img_element:
         img_id = int(img_element.id)
         # img_url = doc_element.documentName
