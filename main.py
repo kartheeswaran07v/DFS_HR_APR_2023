@@ -1687,6 +1687,7 @@ def employee_view(employee_id):
     else:
         img_url = 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
     # get total hours worked
+    print(img_url)
     ts_employee = db.session.query(timesheetEntryMaster).filter_by(employeeID=employee_id).all()
     totalHours = 0
     for i in ts_employee:
