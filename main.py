@@ -22,7 +22,7 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///dfx_may_17.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///dfx_may_17_23.db")
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///dfx_db_seis.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -207,6 +207,7 @@ class documentMaster(db.Model):
 
 
 class Img(db.Model):
+    __tablename__ = "Img"
     id = Column(Integer, primary_key=True)
     img = Column(Text, nullable=False)
     name = Column(Text, nullable=False)
@@ -379,7 +380,7 @@ class rosterEntryMaster(db.Model):
 
 
 
-# db.create_all()
+db.create_all()
 
 
 # Forms
