@@ -688,7 +688,10 @@ def registration():
     form = RegistrationForm()
     if request.method == "POST":
         department_ = request.form.get("department_e")
-        department = db.session.query(departmentMaster).filter_by(name=department_).first()
+        if department_:
+            department = db.session.query(departmentMaster).filter_by(name=department_).first()
+        else:
+            department = db.session.query(departmentMaster).filter_by(id=1).first()
         a_date = datetime.datetime.strptime(request.form.get('joining_date'), '%Y-%m-%d').date()
         nationality_passportNo = f"{request.form.get('nationality')}+{request.form.get('passport_no')}"
         mobile_string = f"{request.form.get('e_uae_addr')}+{request.form.get('mobile_p')}+{request.form.get('mobile_h')}+{request.form.get('e_uae_mob')}+{request.form.get('e_co_mob')}"
