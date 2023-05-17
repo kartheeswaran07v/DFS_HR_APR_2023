@@ -208,7 +208,7 @@ class documentMaster(db.Model):
 
 class Img(db.Model):
     id = Column(Integer, primary_key=True)
-    img = Column(Text, unique=True, nullable=False)
+    img = Column(Text, nullable=False)
     name = Column(Text, nullable=False)
     mimetype = Column(Text, nullable=False)
     employeeID = Column(Integer)
@@ -378,7 +378,7 @@ class rosterEntryMaster(db.Model):
     hotel = relationship("hotelMaster", back_populates="rosterEntry")
 
 
-# db.create_all()
+db.create_all()
 
 
 # Forms
@@ -472,48 +472,38 @@ class PassportForm(FlaskForm):
     remarks = StringField("Remarks")
 
     # guarantors
-    g1_name = SelectField(u'Name: ',
-                          choices=employee_name)
+    g1_name = StringField(u'Name: ')
     g1_dept = StringField("Department: ")
     g1_id_no = IntegerField("ID No.: ")
     # g1_sign = IntegerField("Sign and Date")
-    g2_name = SelectField(u'Name: ',
-                          choices=employee_name)
+    g2_name = StringField(u'Name: ')
     g2_dept = StringField("Department: ")
     g2_id_no = IntegerField("ID No.: ")
     # g2_sign = IntegerField("Sign and Date")
 
     # approval
-    checked_by = SelectField(u"Checked By | Name: ",
-                             choices=employee_name)
+    checked_by = StringField(u"Checked By | Name: ")
     # checked_by_sign = StringField("Sign: ")
-    appr_by_lm = SelectField(u"Approved By | Line Manager: ",
-                             choices=employee_name)
+    appr_by_lm = StringField(u"Approved By | Line Manager: ")
     # appr_by_lm_sign = StringField("Sign: ")
-    appr_by_hr = SelectField(u"Approved By | HR Manager: ",
-                             choices=employee_name)
+    appr_by_hr = StringField(u"Approved By | HR Manager: ")
     # appr_by_hr_sign = StringField("Sign: ")
-    dir_op = SelectField(u"CEO: ",
-                         choices=employee_name)
+    dir_op = StringField(u"CEO: ")
     # dir_op_sign = StringField("Sign")
 
     # issue
-    pass_rec = SelectField(u"Passport Received | Name: ",
-                           choices=employee_name)
+    pass_rec = StringField(u"Passport Received | Name: ")
     date_pass_rec = DateField('Date: ')
-    lc_rec = SelectField(u"Labor Card Received by HRD: ",
-                         choices=employee_name)
+    lc_rec = StringField(u"Labor Card Received by HRD: ")
     date_lc_rec = DateField("Date: ")
 
     # sign_pass = StringField("Signature: ")
     # sign_lc = StringField("Signature: ")
 
     # return
-    pass_rec_e = SelectField(u"Passport Received | Name: ",
-                             choices=employee_name)
+    pass_rec_e = StringField(u"Passport Received | Name: ")
     date_pass_rec_e = DateField('Date: ')
-    lc_rec_e = SelectField(u"Labor Card Received by Employee: ",
-                           choices=employee_name)
+    lc_rec_e = StringField(u"Labor Card Received by Employee: ")
     date_lc_rec_e = DateField("Date: ")
 
     # sign_pass_e = StringField("Signature: ")
@@ -939,6 +929,9 @@ def leaveEdit(leave_id):
 @admin_only
 def passport():
     form = PassportForm()
+    employees = employeeMaster.query.all()
+    entries = [i.name for i in employees]
+
     if form.validate_on_submit():
         employee = db.session.query(employeeMaster).filter_by(name=form.name.data).first()
 
@@ -972,7 +965,7 @@ def passport():
         db.session.add(new_pp)
         db.session.commit()
         redirect(url_for('passportList'))
-    return render_template("passport.html", form=form, user=current_user)
+    return render_template("passport.html", form=form, user=current_user, entries=entries)
 
 
 @app.route('/pp-list', methods=["GET", "POST"])

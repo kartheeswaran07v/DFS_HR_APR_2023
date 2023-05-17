@@ -58,7 +58,12 @@
         <p>{{ form.g1_id_no.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.g1_name }}</p>
+        <p>{{ form.g1_name(list="id_datalist") }}</p>
+        <datalist id="id_datalist">
+          {% for entry in entries %}
+            <option value="{{ entry }}">
+          {% endfor %}
+        </datalist>
         <p>{{ form.g1_dept }}</p>
         <p>{{ form.g1_id_no }}</p>
       </div>
@@ -68,7 +73,7 @@
         <p>{{ form.g2_id_no.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.g2_name }}</p>
+        <p>{{ form.g2_name(list="id_datalist") }}</p>
         <p>{{ form.g2_dept }}</p>
         <p>{{ form.g2_id_no }}</p>
       </div>
@@ -92,10 +97,10 @@
         <p>{{ form.dir_op.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.checked_by }}</p>
-        <p>{{ form.appr_by_lm }}</p>
-        <p>{{ form.appr_by_hr }}</p>
-        <p>{{ form.dir_op }}</p>
+        <p>{{ form.checked_by(list="id_datalist") }}</p>
+        <p>{{ form.appr_by_lm(list="id_datalist") }}</p>
+        <p>{{ form.appr_by_hr(list="id_datalist") }}</p>
+        <p>{{ form.dir_op(list="id_datalist") }}</p>
       </div>
 
 
@@ -113,9 +118,9 @@
         <p>{{ form.date_lc_rec.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.pass_rec }}</p>
+        <p>{{ form.pass_rec(list="id_datalist") }}</p>
         <p>{{ form.date_pass_rec }}</p>
-        <p>{{ form.lc_rec }}</p>
+        <p>{{ form.lc_rec(list="id_datalist") }}</p>
         <p>{{ form.date_lc_rec }}</p>
       </div>
 
@@ -133,9 +138,9 @@
         <p>{{ form.date_lc_rec_e.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.pass_rec_e }}</p>
+        <p>{{ form.pass_rec_e(list="id_datalist") }}</p>
         <p>{{ form.date_pass_rec_e }}</p>
-        <p>{{ form.lc_rec_e }}</p>
+        <p>{{ form.lc_rec_e(list="id_datalist") }}</p>
         <p>{{ form.date_lc_rec_e }}</p>
       </div>
 
