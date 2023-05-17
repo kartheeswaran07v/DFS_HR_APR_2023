@@ -34,7 +34,12 @@
           <div class="col-lg-3">
               <p>{{ form.name(value=data.name) }}</p>
               <p>{{ form.joining_date(value=date_str) }}</p>
-              <p>{{ form.department_e(value=data.department.name)}}</p>
+              <p>{{ form.department_e(value=data.department.name, list="id_datalist")}}</p>
+              <datalist id="id_datalist">
+                  {% for entry in depts %}
+                    <option value="{{ entry }}">
+                  {% endfor %}
+              </datalist>
               <p>{{ form.employee_id(value=data.employeeID) }}</p>
               <p>{{ form.address_uae(value=data.addressUae) }}</p>
               <p>{{ form.po_box(value=data.poBox) }}</p>

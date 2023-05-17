@@ -520,8 +520,7 @@ class RegistrationForm(FlaskForm):
     print(department_name)
     name = StringField("Name:       ", validators=[DataRequired()])
     joining_date = DateField("Joining Date:")
-    department_e = SelectField(u"Department: ",
-                               choices=department_name)
+    department_e = StringField(u"Department: ")
     employee_id = StringField("Employee ID: ")
     address_uae = StringField("Address UAE:     ", validators=[DataRequired()])
     po_box = StringField("P. O. Box:    ", validators=[DataRequired()])
@@ -677,6 +676,8 @@ def home():
 @admin_only
 def registration():
     form = RegistrationForm()
+    department_ = departmentMaster.query.all()
+    department_name = [i.name for i in department_]
     if request.method == "POST":
         department_ = request.form.get("department_e")
         if department_:
@@ -729,7 +730,7 @@ def registration():
         db.session.commit()
         return render_template("upload_doc.html", name=form.name.data, user=current_user)
 
-    return render_template("reg2.html", form=form, user=current_user)
+    return render_template("reg2.html", form=form, user=current_user, depts=department_name)
 
 
 @app.route("/doc", methods=["GET", "POST"])
@@ -1601,6 +1602,8 @@ def employee_report():
 @admin_only
 def employee_edit(employee_id):
     form = RegistrationForm()
+    department_ = departmentMaster.query.all()
+    department_name = [i.name for i in department_]
     employee_element = employeeMaster.query.get(employee_id)
     print(employee_element.joining_date)
     a = str(employee_element.joining_date)
@@ -1663,7 +1666,7 @@ def employee_edit(employee_id):
         db.session.commit()
         return redirect(url_for("employee_report"))
     return render_template("employee_edit.html", data=employee_element, form=form, date_str=date_str,
-                           nationality=nationality_, passport=passport_, mob_det=mob_det, user=current_user)
+                           nationality=nationality_, passport=passport_, mob_det=mob_det, user=current_user, depts=department_name)
 
 
 @app.route("/employee_view/<employee_id>", methods=["GET", "POST"])
