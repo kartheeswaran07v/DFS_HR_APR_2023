@@ -1683,9 +1683,12 @@ def employee_view(employee_id):
     actionItems = db.session.query(actionItemMaster).filter_by(employeeID=employee_id).all()
     doc_element = db.session.query(documentMaster).filter_by(employeeID=employee_id).first()
     img_element = db.session.query(Img).filter_by(employeeID=employee_id).first()
-    img_id = int(img_element.id)
-    # img_url = doc_element.documentName
-    img_url = "file:///C:/Users/karth/Downloads/Images/1image.jpg"
+    if img_element:
+        img_id = int(img_element.id)
+        # img_url = doc_element.documentName
+        img_url = f"https://dfshr.herokuapp.com/image/{img_id}"
+    else:
+        img_url = 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
     # get total hours worked
     ts_employee = db.session.query(timesheetEntryMaster).filter_by(employeeID=employee_id).all()
     totalHours = 0
@@ -1732,7 +1735,7 @@ def employee_view(employee_id):
         return redirect(url_for("employee_view", employee_id=employee_id))
 
     return render_template("employee_view.html", employee=employee_element, form=form, date_str=date_str,
-                           workedHours=totalHours, profile=round(profilePercent, 0), items=actionItems, img_url=img_id,
+                           workedHours=totalHours, profile=round(profilePercent, 0), items=actionItems, img_url=img_url,
                            len=range(len(actionItems)), user=current_user)
 
 
