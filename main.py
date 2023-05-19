@@ -755,7 +755,7 @@ def doc():
         # UPLOAD_FOLDER = f"{home_directory}/{directory}"
         # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
         directory__ = request.form.get('directory')
-        path = os.path.join(directory__, directory)
+        path = os.path.join(directory__ + '\\' + directory)
         print(f"path for uploading folder: {path}")
         # os.mkdir(path)
         UPLOAD_FOLDER = f"{directory__}"
