@@ -1869,8 +1869,10 @@ def employee_view(employee_id):
             leaves_taken = 0
 
         t_leaves += leaves_taken
-
-    total_leaves_pending = int(detail_element.total_leaves) - t_leaves
+    if detail_element.total_leaves:
+        total_leaves_pending = int(detail_element.total_leaves) - t_leaves
+    else:
+        total_leaves_pending = 0
     if form.validate_on_submit():
         newActionItem = actionItemMaster(actionText=form.content.data, employee=employee_element)
         db.session.add(newActionItem)
