@@ -756,8 +756,8 @@ def doc():
         # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
         directory__ = request.form.get('directory')
         path = os.path.join(directory__, directory)
-        os.mkdir(path)
-        UPLOAD_FOLDER = f"{directory__}\\{directory}"
+        # os.mkdir(path)
+        UPLOAD_FOLDER = f"{directory__}"
         app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
         files = request.files.getlist("file")  # other multiple files
