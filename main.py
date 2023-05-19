@@ -757,14 +757,16 @@ def doc():
         directory__ = request.form.get('directory')
         path = os.path.join(directory__ + '\\' + directory)
         print(f"path for uploading folder: {path}")
-        # os.mkdir(path)
         UPLOAD_FOLDER = f"{directory__}"
         app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
         app.config['UPLOAD_PATH'] = f'\\uploads'
         base_path = os.path.dirname(__file__)
-
         path_ = os.path.join(base_path, app.config['UPLOAD_PATH'])
-        os.mkdir(path_)
+        try:
+            os.mkdir(path_)
+            os.mkdir(path)
+        except:
+            pass
 
         files = request.files.getlist("file")  # other multiple files
         pic = request.files.get('photo')  # photo file
@@ -778,7 +780,7 @@ def doc():
         for file in files:
             if file:
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(base_path, app.config['UPLOAD_PATH'], filename))
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # Save pic in folder
 
         # new_doc = documentMaster(documentName=photo, documentDirectory=UPLOAD_FOLDER, employee=employee_element)
