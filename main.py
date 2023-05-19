@@ -771,7 +771,7 @@ def doc():
         db.session.commit()
         # photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
         for file in files:
-            file.save(f"{UPLOAD_FOLDER}\\{file.filename}")
+            file.save(f"{app.config['UPLOAD_FOLDER']}\\{file.filename}")
         # Save pic in folder
 
         # new_doc = documentMaster(documentName=photo, documentDirectory=UPLOAD_FOLDER, employee=employee_element)
