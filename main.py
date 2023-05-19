@@ -399,7 +399,7 @@ class rosterEntryMaster(db.Model):
     hotel = relationship("hotelMaster", back_populates="rosterEntry")
 
 
-db.create_all()
+# db.create_all()
 ##
 
 
