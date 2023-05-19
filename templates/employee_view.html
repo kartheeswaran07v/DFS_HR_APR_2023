@@ -28,11 +28,12 @@
   <div class="row">
       <div class="col-6">
         <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Worked Hours: {{ workedHours }}</p></div>
-        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Payments Done: Rs. 50000</p></div>
-        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Payments Pending: Rs. 25000</p></div><br>
-        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Leaves Pending: 20</p></div>
-        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Visa Expiry: ############</p></div>
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Payments Done: {{details.payments_done}}</p></div>
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Payments Pending: {{details.payments_pending}}</p></div><br>
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Leaves Pending: {{p_l}}</p></div>
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Visa Expiry: {{details.visa_expiry}}</p></div>
         <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Profile Completion: {{ profile }}%</p></div>
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><a href="{{url_for('employee_details', employee_id=employee.id)}}">Edit Details</a></div>
 
       </div>
       <div class="col-6">

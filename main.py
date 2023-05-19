@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, jsonify, Response
+from flask import Flask, render_template, redirect, url_for, send_file, flash, request, jsonify, Response
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from forms import *
@@ -12,6 +12,7 @@ from functools import wraps
 from flask import abort
 from werkzeug.utils import secure_filename
 import os
+from roster_sheet import create_roster
 
 home_directory = os.path.expanduser('~')
 
@@ -22,7 +23,7 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///dfx_may_17_23.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///dfx_may_19.db")
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///dfx_db_seis.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -140,6 +141,8 @@ class employeeMaster(db.Model):
     timesheet = relationship("timesheetEntryMaster", back_populates="employee")
     # TODO 6 - Roster Entry master
     roster = relationship("rosterEntryMaster", back_populates="employee")
+    # TODO 7 - Employee details
+    details = relationship("employeeDetails", back_populates="employee")
 
 
 class rosterMaster(db.Model):
@@ -204,6 +207,23 @@ class documentMaster(db.Model):
     # relationships as child
     employeeID = Column(Integer, ForeignKey("employeeMaster.id"))
     employee = relationship("employeeMaster", back_populates="document")
+
+
+class employeeDetails(db.Model):
+    __tablename__ = "employeeDetails"
+    id = Column(Integer, primary_key=True)
+    payments_done = Column(String(300))
+    payments_pending = Column(String(300))
+    total_leaves = Column(String(300))
+    visa_expiry = Column(String(300))
+    dummy1 = Column(String(300))
+    dummy2 = Column(String(300))
+    dummy3 = Column(String(300))
+    dummy4 = Column(String(300))
+
+    # relationships as child
+    employeeID = Column(Integer, ForeignKey("employeeMaster.id"))
+    employee = relationship("employeeMaster", back_populates="details")
 
 
 class Img(db.Model):
@@ -726,7 +746,12 @@ def registration():
             user=current_user,
             department=department
         )
+
         db.session.add(new_employee)
+
+        db.session.commit()
+        new_detail = employeeDetails(payments_done='', employee=new_employee)
+        db.session.add(new_detail)
         db.session.commit()
         return render_template("upload_doc.html", name=form.name.data, user=current_user)
 
@@ -1158,7 +1183,12 @@ def roster_date():
     all_roster = rosterMaster.query.all()
     dates_list = []
     employees = employeeMaster.query.all()
+    for i in employees:
+        print(i.name)
+        print('no employee')
     hotels = hotelMaster.query.all()
+    for i in hotels:
+        print(i.name)
     data_ = [employees, hotels]
     for i in all_roster:
         date_el = i.date
@@ -1180,6 +1210,50 @@ def roster_date():
             return render_template("roster_date.html", array=dates_list, msg="Choose a date to continue")
 
     return render_template("roster_date.html", array=dates_list, msg="")
+
+@app.route("/download_roster/<roster_id>", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def download_roster(roster_id):
+    roster_entries = db.session.query(rosterEntryMaster).filter_by(rosterID=roster_id).all()
+    roster_element = rosterMaster.query.get(roster_id)
+    roster_date_ = roster_element.date
+    roster_day = datetime.datetime.strptime(roster_date_, "%Y-%m-%d").strftime('%A')
+    roster_full_date = datetime.datetime.strptime(roster_date_, '%Y-%m-%d').strftime('%B %d, %Y')
+    employee_list = []
+    hotel_list = []
+    time_lists = []
+    roster_color = {'Off': '#16FF00', 'Absent': '#FF0303', 'Sick': '#FFED00', 'Vacation': '#82CD47',
+                    'Public Holiday': '#146C94', 'Office': '#83764F'}
+    for i in roster_entries:
+        employee = i.employee
+        hotel = i.hotel
+        hotel_list.append(hotel.name)
+        employee_list.append(employee.name)
+        ti1 = getTimeStr(i.timeIn1)
+        ti2 = getTimeStr(i.timeIn2)
+        to1 = getTimeStr(i.timeOut1)
+        to2 = getTimeStr(i.timeOut2)
+        pu = getTimeStr(i.pickUp)
+        pu2 = getTimeStr(i.pickUp2)
+        # TODO Add pickup 2
+        time_dict = {'timeIn1': ti1, 'timeIn2': ti2, 'timeOut1': to1, 'timeOut2': to2, 'pickUp': pu, 'pickUp2': pu2}
+        time_lists.append(time_dict)
+
+    date_data = [roster_date_, roster_day, roster_full_date]
+    create_roster(employee_list, hotel_list, time_lists, roster_entries, date_data)
+    path = "specsheet.xlsx"
+    current_datetime = datetime.datetime.today().date().timetuple()
+
+    str_current_datetime = str(current_datetime)
+    a__ = datetime.datetime.now()
+    a_ = a__.strftime("%a, %d %b %Y %H-%M-%S")
+    spec_sheet_name = f'Roster_{roster_date_}_.xlsx'
+
+    return send_file(path, as_attachment=True, download_name=spec_sheet_name)
+
+
+# download_roster(3)
 
 
 # Hotel report
@@ -1262,6 +1336,37 @@ def edit_dept(dept_id):
         db.session.commit()
         return redirect(url_for("department_report"))
     return render_template('dept_edit.html', dept=dept_element, user=current_user)
+
+
+@app.route("/empl_dept/<dept_id>", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def empl_dept(dept_id):
+    dept_element = departmentMaster.query.get(dept_id)
+    employee_list = db.session.query(employeeMaster).filter_by(department=dept_element).all()
+    date_test = '2022-09-01'
+    roster_element = db.session.query(rosterMaster).filter_by(date=date_test).first()
+    if roster_element:
+        roster_entries = db.session.query(rosterEntryMaster).filter_by(rosterID=roster_element.id).all()
+        off_days = 0
+        for i in roster_entries:
+            if i.absent != 'none':
+                off_days += 1
+    else:
+        off_days = 0
+        roster_entries = []
+
+    data = {'Task': 'Hours per Day', 'Absent': off_days, 'Present': len(roster_entries)}
+    department = []
+    for ts in employee_list:
+        department_element = departmentMaster.query.get(ts.departmentId)
+        if department_element:
+            department_name = department_element.name
+        else:
+            department_name = "None"
+        department.append(department_name)
+    return render_template("employee_report.html", ts=employee_list, len=range(len(department)), departments=department,
+                           data=data, user=current_user)
 
 
 @app.route("/department_report", methods=["GET", "POST"])
@@ -1377,8 +1482,8 @@ def roster_single(roster_id):
     roster_entries = db.session.query(rosterEntryMaster).filter_by(rosterID=roster_id).all()
     roster_element = rosterMaster.query.get(roster_id)
     roster_date = roster_element.date
-    roster_day = datetime.datetime.strptime(roster_date, "%Y-%d-%m").strftime('%A')
-    roster_full_date = datetime.datetime.strptime(roster_date, '%Y-%d-%m').strftime('%B %d, %Y')
+    roster_day = datetime.datetime.strptime(roster_date, "%Y-%m-%d").strftime('%A')
+    roster_full_date = datetime.datetime.strptime(roster_date, '%Y-%m-%d').strftime('%B %d, %Y')
     employee_list = []
     hotel_list = []
     time_lists = []
@@ -1694,6 +1799,7 @@ def employee_edit(employee_id):
 def employee_view(employee_id):
     form = ActionItem()
     employee_element = employeeMaster.query.get(employee_id)
+    detail_element = db.session.query(employeeDetails).filter_by(employee=employee_element).first()
     a = str(employee_element.joining_date)
     date_str = a[:10]
     actionItems = db.session.query(actionItemMaster).filter_by(employeeID=employee_id).all()
@@ -1704,7 +1810,7 @@ def employee_view(employee_id):
         if img_element:
             img_id = int(img_element.id)
             # img_url = doc_element.documentName
-            img_url = f"https://dfshr.herokuapp.com/image/{img_id}"
+            img_url = f"http://127.0.0.1:5000/image/{img_id}"
         else:
             img_url = 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
     # get total hours worked
@@ -1750,6 +1856,20 @@ def employee_view(employee_id):
 
     profilePercent = ((len(list_empl) - profileCompletion) / len(list_empl)) * 100
 
+    # Get total leaves
+    leave_element = db.session.query(leaveApplicationMaster).filter_by(employee=employee_element).all()
+    t_leaves = 0
+    for le in leave_element:
+        if le:
+            leaves = le.leave_t - le.leave_f
+            leaves_taken = int(leaves.days)
+            # print(f"total leaves: {leaves}, {leaves_taken}")
+        else:
+            leaves_taken = 0
+
+        t_leaves += leaves_taken
+
+    total_leaves_pending = int(detail_element.total_leaves) - t_leaves
     if form.validate_on_submit():
         newActionItem = actionItemMaster(actionText=form.content.data, employee=employee_element)
         db.session.add(newActionItem)
@@ -1758,7 +1878,83 @@ def employee_view(employee_id):
 
     return render_template("employee_view.html", employee=employee_element, form=form, date_str=date_str,
                            workedHours=totalHours, profile=round(profilePercent, 0), items=actionItems, img_url=img_url,
-                           len=range(len(actionItems)), user=current_user)
+                           len=range(len(actionItems)), user=current_user, details=detail_element,
+                           p_l=total_leaves_pending)
+
+
+@app.route("/employee_details/<employee_id>", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def employee_details(employee_id):
+    employee_element = employeeMaster.query.get(employee_id)
+    detail_element = db.session.query(employeeDetails).filter_by(employee=employee_element).first()
+    a = str(employee_element.joining_date)
+    date_str = a[:10]
+    actionItems = db.session.query(actionItemMaster).filter_by(employeeID=employee_id).all()
+    doc_element = db.session.query(documentMaster).filter_by(employeeID=employee_id).first()
+    img_element__ = db.session.query(Img).filter_by(employeeID=employee_id).all()
+    if len(img_element__) > 0:
+        img_element = img_element__[-1]
+        if img_element:
+            img_id = int(img_element.id)
+            # img_url = doc_element.documentName
+            img_url = f"http://127.0.0.1:5000/image/{img_id}"
+        else:
+            img_url = 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
+    # get total hours worked
+    else:
+        img_url = 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
+    # get total hours worked
+    print(img_url)
+    ts_employee = db.session.query(timesheetEntryMaster).filter_by(employeeID=employee_id).all()
+    totalHours = 0
+    for i in ts_employee:
+        b = (i.timeOut1 - i.timeIn1) + (i.timeOut2 - i.timeIn2)
+        totalHours += b
+
+    # get profile completion %
+    list_empl = [employee_element.name,
+                 employee_element.addressUae,
+                 employee_element.poBox,
+                 employee_element.mobilePersonal,
+                 employee_element.mobileHome,
+                 employee_element.personalMail,
+                 employee_element.addressHome,
+                 employee_element.passportNumber,
+                 employee_element.nationality,
+                 employee_element.emUaeName,
+                 employee_element.emUaeRel,
+                 employee_element.emUaeAddr,
+                 employee_element.emUaeMobileNumber,
+                 employee_element.emUaeHomeNumber,
+                 employee_element.originCountry,
+                 employee_element.emCoName,
+                 employee_element.emCoRel,
+                 employee_element.emCoAddr,
+                 employee_element.emCoMobileNumber,
+                 employee_element.emCoHomeNumber,
+                 employee_element.employeeID,
+                 employee_element.joining_date,
+                 employee_element.company_laptop,
+                 employee_element.company_mobile]
+    profileCompletion = 0
+    for i in list_empl:
+        if not i:
+            profileCompletion += 1
+
+    profilePercent = ((len(list_empl) - profileCompletion) / len(list_empl)) * 100
+
+    if request.method == "POST":
+        detail_element.payments_done = request.form.get('done')
+        detail_element.payments_pending = request.form.get('pending_p')
+        detail_element.total_leaves = request.form.get('pending_l')
+        detail_element.visa_expiry = request.form.get('visa')
+        db.session.commit()
+        return redirect(url_for('employee_view', employee_id=employee_id))
+
+    return render_template("employee_view_edit.html", employee=employee_element, date_str=date_str,
+                           workedHours=totalHours, profile=round(profilePercent, 0), items=actionItems, img_url=img_url,
+                           len=range(len(actionItems)), user=current_user, details=detail_element)
 
 
 @app.route("/employee_delete/<employee_id>", methods=["GET", "POST"])
