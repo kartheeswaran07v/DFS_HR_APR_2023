@@ -754,6 +754,11 @@ def doc():
 
         # UPLOAD_FOLDER = f"{home_directory}/{directory}"
         # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+        directory__ = request.form.get('directory')
+        path = os.path.join(directory__, directory)
+        os.mkdir(path)
+        UPLOAD_FOLDER = f"{directory__}\\{directory}"
+        app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
         files = request.files.getlist("file")  # other multiple files
         pic = request.files.get('photo')  # photo file
@@ -764,8 +769,8 @@ def doc():
         db.session.add(img__)
         db.session.commit()
         # photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
-        # for file in files:
-        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+        for file in files:
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
         # Save pic in folder
 
         # new_doc = documentMaster(documentName=photo, documentDirectory=UPLOAD_FOLDER, employee=employee_element)
