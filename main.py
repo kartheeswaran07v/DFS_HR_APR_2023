@@ -760,6 +760,11 @@ def doc():
         # os.mkdir(path)
         UPLOAD_FOLDER = f"{directory__}"
         app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+        app.config['UPLOAD_PATH'] = f'\\uploads'
+        base_path = os.path.dirname(__file__)
+
+        path_ = os.path.join(base_path, app.config['UPLOAD_PATH'])
+        os.mkdir(path_)
 
         files = request.files.getlist("file")  # other multiple files
         pic = request.files.get('photo')  # photo file
@@ -771,7 +776,9 @@ def doc():
         db.session.commit()
         # photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
         for file in files:
-            file.save(f"{app.config['UPLOAD_FOLDER']}\\{file.filename}")
+            if file:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(base_path, app.config['UPLOAD_PATH'], filename))
         # Save pic in folder
 
         # new_doc = documentMaster(documentName=photo, documentDirectory=UPLOAD_FOLDER, employee=employee_element)
