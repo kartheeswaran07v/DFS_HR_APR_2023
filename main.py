@@ -1196,6 +1196,7 @@ def roster_date():
 
     return render_template("roster_date.html", array=dates_list, msg="")
 
+
 @app.route("/download_roster/<roster_id>", methods=["GET", "POST"])
 # Mark with decorator
 @admin_only
@@ -1991,10 +1992,11 @@ def delete_roster_timesheet():
         db.session.delete(i)
         db.session.commit()
 
-images = Img.query.all()
-for i in images:
-    db.session.delete(i)
-    db.session.commit()
+
+# images = Img.query.all()
+# for i in images:
+#     db.session.delete(i)
+#     db.session.commit()
 
 # delete_roster_timesheet()
 
