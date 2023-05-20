@@ -780,19 +780,6 @@ def doc():
 
         # UPLOAD_FOLDER = f"{home_directory}/{directory}"
         # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-        # directory__ = request.form.get('directory')
-        # path = os.path.join(directory__ + '\\' + directory)
-        # print(f"path for uploading folder: {path}")
-        # UPLOAD_FOLDER = f"{directory__}"
-        # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-        # app.config['UPLOAD_PATH'] = f'\\uploads'
-        # base_path = os.path.dirname(__file__)
-        # path_ = os.path.join(base_path, app.config['UPLOAD_PATH'])
-        # try:
-        #     os.mkdir(path_)
-        #     os.mkdir(path)
-        # except:
-        #     pass
 
         files = request.files.getlist("file")  # other multiple files
         pic = request.files.get('photo')  # photo file
@@ -804,14 +791,11 @@ def doc():
         db.session.commit()
         # photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
         # for file in files:
-        #     if file:
-        #         filename = secure_filename(file.filename)
-        #         file.save(os.path.join(app.config['UPLOAD_FOLDER'] + '\\' + filename))
+        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
         # Save pic in folder
 
         # new_doc = documentMaster(documentName=photo, documentDirectory=UPLOAD_FOLDER, employee=employee_element)
         # db.session.add(new_doc)
-        # db.session.commit()
 
         return render_template("reg_suc.html", name=request.form.get('name'), user=current_user,
                                employee=employee_element)
@@ -1808,14 +1792,20 @@ def employee_view(employee_id):
     img_element__ = db.session.query(Img).filter_by(employeeID=employee_id).all()
     if len(img_element__) > 0:
         img_element = img_element__[-1]
+        print("img len is greateer than 0")
         if img_element:
-            img_id = img_element.id
+            print('image elemement is there')
+            img_id = int(img_element.id)
             # img_url = doc_element.documentName
-            img_url = img_id
+            img_url = f"https://dfshr.herokuapp.com/image/{img_id}"
+            # http://127.0.0.1:5000
+            # https://dfshr.herokuapp.com
         else:
+            print(f"img element is not there")
             img_url = 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
     # get total hours worked
     else:
+        print('len of image element is 0')
         img_url = 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
     # get total hours worked
     print(img_url)
