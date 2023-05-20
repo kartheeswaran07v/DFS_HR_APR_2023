@@ -1991,6 +1991,10 @@ def delete_roster_timesheet():
         db.session.delete(i)
         db.session.commit()
 
+images = Img.query.all()
+for i in images:
+    db.session.delete(i)
+    db.session.commit()
 
 # delete_roster_timesheet()
 
