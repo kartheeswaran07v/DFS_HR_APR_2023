@@ -1809,7 +1809,7 @@ def employee_view(employee_id):
     if len(img_element__) > 0:
         img_element = img_element__[-1]
         if img_element:
-            img_id = int(img_element.id)
+            img_id = img_element.id
             # img_url = doc_element.documentName
             img_url = img_id
         else:
