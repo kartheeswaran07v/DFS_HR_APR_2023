@@ -1811,7 +1811,7 @@ def employee_view(employee_id):
         if img_element:
             img_id = int(img_element.id)
             # img_url = doc_element.documentName
-            img_url = f"https://dfshr.herokuapp.com//image/{int(img_id)}"
+            img_url = f"https://dfshr.herokuapp.com/image/{int(img_id)}"
         else:
             img_url = 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
     # get total hours worked
