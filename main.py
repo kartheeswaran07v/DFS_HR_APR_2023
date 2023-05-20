@@ -1007,7 +1007,7 @@ def passport():
         )
         db.session.add(new_pp)
         db.session.commit()
-        redirect(url_for('passportList'))
+        return redirect(url_for('passportList'))
     return render_template("passport.html", form=form, user=current_user, entries=entries)
 
 
@@ -1811,7 +1811,7 @@ def employee_view(employee_id):
         if img_element:
             img_id = int(img_element.id)
             # img_url = doc_element.documentName
-            img_url = f"https://dfshr.herokuapp.com/image/{img_id}"
+            img_url = f"http://127.0.0.1:5000/image/{int(img_id)}"
         else:
             img_url = 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
     # get total hours worked
