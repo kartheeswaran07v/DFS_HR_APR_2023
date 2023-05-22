@@ -813,6 +813,9 @@ def get_img(id):
         if not img:
             return 'Img Not Found!', 404
 
+        print(img.img)
+        print(repr(img.img))
+
         return Response(repr(img.img), mimetype=img.mimetype)
 
 
