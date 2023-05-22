@@ -786,7 +786,10 @@ def doc():
         filename = secure_filename(pic.filename)
         mimetype = pic.mimetype
 
-        img__ = Img(img=pic.read(), name=filename, mimetype=mimetype, employeeID=int(employee_element.id))
+        pic_byte = pic.read()
+        b = bytearray(pic_byte)
+
+        img__ = Img(img=b, name=filename, mimetype=mimetype, employeeID=int(employee_element.id))
         db.session.add(img__)
         db.session.commit()
         # photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
