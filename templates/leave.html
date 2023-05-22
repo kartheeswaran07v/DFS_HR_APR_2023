@@ -103,7 +103,12 @@
         <p>{{ form.g1_id_no.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.g1_name(value='-') }}</p>
+        <p>{{ form.g1_name(list="id_datalist") }}</p>
+        <datalist id="id_datalist">
+          {% for entry in entries %}
+            <option value="{{ entry }}">
+          {% endfor %}
+        </datalist>
         <p>{{ form.g1_dept(value='-') }}</p>
         <p>{{ form.g1_id_no(value=0) }}</p>
       </div>
@@ -113,7 +118,7 @@
         <p>{{ form.g2_id_no.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.g2_name(value='-') }}</p>
+        <p>{{ form.g2_name(list="id_datalist") }}</p>
         <p>{{ form.g2_dept(value='-') }}</p>
         <p>{{ form.g2_id_no(value=0) }}</p>
       </div>
@@ -194,13 +199,13 @@
         <p>{{ form.approved_by.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.approved_by(value='-') }}</p>
+        <p>{{ form.approved_by(list="id_datalist") }}</p>
       </div>
       <div class="col-lg-3 con2">
         <p>{{ form.approved_by_2.label() }}</p>
       </div>
       <div class="col-lg-3">
-        <p>{{ form.approved_by_2(value='-') }}</p>
+        <p>{{ form.approved_by_2(list="id_datalist") }}</p>
       </div>
     </div>
 

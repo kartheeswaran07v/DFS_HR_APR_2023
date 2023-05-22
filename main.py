@@ -439,13 +439,11 @@ class LeaveForm(FlaskForm):
     air_tic = StringField("Air Ticket Details")
 
     # Guarantors
-    g1_name = SelectField(u'Guarantor 1',
-                          choices=employee_name)
+    g1_name = StringField(u'Guarantor 1')
     g1_dept = StringField("Department: ")
     g1_id_no = IntegerField("ID No.: ")
     # g1_sign = IntegerField("Sign and Date")
-    g2_name = SelectField(u'Guarantor 2',
-                          choices=employee_name)
+    g2_name = StringField(u'Guarantor 2')
     g2_dept = StringField("Department: ")
     g2_id_no = IntegerField("ID No.: ")
     # g2_sign = IntegerField("Sign and Date")
@@ -471,11 +469,9 @@ class LeaveForm(FlaskForm):
     date_tr = DateField("Date: ")
 
     # Approval
-    approved_by = SelectField(u'Approved By',
-                              choices=employee_name)
+    approved_by = StringField(u'Approved By')
     # lm_sign = StringField("Sign & Date Line Manager")
-    approved_by_2 = SelectField(u'Approved By',
-                                choices=employee_name)
+    approved_by_2 = StringField(u'Approved By')
     # md_sign = StringField("Sing & Date Managing Director ")
 
     # submit
@@ -539,7 +535,7 @@ class PassportForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     department_ = departmentMaster.query.all()
     department_name = [i.name for i in department_]
-    print(department_name)
+    # print(department_name)
     name = StringField("Name:       ", validators=[DataRequired()])
     joining_date = DateField("Joining Date:")
     department_e = StringField(u"Department: ")
@@ -593,7 +589,7 @@ def getTimeInt(time):
         b[0] = b[0]
     c = b[0] + b[1]
     d = int(c)
-    print(d)
+    # print(d)
     return d
 
 
@@ -610,7 +606,7 @@ def getTimeStr(time):
     else:
         min_str = str(minutes)
     time_str = hour_str + ':' + min_str
-    print(time_str)
+    # print(time_str)
     return time_str
 
 
@@ -830,6 +826,7 @@ def get_img(id):
 def leave():
     form = LeaveForm()
     employees = employeeMaster.query.all()
+    entries = [i.name for i in employees]
 
     if form.validate_on_submit():
         employee = db.session.query(employeeMaster).filter_by(name=form.name.data).first()
@@ -882,7 +879,7 @@ def leave():
         db.session.add(new_leave)
         db.session.commit()
         return redirect(url_for('leaveList'))
-    return render_template("leave.html", form=form, employee=employees, user=current_user)
+    return render_template("leave.html", form=form, employee=employees, user=current_user, entries=entries)
 
 
 @app.route('/leave-list', methods=["GET", "POST"])
@@ -1163,7 +1160,7 @@ def roster():
                         db.session.commit()
 
         # return render_template("roster_complete.html", date=today, data=value)
-        print(a)
+        # print(a)
         return redirect(url_for("roster_single", roster_id=new_roster.id))
     # form = RosterExtend()
     # if form.validate_on_submit():
@@ -1181,12 +1178,12 @@ def roster_date():
     all_roster = rosterMaster.query.all()
     dates_list = []
     employees = employeeMaster.query.all()
-    for i in employees:
-        print(i.name)
-        print('no employee')
+    # for i in employees:
+    #         # print(i.name)
+    #     # print('no employee')
     hotels = hotelMaster.query.all()
-    for i in hotels:
-        print(i.name)
+    # for i in hotels:
+    #         # print(i.name)
     data_ = [employees, hotels]
     for i in all_roster:
         date_el = i.date
@@ -1433,18 +1430,18 @@ def archives():
                 ms_dict['hours'].append(hours)
                 ms_dict['hotel'].append(hotel)
             master_ts_list.append(ms_dict)
-            print(master_ts_list)
+            # print(master_ts_list)
 
         hours_sum = []
         for i in master_ts_list:
             sum_hours = 0
             for j in i['hours']:
-                print(type(j))
+                # print(type(j))
                 if type(j) != str:
                     sum_hours = sum_hours + j
 
             hours_sum.append(sum_hours)
-        print(hours_sum)
+        # print(hours_sum)
 
         analytic_data = []
         for i in range(len(hours_sum)):
@@ -1732,10 +1729,10 @@ def employee_edit(employee_id):
     department_ = departmentMaster.query.all()
     department_name = [i.name for i in department_]
     employee_element = employeeMaster.query.get(employee_id)
-    print(employee_element.joining_date)
+    # print(employee_element.joining_date)
     a = str(employee_element.joining_date)
     date_str = a[:10]
-    print(date_str)
+    # print(date_str)
     nationality_string = employee_element.nationality
     nationality_ = nationality_string.split('+')[0]
     passport_ = nationality_string.split('+')[1]
