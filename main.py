@@ -784,14 +784,16 @@ def doc():
 
         files = request.files.getlist("file")  # other multiple files
         pic = request.files.get('photo')  # photo file
-        filename = pic.filename
+        filename = secure_filename(pic.filename)
         mimetype = pic.mimetype
-        str__ = base64.b64encode(pic.read())
-        print(str__)
-        pic_byte = pic.read()
-        b = bytearray(pic_byte)
+        # str__ = base64.b64encode(pic.read())
+        # print(str__)
+        # pic_byte = pic.read()
+        # b = bytearray(pic_byte)
+        # session_data = str(base64.b64encode(pic_byte).decode())
+        # print(session_data)
 
-        img__ = Img(img=str__, name=filename, mimetype=mimetype, employeeID=int(employee_element.id))
+        img__ = Img(img=pic.read(), name=filename, mimetype=mimetype, employeeID=int(employee_element.id))
         db.session.add(img__)
         db.session.commit()
         # photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
@@ -813,10 +815,10 @@ def get_img(id):
         if not img:
             return 'Img Not Found!', 404
 
-        print(img.img)
-        print(repr(img.img))
+        # print(img.img)
+        # print(repr(img.img))
 
-        return Response(repr(img.img), mimetype=img.mimetype)
+        return Response(img.img, mimetype=img.mimetype)
 
 
 @app.route('/leave', methods=["GET", "POST"])
