@@ -788,12 +788,14 @@ def doc():
         mimetype = pic.mimetype
         # str__ = base64.b64encode(pic.read())
         # print(str__)
-        # pic_byte = pic.read()
+        pic_byte = pic.read()
         # b = bytearray(pic_byte)
         # session_data = str(base64.b64encode(pic_byte).decode())
         # print(session_data)
+        
+        session_data = base64.b64encode(pic_byte).decode()
 
-        img__ = Img(img=pic.read(), name=filename, mimetype=mimetype, employeeID=int(employee_element.id))
+        img__ = Img(img=session_data, name=filename, mimetype=mimetype, employeeID=int(employee_element.id))
         db.session.add(img__)
         db.session.commit()
         # photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
@@ -817,8 +819,9 @@ def get_img(id):
 
         # print(img.img)
         # print(repr(img.img))
+        img_ = base64.b64decode(img.img)
 
-        return Response(img.img, mimetype=img.mimetype)
+        return Response(img_, mimetype=img.mimetype)
 
 
 @app.route('/leave', methods=["GET", "POST"])
