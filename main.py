@@ -813,7 +813,7 @@ def get_img(id):
         if not img:
             return 'Img Not Found!', 404
 
-        return Response(img.img, mimetype=img.mimetype)
+        return Response(repr(img.img), mimetype=img.mimetype)
 
 
 @app.route('/leave', methods=["GET", "POST"])
