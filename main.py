@@ -1974,6 +1974,14 @@ def action_item_del(entry_id):
     return redirect(url_for("employee_view", employee_id=employee_id))
 
 
+@app.route("/image_view", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def image_view():
+    img_data = Img.query.all()
+    return render_template('image.html', data=img_data, user=current_user)
+
+
 def delete_roster_timesheet():
     timesheet_entries = timesheetEntryMaster.query.all()
     roster_entries = rosterEntryMaster.query.all()
