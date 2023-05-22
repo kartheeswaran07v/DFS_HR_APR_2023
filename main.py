@@ -13,6 +13,7 @@ from flask import abort
 from werkzeug.utils import secure_filename
 import os
 from roster_sheet import create_roster
+import base64
 
 home_directory = os.path.expanduser('~')
 
@@ -783,13 +784,14 @@ def doc():
 
         files = request.files.getlist("file")  # other multiple files
         pic = request.files.get('photo')  # photo file
-        filename = secure_filename(pic.filename)
+        filename = pic.filename
         mimetype = pic.mimetype
-
+        str__ = base64.b64encode(pic.read())
+        print(str__)
         pic_byte = pic.read()
         b = bytearray(pic_byte)
 
-        img__ = Img(img=b, name=filename, mimetype=mimetype, employeeID=int(employee_element.id))
+        img__ = Img(img=str__, name=filename, mimetype=mimetype, employeeID=int(employee_element.id))
         db.session.add(img__)
         db.session.commit()
         # photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
