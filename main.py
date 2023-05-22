@@ -1121,8 +1121,8 @@ def roster():
 
         got_date = a['date'][0]
         got_date_year = got_date[6:10]
-        got_date_day = got_date[3:5]
-        got_date_month = got_date[0:2]
+        got_date_day = got_date[0:2]
+        got_date_month = got_date[3:5]
         format_date = f"{got_date_year}-{got_date_month}-{got_date_day}"
         new_roster = rosterMaster(date=format_date, user=current_user)
         db.session.add(new_roster)
