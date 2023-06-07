@@ -1857,7 +1857,7 @@ def employee_view(employee_id):
     date_str = a[:10]
     actionItems = db.session.query(actionItemMaster).filter_by(employeeID=employee_id).all()
     doc_element = db.session.query(documentMaster).filter_by(employeeID=employee_id).first()
-    img_element__ = db.session.query(Img).filter_by(employeeID=employee_id).all()
+    img_element__ = db.session.query(Img).filter_by(employee=employee_element).all()
     doc_s = documentMaster.query.filter_by(employee=employee_element).all()
 
     if len(img_element__) > 0:
