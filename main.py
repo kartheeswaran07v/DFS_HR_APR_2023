@@ -1867,7 +1867,7 @@ def employee_view(employee_id):
             print('image elemement is there')
             img_id = int(img_element.id)
             # img_url = doc_element.documentName
-            img_url = f"http://127.0.0.1:5000/image/{img_id}"
+            img_url = f"https://dfxhr.herokuapp.com/image/{img_id}"
             # http://127.0.0.1:5000
             # https://dfshr.herokuapp.com
         else:
