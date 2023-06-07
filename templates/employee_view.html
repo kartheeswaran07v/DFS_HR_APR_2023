@@ -57,6 +57,18 @@
         </div>
     </div>
   {% endfor %}
+
+  <hr>
+
+  <div class="row reports" style="margin-bottom: 0;" >
+      <h2 style="text-align: left">Documents</h2>
+  </div>
+
+  <div class="row reports" style="margin-bottom: 50px; margin-left: 70px; margin-top: 0; width: 500px;">
+      {% for i in docs %}
+        <a href="{{url_for('download', upload_id=i.id)}}">{{i.documentName}}</a>
+      {% endfor %}
+  </div>
    <hr>
 
   <div class="row reports" style="margin-bottom: 0;" >

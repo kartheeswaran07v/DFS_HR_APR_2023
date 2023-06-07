@@ -5,7 +5,7 @@ from forms import *
 from datetime import date, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, ForeignKey, String, Boolean, DateTime, Text, Float
+from sqlalchemy import Column, Integer, ForeignKey, String, Boolean, DateTime, Text, Float, LargeBinary
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from functools import wraps
@@ -14,6 +14,7 @@ from werkzeug.utils import secure_filename
 import os
 from roster_sheet import create_roster
 import base64
+from io import BytesIO
 
 home_directory = os.path.expanduser('~')
 
@@ -24,7 +25,7 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///dfx_may_19.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1", "sqlite:///dfx_june_.db")
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///dfx_db_seis.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -144,6 +145,8 @@ class employeeMaster(db.Model):
     roster = relationship("rosterEntryMaster", back_populates="employee")
     # TODO 7 - Employee details
     details = relationship("employeeDetails", back_populates="employee")
+    # TODO 8 - Image
+    img__ = relationship('Img', back_populates='employee')
 
 
 class rosterMaster(db.Model):
@@ -203,7 +206,7 @@ class documentMaster(db.Model):
     __tablename__ = "documentMaster"
     id = Column(Integer, primary_key=True)
     documentName = Column(String(300))
-    documentDirectory = Column(String(300))
+    documentDirectory = Column(LargeBinary)
 
     # relationships as child
     employeeID = Column(Integer, ForeignKey("employeeMaster.id"))
@@ -233,7 +236,11 @@ class Img(db.Model):
     img = Column(Text, nullable=False)
     name = Column(Text, nullable=False)
     mimetype = Column(Text, nullable=False)
-    employeeID = Column(Integer)
+    # employeeID = Column(Integer)
+
+    # relationships as child
+    employeeID = Column(Integer, ForeignKey("employeeMaster.id"))
+    employee = relationship("employeeMaster", back_populates="img__")
 
 
 class actionItemMaster(db.Model):
@@ -400,7 +407,9 @@ class rosterEntryMaster(db.Model):
     hotel = relationship("hotelMaster", back_populates="rosterEntry")
 
 
-# db.create_all()
+db.create_all()
+
+
 ##
 
 
@@ -751,7 +760,7 @@ def registration():
         new_detail = employeeDetails(payments_done='', employee=new_employee)
         db.session.add(new_detail)
         db.session.commit()
-        return render_template("upload_doc.html", name=form.name.data, user=current_user)
+        return render_template("upload_doc.html", name=form.name.data, user=current_user, emp_id=new_employee.id)
 
     return render_template("reg2.html", form=form, user=current_user, depts=department_name)
 
@@ -762,7 +771,7 @@ def registration():
 def doc():
     if request.method == 'POST':
         directory = request.form.get('name')
-        employee_element = db.session.query(employeeMaster).filter_by(name=directory).first()
+        employee_element = db.session.query(employeeMaster).filter_by(id=directory).first()
         #
         # # Parent Directory path
         # parent_dir = home_directory
@@ -788,15 +797,19 @@ def doc():
         # b = bytearray(pic_byte)
         # session_data = str(base64.b64encode(pic_byte).decode())
         # print(session_data)
-        
+
         session_data = base64.b64encode(pic_byte).decode()
 
-        img__ = Img(img=session_data, name=filename, mimetype=mimetype, employeeID=int(employee_element.id))
+        img__ = Img(img=session_data, name=filename, mimetype=mimetype, employee=employee_element)
         db.session.add(img__)
         db.session.commit()
         # photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
-        # for file in files:
-        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+        for file in files:
+            upload__ = documentMaster(documentName=file.filename, documentDirectory=file.read(),
+                                      employee=employee_element)
+            db.session.add(upload__)
+            db.session.commit()
+            print(file.filename)
         # Save pic in folder
 
         # new_doc = documentMaster(documentName=photo, documentDirectory=UPLOAD_FOLDER, employee=employee_element)
@@ -804,6 +817,12 @@ def doc():
 
         return render_template("reg_suc.html", name=request.form.get('name'), user=current_user,
                                employee=employee_element)
+
+
+@app.route('/download/<upload_id>', methods=["GET", "POST"])
+def download(upload_id):
+    upload__ = documentMaster.query.filter_by(id=upload_id).first()
+    return send_file(BytesIO(upload__.documentDirectory), as_attachment=True, download_name=upload__.documentName)
 
 
 @app.route('/image/<int:id>')
@@ -1788,10 +1807,42 @@ def employee_edit(employee_id):
         employee_element.user = current_user
         employee_element.department = department
         db.session.commit()
-        return redirect(url_for("employee_report"))
+        return redirect(url_for("upload_edit", employee_id=employee_element.id))
     return render_template("employee_edit.html", data=employee_element, form=form, date_str=date_str,
                            nationality=nationality_, passport=passport_, mob_det=mob_det, user=current_user,
                            depts=department_name)
+
+
+@app.route("/upload_edit/<employee_id>", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def upload_edit(employee_id):
+    emp_element = employeeMaster.query.get(employee_id)
+    doc_s = documentMaster.query.filter_by(employee=emp_element).all()
+    img_s = Img.query.filter_by(employee=emp_element).all()
+    if request.method == 'POST':
+        directory = request.form.get('name')
+        employee_element = db.session.query(employeeMaster).filter_by(id=directory).first()
+
+        files = request.files.getlist("file")  # other multiple files
+        pic = request.files.get('photo')  # photo file
+        filename = secure_filename(pic.filename)
+        mimetype = pic.mimetype
+        pic_byte = pic.read()
+
+        session_data = base64.b64encode(pic_byte).decode()
+
+        img__ = Img(img=session_data, name=filename, mimetype=mimetype, employee=employee_element)
+        db.session.add(img__)
+        db.session.commit()
+        for file in files:
+            upload__ = documentMaster(documentName=file.filename, documentDirectory=file.read(),
+                                      employee=employee_element)
+            db.session.add(upload__)
+            db.session.commit()
+            print(file.filename)
+            return redirect(url_for('employee_view', employee_id=employee_element.id))
+    return render_template("upload_edit.html", name=emp_element.name, user=current_user, emp_id=emp_element.id, docs=doc_s, img=img_s)
 
 
 @app.route("/employee_view/<employee_id>", methods=["GET", "POST"])
@@ -1806,6 +1857,8 @@ def employee_view(employee_id):
     actionItems = db.session.query(actionItemMaster).filter_by(employeeID=employee_id).all()
     doc_element = db.session.query(documentMaster).filter_by(employeeID=employee_id).first()
     img_element__ = db.session.query(Img).filter_by(employeeID=employee_id).all()
+    doc_s = documentMaster.query.filter_by(employee=employee_element).all()
+
     if len(img_element__) > 0:
         img_element = img_element__[-1]
         print("img len is greateer than 0")
@@ -1813,7 +1866,7 @@ def employee_view(employee_id):
             print('image elemement is there')
             img_id = int(img_element.id)
             # img_url = doc_element.documentName
-            img_url = f"https://dfshr.herokuapp.com/image/{img_id}"
+            img_url = f"http://127.0.0.1:5000/image/{img_id}"
             # http://127.0.0.1:5000
             # https://dfshr.herokuapp.com
         else:
@@ -1888,7 +1941,7 @@ def employee_view(employee_id):
     return render_template("employee_view.html", employee=employee_element, form=form, date_str=date_str,
                            workedHours=totalHours, profile=round(profilePercent, 0), items=actionItems, img_url=img_url,
                            len=range(len(actionItems)), user=current_user, details=detail_element,
-                           p_l=total_leaves_pending)
+                           p_l=total_leaves_pending, docs=doc_s)
 
 
 @app.route("/employee_details/<employee_id>", methods=["GET", "POST"])
