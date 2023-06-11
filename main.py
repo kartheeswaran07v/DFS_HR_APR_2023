@@ -814,7 +814,7 @@ def doc():
         # new_doc = documentMaster(documentName=photo, documentDirectory=UPLOAD_FOLDER, employee=employee_element)
         # db.session.add(new_doc)
 
-        return render_template("reg_suc.html", name=request.form.get('name'), user=current_user,
+        return render_template("reg_suc.html", name=request.form.get('name_'), user=current_user,
                                employee=employee_element)
 
 
