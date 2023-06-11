@@ -416,12 +416,11 @@ class rosterEntryMaster(db.Model):
 
 # Forms
 class LeaveForm(FlaskForm):
-    employees = employeeMaster.query.all()
-    employee_name = [i.name for i in employees]
+    # employees = employeeMaster.query.all()
+    # employee_name = [i.name for i in employees]
     # details
     date = DateField("Date: ")
-    name = SelectField(u'Name of the Employee',
-                       choices=employee_name)
+    name = SelectField(u'Name of the Employee', coerce=str)
     company = StringField("Company: ")
     dept = StringField("Department: ")
     designation = StringField("Designation: ")
@@ -489,12 +488,11 @@ class LeaveForm(FlaskForm):
 
 
 class PassportForm(FlaskForm):
-    employees = employeeMaster.query.all()
-    employee_name = [i.name for i in employees]
+    # employees = employeeMaster.query.all()
+    # employee_name = [i.name for i in employees]
     date = DateField("Date: ")
     emp_no = IntegerField("Emp No.: ")
-    name = SelectField(u'Name of the Employee:',
-                       choices=employee_name)
+    name = SelectField(u'Name of the Employee:', coerce=str)
     pow = StringField("Purpose of Withdrawal")
     # sign = StringField("Signature")
     days_req = StringField("Days Required")
@@ -848,6 +846,8 @@ def leave():
     employees = employeeMaster.query.all()
     entries = [i.name for i in employees]
 
+    form.name.choices = entries
+
     if form.validate_on_submit():
         employee = db.session.query(employeeMaster).filter_by(name=form.name.data).first()
 
@@ -915,6 +915,12 @@ def leaveList():
 @admin_only
 def leaveEdit(leave_id):
     form = LeaveForm()
+
+    employees = employeeMaster.query.all()
+    entries = [i.name for i in employees]
+
+    form.name.choices = entries
+
     leave_element = leaveApplicationMaster.query.get(leave_id)
     leave_date = leave_element.date
     leave_f_date = leave_element.leave_f
@@ -931,6 +937,7 @@ def leaveEdit(leave_id):
     leave_rd_str = str(leave_rd_date)[:10]
     leave_tr_str = str(leave_tr_date)[:10]
     date_data = [leave_date_str, leave_f_str, leave_t_str, leave_dot_str, leave_dor_str, leave_rd_str, leave_tr_str]
+
     if request.method == 'POST':
         employee = db.session.query(employeeMaster).filter_by(name=form.name.data).first()
         leave_element.date = form.date.data
@@ -989,6 +996,8 @@ def passport():
     employees = employeeMaster.query.all()
     entries = [i.name for i in employees]
 
+    form.name.choices = entries
+
     if form.validate_on_submit():
         employee = db.session.query(employeeMaster).filter_by(name=form.name.data).first()
 
@@ -1038,6 +1047,12 @@ def passportList():
 @admin_only
 def ppEdit(pp_id):
     form = PassportForm()
+
+    employees = employeeMaster.query.all()
+    entries = [i.name for i in employees]
+
+    form.name.choices = entries
+
     passport_element = passportApplicationMaster.query.get(pp_id)
     pp_date = passport_element.date
     pp_pass_date = passport_element.date_pass_rec
@@ -1843,7 +1858,7 @@ def upload_edit(employee_id):
             db.session.commit()
             print(file.filename)
             return redirect(url_for('employee_view', employee_id=employee_element.id))
-    return render_template("upload_edit.html", name=emp_element.name, user=current_user, emp_id=emp_element.id, docs=doc_s, img=img_s)
+    return render_template("upload_edit.html", name=emp_element.name, user=current_user, emp_id=emp_element.id, docs=doc_s, img_=img_s)
 
 
 @app.route("/employee_view/<employee_id>", methods=["GET", "POST"])

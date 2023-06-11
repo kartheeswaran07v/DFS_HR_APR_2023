@@ -19,6 +19,9 @@
           <label for="name">Name:</label>
         </div>
         <div class="col-lg-6 bbut upload" style="justify-content: center;">
+          <input type="text" id="name_" name="name_" value="{{ name }}" readonly>
+        </div>
+        <div class="col-lg-6 bbut upload" style="justify-content: center;" hidden>
           <input type="text" id="name" name="name" value="{{ emp_id }}" readonly>
         </div>
         <div class="col-lg-6 abut upload" style="justify-content: center;">
@@ -26,7 +29,7 @@
         </div>
         <div class="col-lg-6 bbut upload" style="justify-content: center;">
           <input type="file" id="files" name="file" multiple="">
-          <p>Existing files:</p><br>
+          <p>Existing files:</p>
           {% for i in docs %}
             <a href="{{url_for('download', upload_id=i.id)}}">{{i.documentName}}</a><br>
           {% endfor %}
@@ -36,6 +39,8 @@
         </div>
         <div class="col-lg-6 bbut upload" style="justify-content: center;">
           <input type="file" id="photo" name="photo">
+          <p>Existing files:</p>
+          <p><a href="{{url_for('get_img', id=img_[-1].id)}}">{{img_[-1].name}}</a></p>
         </div>
         <input type="submit" value="Upload Documents">
 
