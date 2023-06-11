@@ -1842,15 +1842,16 @@ def upload_edit(employee_id):
 
         files = request.files.getlist("file")  # other multiple files
         pic = request.files.get('photo')  # photo file
-        filename = secure_filename(pic.filename)
-        mimetype = pic.mimetype
-        pic_byte = pic.read()
+        if pic:
+            filename = secure_filename(pic.filename)
+            mimetype = pic.mimetype
+            pic_byte = pic.read()
 
-        session_data = base64.b64encode(pic_byte).decode()
+            session_data = base64.b64encode(pic_byte).decode()
 
-        img__ = Img(img=session_data, name=filename, mimetype=mimetype, employee=employee_element)
-        db.session.add(img__)
-        db.session.commit()
+            img__ = Img(img=session_data, name=filename, mimetype=mimetype, employee=employee_element)
+            db.session.add(img__)
+            db.session.commit()
         for file in files:
             upload__ = documentMaster(documentName=file.filename, documentDirectory=file.read(),
                                       employee=employee_element)
