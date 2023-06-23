@@ -1340,11 +1340,18 @@ def hotel_report():
 @admin_only
 def add_department():
     if request.method == "POST":
-        new_department = departmentMaster(name=request.form.get('name'))
-        db.session.add(new_department)
-        db.session.commit()
+        new_d = request.form.get('name')
+        all_depts = departmentMaster.query.all()
+        dept_names = [dep.name for dep in all_depts]
+        print(new_d, dept_names)
+        if request.form.get('name') in dept_names:
+            return render_template("add_dept.html", user=current_user, msg=f'Department: "{new_d}"" already exists, try adding a new one.')
+        else:
+            new_department = departmentMaster(name=request.form.get('name'))
+            db.session.add(new_department)
+            db.session.commit()
         return redirect(url_for("department_report"))
-    return render_template("add_dept.html", user=current_user)
+    return render_template("add_dept.html", user=current_user, msg='')
 
 
 @app.route("/del_dept/<dept_id>", methods=["GET", "POST"])

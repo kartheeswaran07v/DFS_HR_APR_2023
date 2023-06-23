@@ -15,7 +15,7 @@
 
   </div>
   <form action="/add_department" method="post">
-      <div class="row" style="margin-bottom: 100px;">
+      <div class="row" style="">
           <div class="col-2 abut">
               <label for="name">Department Name: </label>
           </div>
@@ -24,6 +24,11 @@
           </div>
           <div class="col-2">
               <button type="submit">Add Department</button>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-4 abut" style="text-align: ; color: red;margin-bottom: 100px;">
+              <p>{{msg}}</p>
           </div>
       </div>
 
