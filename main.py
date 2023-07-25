@@ -1961,7 +1961,7 @@ def employee_view(employee_id):
             leaves_taken = 0
 
         t_leaves += leaves_taken
-    if detail_element.total_leaves:
+    if detail_element.total_leaves or detail_element.total_leaves != 'None':
         total_leaves_pending = int(detail_element.total_leaves) - t_leaves
     else:
         total_leaves_pending = 0
