@@ -824,6 +824,15 @@ def download(upload_id):
     return send_file(BytesIO(upload__.documentDirectory), as_attachment=True, download_name=upload__.documentName)
 
 
+@app.route('/delete_upload/<upload_id>', methods=["GET", "POST"])
+def delete_upload(upload_id):
+    entry_to_delete = documentMaster.query.filter_by(id=upload_id).first()
+    employee_id = entry_to_delete.employeeID
+    db.session.delete(entry_to_delete)
+    db.session.commit()
+    return redirect(url_for('employee_view', employee_id=employee_id))
+
+
 @app.route('/image/<int:id>')
 def get_img(id):
     with app.app_context():
