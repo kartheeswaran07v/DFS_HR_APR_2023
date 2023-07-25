@@ -1865,7 +1865,7 @@ def upload_edit(employee_id):
             db.session.add(upload__)
             db.session.commit()
             print(file.filename)
-            return redirect(url_for('employee_view', employee_id=employee_element.id))
+        return redirect(url_for('employee_view', employee_id=employee_element.id))
     return render_template("upload_edit.html", name=emp_element.name, user=current_user, emp_id=emp_element.id, docs=doc_s, img_=img_s)
 
 
