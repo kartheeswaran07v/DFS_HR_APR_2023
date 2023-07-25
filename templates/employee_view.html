@@ -66,13 +66,14 @@
 
   <div class="row reports" style="margin-bottom: 50px; margin-left: 70px; margin-top: 0; width: 500px;">
       {% for i in docs %}
-        <div class="col-6">
-            <a href="{{url_for('download', upload_id=i.id)}}">{{i.documentName}}</a>
-        </div>
-        <div class="col-6">
-            <a href="{{url_for('delete_upload', upload_id=i.id)}}" style="color: red">X</a>
-        </div>
-
+          {% if i.documentName %}
+            <div class="col-6">
+                <a href="{{url_for('download', upload_id=i.id)}}">{{i.documentName}}</a>
+            </div>
+            <div class="col-6">
+                <a href="{{url_for('delete_upload', upload_id=i.id)}}" style="color: red">X</a>
+            </div>
+          {% endif %}
       {% endfor %}
   </div>
    <hr>
