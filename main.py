@@ -1572,8 +1572,12 @@ def roster_single_edit(roster_id):
     data_ = [employees, hotels]
     roster_element = rosterMaster.query.get(roster_id)
     roster_date = roster_element.date
-    roster_day = datetime.datetime.strptime(roster_date, "%Y-%d-%m").strftime('%A')
-    roster_full_date = datetime.datetime.strptime(roster_date, '%Y-%d-%m').strftime('%B %d, %Y')
+    try:
+        roster_day = datetime.datetime.strptime(roster_date, "%Y-%d-%m").strftime('%A')
+        roster_full_date = datetime.datetime.strptime(roster_date, '%Y-%d-%m').strftime('%B %d, %Y')
+    except ValueError:
+        roster_day = datetime.datetime.strptime(roster_date, "%Y-%m-%d").strftime('%A')
+        roster_full_date = datetime.datetime.strptime(roster_date, '%Y-%m-%d').strftime('%B %d, %Y')
     roster_color = {'Off': '#16FF00', 'Absent': '#FF0303', 'Sick': '#FFED00', 'Vacation': '#82CD47',
                     'Public Holiday': '#146C94', 'Office': '#83764F'}
     time_lists = []
