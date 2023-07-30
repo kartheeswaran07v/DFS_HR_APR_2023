@@ -1962,7 +1962,10 @@ def employee_view(employee_id):
 
         t_leaves += leaves_taken
     if detail_element.total_leaves and detail_element.total_leaves != 'None':
-        total_leaves_pending = int(detail_element.total_leaves) - t_leaves
+        try:
+            total_leaves_pending = int(detail_element.total_leaves) - t_leaves
+        except ValueError:
+            total_leaves_pending = 0
     else:
         total_leaves_pending = 0
     if form.validate_on_submit():
