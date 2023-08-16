@@ -13,8 +13,9 @@
   <!-- buttons -->
 
   <div class="row" style="margin-bottom: 50px; margin-left: 50px; text-align: center;">
-    <div class="col-6"><h1>Sheet No.: {{ sheet }}</h1></div>
-    <div class="col-6"><h1>Timesheet Date: {{ date__ }}</h1></div>
+    <div class="col-4"><h3>Sheet No.: {{ sheet }}</h3></div>
+    <div class="col-4"><h3>Timesheet Date: {{ date__ }}</h3></div>
+    <div class="col-4"><h3><a href="{{url_for('del_timesheet', ts_id=ts_id)}}">Delete</a></h3></div>
   </div>
 
 

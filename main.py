@@ -1143,7 +1143,8 @@ def timesheet():
 
         return render_template("ts_success_db.html", data=a, len=range(len(a['name'])), user=current_user)
 
-    return render_template("timesheet.html", array=employee_name, data=data_, user=current_user)
+    today = date.today()
+    return render_template("timesheet.html", array=employee_name, data=data_, user=current_user, date_=today)
 
 
 @app.route("/roster", methods=["GET", "POST"])
@@ -1354,7 +1355,8 @@ def add_department():
         dept_names = [dep.name for dep in all_depts]
         print(new_d, dept_names)
         if request.form.get('name') in dept_names:
-            return render_template("add_dept.html", user=current_user, msg=f'Department: "{new_d}"" already exists, try adding a new one.')
+            return render_template("add_dept.html", user=current_user,
+                                   msg=f'Department: "{new_d}"" already exists, try adding a new one.')
         else:
             new_department = departmentMaster(name=request.form.get('name'))
             db.session.add(new_department)
@@ -1522,6 +1524,16 @@ def roster_archive():
                            user=current_user)
 
 
+@app.route("/del_roster/<roster_id>", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def del_roster(roster_id):
+    entry_to_delete = rosterMaster.query.get(roster_id)
+    db.session.delete(entry_to_delete)
+    db.session.commit()
+    return redirect(url_for("roster_archive"))
+
+
 @app.route("/roster_single/<roster_id>", methods=["GET", "POST"])
 # Mark with decorator
 @admin_only
@@ -1545,7 +1557,10 @@ def roster_single(roster_id):
         employee = i.employee
         hotel = i.hotel
         hotel_list.append(hotel.name)
-        employee_list.append(employee.name)
+        try:
+            employee_list.append(employee.name)
+        except AttributeError:
+            employee_list.append('Undefined')
         ti1 = getTimeStr(i.timeIn1)
         ti2 = getTimeStr(i.timeIn2)
         to1 = getTimeStr(i.timeOut1)
@@ -1557,13 +1572,14 @@ def roster_single(roster_id):
         time_lists.append(time_dict)
     return render_template("roster_entries.html", entries=roster_entries, employees=employee_list, hotels=hotel_list,
                            len=range(len(roster_entries)), date=roster_full_date, day=roster_day, time_data=time_lists,
-                           user=current_user, color=roster_color)
+                           user=current_user, color=roster_color, roster_id=roster_id)
 
 
 @app.route("/roster_single_edit/<roster_id>", methods=["GET", "POST"])
 # Mark with decorator
 @admin_only
 def roster_single_edit(roster_id):
+    absence_reasons = ['none', 'Off', 'Absent', 'Sick', 'Vacation', 'Office']
     roster_entries = db.session.query(rosterEntryMaster).filter_by(rosterID=roster_id).all()
     employee_list = []
     hotel_list = []
@@ -1586,7 +1602,10 @@ def roster_single_edit(roster_id):
         employee = i.employee
         hotel = i.hotel
         hotel_list.append(hotel.name)
-        employee_list.append(employee.name)
+        try:
+            employee_list.append(employee.name)
+        except AttributeError:
+            employee_list.append('Undefined')
         ti1 = getTimeStr(i.timeIn1)
         ti2 = getTimeStr(i.timeIn2)
         to1 = getTimeStr(i.timeOut1)
@@ -1599,7 +1618,7 @@ def roster_single_edit(roster_id):
     return render_template("roster_entries_edit.html", entries=roster_entries, employees=employee_list,
                            hotels=hotel_list,
                            len=range(len(roster_entries)), date=roster_full_date, day=roster_day, data=data_,
-                           time_data=time_lists, user=current_user, color=roster_color)
+                           time_data=time_lists, user=current_user, color=roster_color, ab=absence_reasons)
 
 
 @app.route("/add_roster_element/<roster_id>", methods=["GET", "POST"])
@@ -1624,6 +1643,27 @@ def add_roster_element(roster_id):
         db.session.commit()
 
         return redirect(url_for("roster_single_edit", roster_id=roster_id))
+
+
+@app.route("/update_roster_element/<roster_entry_id>", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def update_roster_element(roster_entry_id):
+    if request.method == 'POST':
+        data = request.form.to_dict(flat=False)
+        a = jsonify(data).json
+        roster_entry_element = rosterEntryMaster.query.get(int(roster_entry_id))
+        roster_entry_element.timeIn1 = getTimeInt(a['timeIn1'][0])
+        roster_entry_element.timeOut1 = getTimeInt(a['timeOut1'][0])
+        roster_entry_element.timeIn2 = getTimeInt(a['timeIn2'][0])
+        roster_entry_element.timeOut2 = getTimeInt(a['timeOut2'][0])
+        roster_entry_element.pickUp = getTimeInt(a['pickUp'][0])
+        roster_entry_element.pickUp2 = getTimeInt(a['pickUp2'][0])
+        roster_entry_element.remark = a['remarks'][0]
+        roster_entry_element.absent = a['absent'][0]
+        db.session.commit()
+
+        return redirect(url_for("roster_single_edit", roster_id=roster_entry_element.rosterID))
 
 
 @app.route("/del_roster_element/<entry_id>", methods=["GET", "POST"])
@@ -1655,6 +1695,16 @@ def timesheet_archive():
                            hotels=hotels)
 
 
+@app.route("/del_timesheet/<ts_id>", methods=["GET", "POST"])
+# Mark with decorator
+@admin_only
+def del_timesheet(ts_id):
+    entry_to_delete = timesheetMaster.query.get(ts_id)
+    db.session.delete(entry_to_delete)
+    db.session.commit()
+    return redirect(url_for("timesheet_archive"))
+
+
 @app.route("/timesheet_single/<timesheet_id>", methods=["GET", "POST"])
 # Mark with decorator
 @admin_only
@@ -1679,7 +1729,8 @@ def timesheet_single(timesheet_id):
     return render_template("timesheet_entries.html", user=current_user, entries=timesheet_entries,
                            employees=employee_list,
                            hotel_name=hotel_name,
-                           len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, time_data=time_lists)
+                           len=range(len(timesheet_entries)), date__=date__, sheet=sheet_no, time_data=time_lists,
+                           ts_id=timesheet_id)
 
 
 @app.route("/timesheet_single_edit/<timesheet_id>", methods=["GET", "POST"])
@@ -1743,6 +1794,8 @@ def del_ts_element(entry_id):
     db.session.commit()
     return redirect(url_for("timesheet_single_edit", timesheet_id=ts_id))
 
+
+# Delete
 
 # reports
 
@@ -1879,7 +1932,8 @@ def upload_edit(employee_id):
             db.session.commit()
             print(file.filename)
         return redirect(url_for('employee_view', employee_id=employee_element.id))
-    return render_template("upload_edit.html", name=emp_element.name, user=current_user, emp_id=emp_element.id, docs=doc_s, img_=img_s)
+    return render_template("upload_edit.html", name=emp_element.name, user=current_user, emp_id=emp_element.id,
+                           docs=doc_s, img_=img_s)
 
 
 @app.route("/employee_view/<employee_id>", methods=["GET", "POST"])
@@ -1903,7 +1957,7 @@ def employee_view(employee_id):
             print('image elemement is there')
             img_id = int(img_element.id)
             # img_url = doc_element.documentName
-            img_url = f"https://dfxhr.herokuapp.com/image/{img_id}"
+            img_url = f"https://dfshr.herokuapp.com/image/{img_id}"
             # http://127.0.0.1:5000
             # https://dfshr.herokuapp.com
         else:

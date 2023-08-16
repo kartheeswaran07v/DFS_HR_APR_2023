@@ -1,30 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-        <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
-    <link href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" rel="stylesheet" />
-
-     <!-- Custom fonts for this template -->
-    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-
-    <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='styles1.css')}}" rel="stylesheet">
-
-</head>
-
-<body>
+{% block content %}
+{% include "header.html" %}
 
 
   <div class="welcome">
@@ -42,13 +20,13 @@
           <label for="date">Date: </label>
         </div>
         <div class="col-lg-2">
-          <input type="date" id="date" name="date" value="">
+          <input type="date" id="date" name="date" value="{{date_}}">
         </div>
         <div class="col-lg-2 con1">
           <label for="sheetNo">Sheet No.: </label>
         </div>
         <div class="col-lg-2">
-          <input type="number" id="sheetNo" name="sheetNo" value="">
+          <input type="number" id="sheetNo" name="sheetNo" value="0">
         </div>
         <div class="col-lg-2 con1">
           <label for="hotel">Hotel: </label>
@@ -63,7 +41,7 @@
       </div>
 
       <!-- entry rows -->
-      <div class="item row">
+      <div id='box1' class="item row">
         <div class="col-lg-2 con1">
           <label for="name">Name: </label>
         </div>
@@ -108,6 +86,9 @@
       <div>
         <button type="button" name="button" id="addButton2">Add</button>
       </div>
+      <div>
+        <button type="button" name="button" id="remove">Remove</button>
+      </div>
     </h5>
 
 
@@ -137,25 +118,26 @@
       $('#addButton2').click(function() {
         var numItems = $('.item').length + 1;
         var numStr = numItems.toString();
-        var divString = '<div class="item row"><div class="col-lg-2 con1"><label for="name">Name:</label></div><div class="col-lg-2"><select name="name" id="name" class="name"> {% for i in data[0] %} <option value="{{i.name}}">{{i.name}}</option> {% endfor %} </select></div><div class="col-lg-2 con1"><label for="timeIn1">Time In 1:</label></div><div class="col-lg-2"><input type="time" id="timeIn1" name="timeIn1" value="00:00"></div><div class="col-lg-2 con1"><label for="timeOut1">Time Out 1:</label></div><div class="col-lg-2"><input type="time" id="timeOut1" name="timeOut1" value="00:00"></div><div class="col-lg-2 con1"><label for="timeIn2">Time In 2: </label></div><div class="col-lg-2"><input type="time" id="timeIn2" name="timeIn2" value="00:00"></div><div class="col-lg-2 con1"><label for="timeOut2">Time Out 2: </label></div><div class="col-lg-2"><input type="time" id="timeOut2" name="timeOut2" value="00:00"></div></div>';
+        var divString = '<div id="box'+ numStr +'" class="item row"><div class="col-lg-2 con1"><label for="name">Name:</label></div><div class="col-lg-2"><select name="name" id="name" class="name"> {% for i in data[0] %} <option value="{{i.name}}">{{i.name}}</option> {% endfor %} </select></div><div class="col-lg-2 con1"><label for="timeIn1">Time In 1:</label></div><div class="col-lg-2"><input type="time" id="timeIn1" name="timeIn1" value="00:00"></div><div class="col-lg-2 con1"><label for="timeOut1">Time Out 1:</label></div><div class="col-lg-2"><input type="time" id="timeOut1" name="timeOut1" value="00:00"></div><div class="col-lg-2 con1"><label for="timeIn2">Time In 2: </label></div><div class="col-lg-2"><input type="time" id="timeIn2" name="timeIn2" value="00:00"></div><div class="col-lg-2 con1"><label for="timeOut2">Time Out 2: </label></div><div class="col-lg-2"><input type="time" id="timeOut2" name="timeOut2" value="00:00"></div></div>';
         var newDiv1 = $(divString);
 
         $('#divOutsideAdd').append(newDiv1);
       });
     });
+
+
+    $(function() {
+      $('#remove').click(function() {
+        var div_id = $('#divOutsideAdd').children().last().attr('id');
+        div_str = div_id.toString();
+        div_id_str = '#' + div_str
+        $(div_id_str).remove();
+      });
+    });
+
   </script>
 
 
 
-
-  <!-- Footer -->
-  <footer>
-
-    <hr>
-    <p class="copyright text-muted">Copyright &copy; Dash Fix HR 2022</p>
-
-  </footer>
-
-</body>
-
-</html>
+{% include "footer.html" %}
+{% endblock %}
