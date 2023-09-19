@@ -18,7 +18,7 @@ from io import BytesIO
 
 home_directory = os.path.expanduser('~')
 
-#gunicorn error check deploy
+# gunicorn error check deploy
 
 # app configuration
 app = Flask(__name__)
