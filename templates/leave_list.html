@@ -21,7 +21,7 @@
   {% for i in len %}
     <div class="row" style="margin-bottom: 30px; margin-left: 100px; text-align: center;">
       <div class="col-2"><p>{{ i+1 }}</p></div>
-      <div class="col-2"><p>{{ data[i].date }}</p></div>
+      <div class="col-2"><p>{{ date_list[i] }}</p></div>
       <div class="col-2"><h3>{{ data[i].employee.name }}</h3></div>
       <div class="col-2"><p><a href="{{url_for('leaveEdit', leave_id=data[i].id)}}">View/Edit</a></p></div>
     </div>

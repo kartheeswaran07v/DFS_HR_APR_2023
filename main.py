@@ -15,6 +15,7 @@ import os
 from roster_sheet import create_roster
 import base64
 from io import BytesIO
+from dateutil.parser import parse
 
 home_directory = os.path.expanduser('~')
 
@@ -410,7 +411,7 @@ class rosterEntryMaster(db.Model):
 
 
 # db.create_all()
-##postgres
+## postgres
 
 
 ##
@@ -918,7 +919,13 @@ def leave():
 @admin_only
 def leaveList():
     leave_list = leaveApplicationMaster.query.all()
-    return render_template('leave_list.html', data=leave_list, len=range(len(leave_list)), user=current_user)
+    date_list = [parse(str(leave_.date)[:10]).strftime("%d/%m/%Y") for leave_ in leave_list]
+
+    # # a = str(employee_element.joining_date)
+    # # formatted_date = parse(a[:10])
+    # date_str = formatted_date.strftime("%d/%m/%Y")
+    return render_template('leave_list.html', data=leave_list, len=range(len(leave_list)), user=current_user,
+                           date_list=date_list)
 
 
 @app.route('/leave-edit/<leave_id>', methods=["GET", "POST"])
@@ -1049,8 +1056,11 @@ def passport():
 # Mark with decorator
 @admin_only
 def passportList():
-    leave_list = passportApplicationMaster.query.all()
-    return render_template('pp_list.html', data=leave_list, len=range(len(leave_list)), user=current_user)
+    # leave_list = passportApplicationMaster.query.all()
+    leave_list = passportApplicationMaster.query.order_by(passportApplicationMaster.date.asc()).all()
+    date_list = [parse(str(leave_.date)[:10]).strftime("%d/%m/%Y") for leave_ in leave_list]
+    return render_template('pp_list.html', data=leave_list, len=range(len(leave_list)), user=current_user,
+                           date_list=date_list)
 
 
 @app.route('/pp-edit/<pp_id>', methods=["GET", "POST"])
@@ -1153,7 +1163,7 @@ def timesheet():
 # # Mark with decorator
 @admin_only
 def roster():
-    all_roster = rosterMaster.query.all()
+    all_roster = rosterMaster.query.order_by(rosterMaster.date.asc()).all()
     dates_list = []
     for i in all_roster:
         date_el = i.date
@@ -1473,6 +1483,7 @@ def archives():
                         else:
                             hours = rs_entry_element.absent
                         hotel = rs_entry_element.hotel
+                        # hotel = "abc"
 
 
                 else:
@@ -1521,9 +1532,10 @@ def archives():
 # Mark with decorator
 @admin_only
 def roster_archive():
-    rosters_list = rosterMaster.query.all()
+    rosters_list = rosterMaster.query.order_by(rosterMaster.date.asc()).all()
+    date_list = [parse(entry.date).strftime("%d/%m/%Y") for entry in rosters_list]
     return render_template("roster_archive_list.html", rosters=rosters_list, len=range(len(rosters_list)),
-                           user=current_user)
+                           user=current_user, date_list=date_list)
 
 
 @app.route("/del_roster/<roster_id>", methods=["GET", "POST"])
@@ -1631,18 +1643,21 @@ def add_roster_element(roster_id):
         hotel_element = db.session.query(hotelMaster).filter_by(name=request.form.get('hotel')).first()
         employee_element = db.session.query(employeeMaster).filter_by(name=request.form.get('name')).first()
         roster_element = db.session.query(rosterMaster).filter_by(id=roster_id).first()
-        new_entry = rosterEntryMaster(timeIn1=getTimeInt(request.form.get('timeIn1')),
-                                      timeOut1=getTimeInt(request.form.get('timeOut1')),
-                                      timeIn2=getTimeInt(request.form.get('timeIn2')),
-                                      timeOut2=getTimeInt(request.form.get('timeOut2')),
-                                      pickUp=getTimeInt(request.form.get('pickUp')),
-                                      pickUp2=getTimeInt(request.form.get('pickUp2')),
-                                      remark=request.form.get('remarks'), absent=request.form.get('absent'),
-                                      employee=employee_element, roster=roster_element,
-                                      hotel=hotel_element)
-        # TODO Add pick up 2
-        db.session.add(new_entry)
-        db.session.commit()
+        roster_entries = db.session.query(rosterEntryMaster).filter_by(roster=roster_element).all()
+        # Do not add to db if entry with user exists
+        if employee_element not in [roster_.employee for roster_ in roster_entries]:  # list comprehension
+            new_entry = rosterEntryMaster(timeIn1=getTimeInt(request.form.get('timeIn1')),
+                                          timeOut1=getTimeInt(request.form.get('timeOut1')),
+                                          timeIn2=getTimeInt(request.form.get('timeIn2')),
+                                          timeOut2=getTimeInt(request.form.get('timeOut2')),
+                                          pickUp=getTimeInt(request.form.get('pickUp')),
+                                          pickUp2=getTimeInt(request.form.get('pickUp2')),
+                                          remark=request.form.get('remarks'), absent=request.form.get('absent'),
+                                          employee=employee_element, roster=roster_element,
+                                          hotel=hotel_element)
+            # TODO Add pick up 2
+            db.session.add(new_entry)
+            db.session.commit()
 
         return redirect(url_for("roster_single_edit", roster_id=roster_id))
 
@@ -1685,8 +1700,11 @@ def del_roster_element(entry_id):
 # Mark with decorator
 @admin_only
 def timesheet_archive():
-    timesheet_list = timesheetMaster.query.all()
+    # timesheet_list = timesheetMaster.query.all()
+    timesheet_list = timesheetMaster.query.order_by(timesheetMaster.date.asc()).all()
     hotels = []
+    date_list = [parse(entry.date).strftime("%d/%m/%Y") for entry in timesheet_list]
+
     for ts in timesheet_list:
         hotel_element = hotelMaster.query.get(ts.hotelID)
 
@@ -1694,7 +1712,7 @@ def timesheet_archive():
         hotels.append(hotel_name)
 
     return render_template("timesheet_archive_list.html", user=current_user, ts=timesheet_list, len=range(len(hotels)),
-                           hotels=hotels)
+                           hotels=hotels, date_list=date_list)
 
 
 @app.route("/del_timesheet/<ts_id>", methods=["GET", "POST"])
@@ -1714,7 +1732,7 @@ def timesheet_single(timesheet_id):
     timesheet_entries = db.session.query(timesheetEntryMaster).filter_by(timesheetID=timesheet_id).all()
     ts_element = timesheetMaster.query.get(timesheet_id)
     sheet_no = ts_element.sheet_no
-    date__ = ts_element.date
+    date__ = parse(ts_element.date).strftime("%d/%m/%Y")
     hotel_element = hotelMaster.query.get(ts_element.hotelID)
     hotel_name = hotel_element.name
     employee_list = []
@@ -1742,7 +1760,7 @@ def timesheet_single_edit(timesheet_id):
     timesheet_entries = db.session.query(timesheetEntryMaster).filter_by(timesheetID=timesheet_id).all()
     ts_element = timesheetMaster.query.get(timesheet_id)
     sheet_no = ts_element.sheet_no
-    date__ = ts_element.date
+    date__ = parse(ts_element.date).strftime("%d/%m/%Y")
     hotel_element = hotelMaster.query.get(ts_element.hotelID)
     hotel_name = hotel_element.name
     employee_list = []
@@ -1946,7 +1964,8 @@ def employee_view(employee_id):
     employee_element = employeeMaster.query.get(employee_id)
     detail_element = db.session.query(employeeDetails).filter_by(employee=employee_element).first()
     a = str(employee_element.joining_date)
-    date_str = a[:10]
+    formatted_date = parse(a[:10])
+    date_str = formatted_date.strftime("%d/%m/%Y")
     actionItems = db.session.query(actionItemMaster).filter_by(employeeID=employee_id).all()
     doc_element = db.session.query(documentMaster).filter_by(employeeID=employee_id).first()
     img_element__ = db.session.query(Img).filter_by(employee=employee_element).all()

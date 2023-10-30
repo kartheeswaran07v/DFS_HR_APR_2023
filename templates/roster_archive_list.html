@@ -22,7 +22,7 @@
   {% for i in len %}
     <div class="row" style="margin-bottom: 30px; margin-left: 100px; text-align: center;">
       <div class="col-2"><p>{{ i+1 }}</p></div>
-      <div class="col-2"><p>{{ rosters[i].date }}</p></div>
+      <div class="col-2"><p>{{ date_list[i] }}</p></div>
       <div class="col-2"><p><a href="{{url_for('roster_single', roster_id=rosters[i].id)}}">View</a></p></div>
       <div class="col-2"><p><a href="{{url_for('roster_single_edit', roster_id=rosters[i].id)}}">Edit</a></p></div>
       <div class="col-2"><p><a href="{{url_for('download_roster', roster_id=rosters[i].id)}}">Download</a></p></div>
