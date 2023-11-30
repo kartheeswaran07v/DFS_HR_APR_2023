@@ -1449,6 +1449,7 @@ def reports():
 # Mark with decorator
 @admin_only
 def archives():
+    hotels = hotelMaster.query.all()
     form = Archives()
     employee_list = employeeMaster.query.all()
     if form.validate_on_submit():
@@ -1473,19 +1474,20 @@ def archives():
                     roster_element = db.session.query(rosterMaster).filter_by(date=ts_list[j].date).first()
                     if not roster_element:
                         hours = "N/A"
-                        hotel = hotelMaster.query.get(1)
+                        
+                        hotel = hotels[0]
                     else:
                         rs_entry_element = db.session.query(rosterEntryMaster).filter_by(employeeID=employee_list[i].id,
                                                                                          rosterID=roster_element.id).first()
                         if (not rs_entry_element) or (rs_entry_element.absent == "none"):
                             hours = "N/A"
-                            hotel = hotelMaster.query.get(1)
+                            hotel = hotels[0]
                         else:
                             hours = rs_entry_element.absent
                         try:
                             hotel = rs_entry_element.hotel
                         except:
-                            hotel = hotelMaster.query.get(1)
+                            hotel = hotels[0]
                         # hotel = "abc"
 
 
