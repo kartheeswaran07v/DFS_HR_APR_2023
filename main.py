@@ -1462,7 +1462,7 @@ def archives():
                 return render_template("archives.html", form=form, msg="Choose correct dates", user=current_user)
             else:
                 ts_list.append(ts_element)
-
+        print(len(ts_list))
         master_ts_list = []
         for i in range(len(employee_list)):
             ms_dict = {"name": employee_list[i].name, "hours": [], 'hotel': []}
