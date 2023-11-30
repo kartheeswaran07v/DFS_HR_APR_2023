@@ -1482,7 +1482,10 @@ def archives():
                             hotel = hotelMaster.query.get(1)
                         else:
                             hours = rs_entry_element.absent
-                        hotel = rs_entry_element.hotel
+                        try:
+                            hotel = rs_entry_element.hotel
+                        except:
+                            hotel = hotelMaster.query.get(1)
                         # hotel = "abc"
 
 
