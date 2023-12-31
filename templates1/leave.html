@@ -1,0 +1,231 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+{% include "header.html" %}
+
+
+
+  <div class="welcome">
+    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
+    <span>Welcome: {{user.name}}</span>
+  </div>
+
+  <h2>Leave Application Form</h2>
+  <form action="" method="post">
+    {{form.hidden_tag()}} <!-- important tag-->
+
+    <!-- basic details -->
+    <div class="firstDet row">
+
+      <div class="col-lg-3 con1">
+        <p>{{ form.date.label() }}</p>
+        <p>{{ form.name.label() }}</p>
+        <p>{{ form.company.label() }}</p>
+        <p>{{ form.dept.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.date(value='2023-01-01') }}</p>
+        <p>{{ form.name(choices=[1, 2, 3, 4]) }}</p>
+        <p>{{ form.company(value='-') }}</p>
+        <p>{{ form.dept(value='-') }}</p>
+      </div>
+      <div class="col-lg-3 con2">
+        <p>{{ form.designation.label() }}</p>
+        <p>{{ form.nationality.label() }}</p>
+        <p>{{ form.pass_no.label() }}</p>
+        <p>{{ form.emp.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.designation(value='-') }}</p>
+        <p>{{ form.nationality(value='-') }}</p>
+        <p>{{ form.pass_no(value='-') }}</p>
+        <p>{{ form.emp(value='-') }}</p>
+      </div>
+    </div>
+
+    <!-- leave type -->
+
+    <h5>{{ form.leave_type.label() }}{{ form.leave_type }}</h5>
+
+    <!-- personal details -->
+    <h5>Section 1: Personal Details</h5>
+    <div class="persDet row">
+
+      <div class="col-lg-3 con1">
+        <p>{{ form.addr_wol.label() }}</p>
+        <p>{{ form.con_per.label() }}</p>
+        <p>{{ form.rel.label() }}</p>
+        <p>{{ form.pol.label() }}</p>
+
+        <p>{{ form.dot.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.addr_wol(value='-') }}</p>
+        <p>{{ form.con_per(value='-') }}</p>
+        <p>{{ form.rel(value='-') }}</p>
+        <p>{{ form.pol(value='-') }}</p>
+
+        <p>{{ form.dot(value='2023-01-01') }}</p>
+      </div>
+      <div class="col-lg-3 con2">
+        <p>{{ form.con_wol.label() }}</p>
+        <p>{{ form.sub_emp.label() }}</p>
+        <p>{{ form.leave_f.label() }}</p>
+        <p>{{ form.leave_t.label() }}</p>
+        <p>{{ form.no_days.label() }}</p>
+        <p>{{ form.air_tic.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.con_wol(value='-') }}</p>
+        <p>{{ form.sub_emp(value='-') }}</p>
+        <p>{{ form.leave_f(value='2023-01-01') }}</p>
+        <p>{{ form.leave_t(value='2023-01-01') }}</p>
+        <p>{{ form.no_days(value=0) }}</p>
+        <p>{{ form.air_tic(value='-') }}</p>
+      </div>
+    </div>
+
+
+
+    <!-- Guarantors -->
+    <h5>Section 2: Guarantors</h5>
+    <div class="persDet row">
+      <div class="col-lg-12">
+        <p>
+          Please note you need to provide Two Guarantors, who will stand
+          Gurantee that you will reutnr ot work as per your due date
+        </p>
+      </div>
+      <div class="col-lg-3 con1">
+        <p>{{ form.g1_name.label() }}</p>
+        <p>{{ form.g1_dept.label() }}</p>
+        <p>{{ form.g1_id_no.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.g1_name(list="id_datalist") }}</p>
+        <datalist id="id_datalist">
+          {% for entry in entries %}
+            <option value="{{ entry }}">
+          {% endfor %}
+        </datalist>
+        <p>{{ form.g1_dept(value='-') }}</p>
+        <p>{{ form.g1_id_no(value=0) }}</p>
+      </div>
+      <div class="col-lg-3 con2">
+        <p>{{ form.g2_name.label() }}</p>
+        <p>{{ form.g2_dept.label() }}</p>
+        <p>{{ form.g2_id_no.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.g2_name(list="id_datalist") }}</p>
+        <p>{{ form.g2_dept(value='-') }}</p>
+        <p>{{ form.g2_id_no(value=0) }}</p>
+      </div>
+      <div class="col-lg-12">
+        <p>
+          The above guarantors are responsible for the individuals return as per their due date, failing which you will ensure that the individual Passport is returned through you to HRD for necessary paper works in cancellation of visa and where necessary to provide all required documentation and payments requested by HRD for visa fees and cancellation fees and other advances or loans from the employee. By signing this you accept stand as a guarantee and HRD will have the authority to take all necessary action to ensure safety and security of the company.
+        </p>
+      </div>
+    </div>
+
+
+    <h2>For Official Use</h2>
+
+
+    <!-- hr department -->
+    <h5>Section 3: HR Department</h5>
+    <div class="hrDet row">
+
+      <div class="col-lg-3 con1">
+        <p>{{ form.doj.label() }}</p>
+        <p>{{ form.tla.label() }}</p>
+        <p>{{ form.less_this.label() }}</p>
+        <p>{{ form.nod_app.label() }}</p>
+        <p>{{ form.dor.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.doj(value='2023-01-01') }}</p>
+        <p>{{ form.tla(value=0) }}</p>
+        <p>{{ form.less_this(value=0) }}</p>
+        <p>{{ form.nod_app(value=0) }}</p>
+        <p>{{ form.dor(value='2023-01-01') }}</p>
+      </div>
+      <div class="col-lg-3 con2">
+        <p>{{ form.eligibility.label() }}</p>
+        <p>{{ form.last_leave.label() }}</p>
+        <p>{{ form.balance_leave.label() }}</p>
+        <p>{{ form.release_date.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.eligibility(value='-') }}</p>
+        <p>{{ form.last_leave(value='-') }}</p>
+        <p>{{ form.balance_leave(value=0) }}</p>
+        <p>{{ form.release_date(value='2023-01-01') }}</p>
+      </div>
+    </div>
+
+
+    <!-- if leave not approved -->
+    <h5>Section 4: If Annual Leave is not Approved</h5>
+    <div class="noLeaveAp row">
+
+      <div class="col-lg-3 con1">
+        <p>{{ form.amt_appr.label() }}</p>
+        <p>{{ form.cheq_no.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.amt_appr(value=0) }}</p>
+        <p>{{ form.cheq_no(value=0) }}</p>
+      </div>
+      <div class="col-lg-3 con2">
+        <p>{{ form.pbc.label() }}</p>
+        <p>{{ form.bank_tr.label() }}</p>
+        <p>{{ form.date_tr.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.pbc }}</p>
+        <p>{{ form.bank_tr(value='-') }}</p>
+        <p>{{ form.date_tr(value='2023-01-01') }}</p>
+      </div>
+    </div>
+
+
+    <!-- approval-->
+    <h5>Section 5: Approval</h5>
+    <div class="appr row">
+
+      <div class="col-lg-3 con1">
+        <p>{{ form.approved_by.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.approved_by(list="id_datalist") }}</p>
+      </div>
+      <div class="col-lg-3 con2">
+        <p>{{ form.approved_by_2.label() }}</p>
+      </div>
+      <div class="col-lg-3">
+        <p>{{ form.approved_by_2(list="id_datalist") }}</p>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <h5>{{ form.submit }}</h5>
+
+
+
+  </form>
+
+
+
+
+{% include "footer.html" %}
+{% endblock %}

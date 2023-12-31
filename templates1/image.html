@@ -1,0 +1,47 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+{% include "header.html" %}
+
+  <div class="welcome">
+    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
+    <span>Welcome: {{user.name}}</span>
+  </div>
+
+
+
+
+  <!-- <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Duty Roster</h1>
+  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">{{date}}- {{day}}</h1> -->
+
+  <div class="row" style="text-align: center;">
+    <div class="col-2">
+      <img src="{{ url_for('static', filename='images/Sign.png')}}" alt="" style="width: 100%; padding-top:35px;">
+    </div>
+  <div class="row">
+    <div class="col-2"><p>ID</p></div>
+    <div class="col-3"><p>Image</p></div>
+    <div class="col-3"><p>Name</p></div>
+    <div class="col-2"><p>MimeType</p></div>
+    <div class="col-2"><p>Employee ID</p></div>
+  </div>
+
+  <div class="row">
+    {% for i in data %}
+      <div class="col-2"><p>{{i.id}}</p></div>
+      <div class="col-3"><p>{{i.img[:20]}}</p></div>
+      <div class="col-3"><p>{{i.name}}</p></div>
+      <div class="col-2"><p>{{i.mimetype}}</p></div>
+      <div class="col-2"><p>{{i.employeeID}}</p></div>
+    {% endfor %}
+  </div>
+
+
+
+
+
+
+
+{% include "footer.html" %}
+{% endblock %}

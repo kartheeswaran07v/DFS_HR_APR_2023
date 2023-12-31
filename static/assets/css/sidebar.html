@@ -1,0 +1,146 @@
+		<!-- Sidebar -->
+		<div class="sidebar sidebar-style-2" data-background-color="dark2">			
+			<div class="sidebar-wrapper scrollbar scrollbar-inner">
+				<div class="sidebar-content">
+
+				{% if current_user.is_authenticated %}	
+					<div class="user">
+						<div class="avatar-sm float-left mr-2">
+							<img src="/static/assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+						</div>
+						<div class="info">
+							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+								<span>
+									{{ current_user.username }}
+									<span class="user-level">
+										{{ current_user.email }}
+									</span>
+									<span class="caret"></span>
+								</span>
+							</a>
+							<div class="clearfix"></div>
+
+							<div class="collapse in" id="collapseExample">
+								<ul class="nav">
+									<li>
+										<a href="{{ url_for('profile') }}">
+											<span class="link-collapse">My Profile</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{ url_for('logout') }}">
+											<span class="link-collapse">Logout</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<ul class="nav nav-primary">
+						<li class="nav-item {% if 'index' in segment %} active {% endif %}">
+							<a data-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
+								<i class="fas fa-home"></i>
+								<p>Dashboard</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse {% if 'index' in segment %} show {% endif %}" id="dashboard">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="/home">
+											<span class="sub-item">Dashboard</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</li>
+						<hr style="border-top: 1px solid #ccc; opacity: 0.1;">
+						<li class="nav-section">
+							<span class="sidebar-mini-icon">
+								<i class="fa fa-ellipsis-h"></i>
+							</span>
+							<h4 class="text-section">Components</h4>
+						</li>
+
+						<!---------->
+						<li class="nav-item {% if 'widgets' in segment %} active {% endif %}">
+							<a href="{{ url_for('registration') }}">
+								<i class="fas fa-user-plus"></i>
+								<p>New Registration</p>
+								
+							</a>
+						</li>
+
+						<li class="nav-item {% if 'widgets' in segment %} active {% endif %}">
+							<a href="{{ url_for('leave') }}">
+								<i class="fas fa-file-alt"></i>
+								<p>Leave Application</p>
+								
+							</a>
+						</li>
+
+						<li class="nav-item {% if 'widgets' in segment %} active {% endif %}">
+							<a href="{{ url_for('passport') }}">
+								<i class="fas fa-passport"></i>
+								<p>Passport Req. Form</p>
+								
+							</a>
+						</li>
+
+						<li class="nav-item {% if 'widgets' in segment %} active {% endif %}">
+							<a href="{{ url_for('timesheet') }}">
+								<i class="fas fa-clock"></i>
+								<p>Add Timesheet</p>
+								
+							</a>
+						</li>
+
+						<li class="nav-item {% if 'widgets' in segment %} active {% endif %}">
+							<a href="{{ url_for('roster_date') }}">
+								<i class="fas fa-calendar-alt"></i>
+								<p>Add Roster</p>
+								
+							</a>
+						</li>
+
+						<li class="nav-item {% if 'widgets' in segment %} active {% endif %}">
+							<a href="{{ url_for('add_hotel') }}">
+								<i class="fas fa-hotel"></i>
+								<p>Add Hotel</p>
+								
+							</a>
+						</li>
+
+						<li class="nav-item {% if 'widgets' in segment %} active {% endif %}">
+							<a href="{{ url_for('add_department') }}">
+								<i class="fas fa-sitemap"></i>
+								<p>Add Dept.</p>
+								
+							</a>
+						</li>
+
+						<li class="nav-item {% if 'widgets' in segment %} active {% endif %}">
+							<a href="{{ url_for('reports') }}">
+								<i class="fas fa-chart-bar"></i>
+								<p>Go to Reports</p>
+								
+							</a>
+						</li>
+
+						<li class="nav-item {% if 'widgets' in segment %} active {% endif %}">
+							<a href="{{ url_for('archives') }}">
+								<i class="fas fa-archive"></i>
+								<p>Archives</p>
+								
+							</a>
+						</li>
+						<!---------->
+						
+					</ul>
+				{% else %}
+					
+				{% endif %}	
+				</div>
+			</div>
+		</div>
+        <!-- End Sidebar -->
+        

@@ -1,0 +1,78 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+{% include "header.html" %}
+
+  <div class="welcome">
+    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
+    <span>Welcome: {{user.name}}</span>
+  </div>
+
+
+
+
+  <!-- <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Duty Roster</h1>
+  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">{{date}}- {{day}}</h1> -->
+
+  <div class="row" style="text-align: center;">
+    <div class="col-2">
+      <img src="{{ url_for('static', filename='images/Sign.png')}}" alt="" style="width: 100%; padding-top:35px;">
+    </div>
+    <div class="col-10">
+      <div class="row">
+        <div class="col-12">
+          <h3>Duty Roster</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <h3>Date</h3>
+        </div>
+        <div class="col-8">
+          <h3>{{day}}, {{date}}</h3>
+        </div>
+        <div class="col-2">
+          <h3><a href="{{url_for('del_roster', roster_id=roster_id)}}">Delete</a></h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-1"><p>S. No.</p></div>
+    <div class="col-3"><p>Staff</p></div>
+    <div class="col-3"><p>Hotel</p></div>
+    <div class="col-2"><p>Duty Time</p></div>
+    <div class="col-2"><p>Pick-Up Time</p></div>
+    <div class="col-1">Remark</div>
+  </div>
+
+  <div class="row">
+    {% for i in len %}
+      {% if entries[i].absent == 'none' %}
+        <div class="col-1"><p>{{ i + 1 }}</p></div>
+        <div class="col-3"><p>{{ employees[i] }}</p></div>
+        <div class="col-3"><p>{{ hotels[i] }}</p></div>
+        {% if time_data[i].timeIn2 == '00:00' %}
+          <div class="col-2"><p>{{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}</p></div>
+        {% else %}
+          <div class="col-2"><p>{{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}/{{ time_data[i].timeIn2 }} - {{ time_data[i].timeOut2 }}</p></div>
+        {% endif %}
+        <div class="col-2"><p>{{ time_data[i].pickUp }}</p></div>
+        <div class="col-1">{{ entries[i].remark }}</div>
+      {% else %}
+        <div class="col-1"><p>{{ i + 1 }}</p></div>
+        <div class="col-3"><p>{{ employees[i] }}</p></div>
+        <div class="col-8" style="text-align: center; background-color: {{color[entries[i].absent]}};"><p>{{ entries[i].absent }}</p></div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+
+
+
+
+
+
+{% include "footer.html" %}
+{% endblock %}

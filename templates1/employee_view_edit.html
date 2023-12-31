@@ -1,0 +1,72 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+{% include "header.html" %}
+
+  <div class="welcome">
+    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
+    <span>Welcome: {{user.name}}</span>
+  </div>
+
+  <div class="row reports" style="margin-bottom: 30px; margin-left: 70px; margin-top: 70px;">
+      <div class="col-3">
+        <h3>ID: {{ employee.employeeID }}</h3>
+      </div>
+      <div class="col-3">
+        <h3>Name: {{employee.name}}</h3>
+      </div>
+      <div class="col-3">
+        <h3>Joining Date: {{date_str}}</h3>
+      </div>
+      <div class="col-3">
+        <h3>Addr: {{employee.addressUae}}</h3>
+      </div>
+  </div>
+  <hr>
+  <form action="/employee_details/{{employee.id}}" method="post">
+      <div class="row">
+
+          <div class="col-6">
+            <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Worked Hours: {{ workedHours }}</p></div>
+            <div class="row" style="margin-bottom: 5px; margin-left: 70px;">
+                <div class="col-6"><label for="done">Payments Done:</label></div>
+                <div class="col-6"><input type="text" id="done" name="done" value="{{details.payments_done}}"></div>
+            </div>
+            <div class="row" style="margin-bottom: 5px; margin-left: 70px;">
+                <div class="col-6"><label for="pending_p">Payments Pending:</label></div>
+                <div class="col-6"><input type="number" id="pending_p" name="pending_p" value="{{details.payments_pending}}"></div>
+            </div><br>
+            <div class="row" style="margin-bottom: 5px; margin-left: 70px;">
+                <div class="col-6"><label for="pending_l">Total Leaves:</label></div>
+                <div class="col-6"><input type="number" id="pending_l" name="pending_l" value="{{details.total_leaves}}"></div>
+            </div>
+            <div class="row" style="margin-bottom: 5px; margin-left: 70px;">
+                <div class="col-6"><label for="visa">Visa Expiry:</label></div>
+                <div class="col-6"><input type="text" id="visa" name="visa" value="{{details.visa_expiry}}"></div>
+            </div>
+            <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Profile Completion: {{ profile }}%</p></div>
+
+            <div class="row"><input type="submit" value="Sumbmit"></div>
+
+          </div>
+
+
+          <div class="col-6">
+            <img src="{{img_url}}" alt="Profile pic" style="width: 50%;">
+          </div>
+
+      </div>
+  </form>
+  <hr>
+
+
+
+
+
+
+
+
+
+{% include "footer.html" %}
+{% endblock %}

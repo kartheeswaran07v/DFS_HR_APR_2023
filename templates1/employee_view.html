@@ -1,0 +1,92 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+{% include "header.html" %}
+
+  <div class="welcome">
+    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
+    <span>Welcome: {{user.name}}</span>
+  </div>
+
+  <div class="row reports" style="margin-bottom: 30px; margin-left: 70px; margin-top: 70px;">
+      <div class="col-3">
+        <h3>ID: {{ employee.employeeID }}</h3>
+      </div>
+      <div class="col-3">
+        <h3>Name: {{employee.name}}</h3>
+      </div>
+      <div class="col-3">
+        <h3>Joining Date: {{date_str}}</h3>
+      </div>
+      <div class="col-3">
+        <h3>Addr: {{employee.addressUae}}</h3>
+      </div>
+  </div>
+  <hr>
+
+  <div class="row">
+      <div class="col-6">
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Worked Hours: {{ workedHours }}</p></div>
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Payments Done: {{details.payments_done}}</p></div>
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Payments Pending: {{details.payments_pending}}</p></div><br>
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Leaves Pending: {{p_l}}</p></div>
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Visa Expiry: {{details.visa_expiry}}</p></div>
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Profile Completion: {{ profile }}%</p></div>
+        <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><a href="{{url_for('employee_details', employee_id=employee.id)}}">Edit Details</a></div>
+
+      </div>
+      <div class="col-6">
+        <img src="{{img_url}}" alt="Profile pic" style="width: 50%;">
+      </div>
+
+  </div>
+  <hr>
+
+  <div class="row reports" style="margin-bottom: 20px;" >
+      <h2 style="text-align: left">Action Items</h2>
+  </div>
+
+  {% for i in len %}
+    <div class="row reports" style="margin-bottom: 20px; margin-left: 70px;" >
+        <div class="col-3">
+            <h4>{{ i+1 }}. {{ items[i].actionText }}</h4>
+        </div>
+        <div class="col-2 bbut">
+            <h4><a href="{{url_for('action_item_del', entry_id=items[i].id)}}">Del</a></h4>
+        </div>
+    </div>
+  {% endfor %}
+
+  <hr>
+
+  <div class="row reports" style="margin-bottom: 0;" >
+      <h2 style="text-align: left">Documents</h2>
+  </div>
+
+  <div class="row reports" style="margin-bottom: 50px; margin-left: 70px; margin-top: 0; width: 800px;">
+      {% for i in docs %}
+          {% if i.documentName %}
+            <div class="col-6">
+                <a href="{{url_for('download', upload_id=i.id)}}">{{i.documentName}}</a>
+            </div>
+            <div class="col-6">
+                <a href="{{url_for('delete_upload', upload_id=i.id)}}" style="color: red">X</a>
+            </div>
+          {% endif %}
+      {% endfor %}
+  </div>
+   <hr>
+
+  <div class="row reports" style="margin-bottom: 0;" >
+      <h2 style="text-align: left">Add Action Items</h2>
+  </div>
+
+  <div class="row reports" style="margin-bottom: 50px; margin-left: 70px; margin-top: 0; width: 500px;">
+      {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+  </div>
+
+
+
+{% include "footer.html" %}
+{% endblock %}
