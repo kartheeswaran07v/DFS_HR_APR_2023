@@ -1,108 +1,473 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} New Registration Forms {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{ url_for('home') }}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
+<div class="content">
 
-  <form action="" method="post">
-      {{form.hidden_tag()}} <!-- important tag-->
-      <h5>Basic Details</h5>
-      <div class="basDet row">
-          <div class="col-lg-3 con1">
-              <p>{{ form.name.label() }}</p>
-              <p>{{ form.joining_date.label() }}</p>
-              <p>{{ form.department_e.label() }}</p>
-              <p>{{ form.employee_id.label() }}</p>
-              <p>{{ form.address_uae.label() }}</p>
-              <p>{{ form.po_box.label() }}</p>
-              <p>{{ form.mobile_p.label() }}</p>
-              <p>{{ form.mobile_h.label() }}</p>
-              <p>{{ form.personal_mail.label() }}</p>
-              <p>{{ form.address_home.label() }}</p>
-              <p>{{ form.passport_no.label() }}</p>
-              <p>{{ form.nationality.label() }}</p>
-              <p>{{ form.own_car.label() }}</p>
-              <p>{{ form.car_rent.label() }}</p>
-              <p>{{ form.company_laptop.label() }}</p>
-              <p>{{ form.company_mobile.label() }}</p>
-          </div>
-          <div class="col-lg-3">
-              <p>{{ form.name(value='-') }}</p>
-              <p>{{ form.joining_date(value='2023-01-01') }}</p>
-              <p>{{ form.department_e(list="id_datalist") }}</p>
-              <datalist id="id_datalist">
-                  {% for entry in depts %}
-                    <option value="{{ entry }}">
-                  {% endfor %}
-              </datalist>
-              <p>{{ form.employee_id(value='-') }}</p>
-              <p>{{ form.address_uae(value='-') }}</p>
-              <p>{{ form.po_box(value='-') }}</p>
-              <p>{{ form.mobile_p(value=0) }}</p>
-              <p>{{ form.mobile_h(value=0) }}</p>
-              <p>{{ form.personal_mail(value='test@test.com') }}</p>
-              <p>{{ form.address_home(value='-') }}</p>
-              <p>{{ form.passport_no(value='-') }}</p>
-              <p>{{ form.nationality(value='-') }}</p>
-              <p>{{ form.own_car }}</p>
-              <p>{{ form.car_rent }}</p>
-              <p>{{ form.company_laptop(value='-') }}</p>
-              <p>{{ form.company_mobile(value='-') }}</p>
-          </div>
-
-
-
-      </div>
-
-      <h5>Emergency Contact Details</h5>
-      <div class="emeCon row">
-
-        <div class="col-lg-3 con1">
-            <p>UAE</p>
-            <p>{{ form.e_uae_name.label() }}</p>
-            <p>{{ form.e_uae_rel.label() }}</p>
-            <p>{{ form.e_uae_addr.label() }}</p>
-            <p>{{ form.e_uae_mob.label() }}</p>
-            <p>{{ form.e_uae_hom.label() }}</p>
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="registration">New Registration</a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                
+            </ul>
         </div>
-        <div class="col-lg-3">
-            <p>Details</p>
-            <p>{{ form.e_uae_name(value='-') }}</p>
-            <p>{{ form.e_uae_rel(value='-') }}</p>
-            <p>{{ form.e_uae_addr(value='-') }}</p>
-            <p>{{ form.e_uae_mob(value=0) }}</p>
-            <p>{{ form.e_uae_hom(value=0) }}</p>
-        </div>
-        <div class="col-lg-3 con2">
-              <p>{{ form.origin_country.label() }}</p>
-              <p>{{ form.e_co_name.label() }}</p>
-              <p>{{ form.e_co_rel.label() }}</p>
-              <p>{{ form.e_co_addr.label() }}</p>
-              <p>{{ form.e_co_mob.label() }}</p>
-              <p>{{ form.e_co_hom.label() }}</p>
-        </div>
-        <div class="col-lg-3">
-              <p>{{ form.origin_country(value='-') }}</p>
-              <p>{{ form.e_co_name(value='-') }}</p>
-              <p>{{ form.e_co_rel(value='-') }}</p>
-              <p>{{ form.e_co_addr(value='-') }}</p>
-              <p>{{ form.e_co_mob(value=0) }}</p>
-              <p>{{ form.e_co_hom(value=0) }}</p>
-        </div>
-      </div>
+
+        <form action="" method="post">
+            {{form.hidden_tag()}} 
+            <div>
+                 <!-- basic details -->
+                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title" > Basic Details</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="form-group">
+                                            <p>{{ form.name.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-user"></i>
+                                                </span>
+                                                {{ form.name(class="form-control", placeholder="Username") }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p>{{ form.joining_date.label() }}</p>
+                                            <span class="input-group-addon">
+                                            </span>
+                                            {{ form.joining_date(class="form-control", placeholder="Joining Date") }}
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p>{{ form.department_e.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-building"></i></span>
+                                                </div>
+                                                {{ form.department_e(class="form-control", list="id_datalist", id="smallInput", placeholder="department")}}
+                                                <datalist id="id_datalist">
+                                                    {% for entry in depts %}
+                                                    <option value="{{ entry }}">
+                                                    {% endfor %}
+                                                </datalist>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <p>{{ form.employee_id.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                                                </div>
+                                                {{ form.employee_id(class="form-control", placeholder="Employee ID") }}
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                        <div class="form-group">
+                                            <p>{{ form.address_uae.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                                                </div>
+                                                {{ form.address_uae(class="form-control", placeholder="Address") }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p>{{ form.po_box.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-inbox"></i></span>
+                                                </div>
+                                                {{ form.po_box(class="form-control", placeholder="Post Box") }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="form-group">
+                                            <p>{{ form.mobile_p.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control form-control" id="defaultSelect" >
+                                                        <option value="+1">+1 </option>
+                                                        <option value="+44">+44 </option>
+                                                        <option value="+61">+61 </option>
+                                                        <option value="+1">+1 </option>
+                                                        <option value="+91">+91 </option>
+                                                        <option value="+49">+49 </option>
+                                                        <option value="+33">+33 </option>
+                                                        <option value="+86">+86 </option>
+                                                        <option value="+81">+81 </option>
+                                                        <option value="+55">+55 </option>
+                                                        <option value="+27">+27 </option>
+                                                        <option value="+7">+7 </option>
+                                                        <option value="+52">+52 </option>
+                                                        <option value="+34">+34 </option>
+                                                        <option value="+39">+39 </option>
+                                                    </select>
+                                                </div>
+                                                {{ form.mobile_p(type="tel",class="form-control", placeholder="Phone Number") }}
+                                            </div>
+                                        </div>
+               
+                                        <div class="form-group">
+                                            <p>{{ form.mobile_h.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <select class="form-control form-control" id="defaultSelect" >
+                                                        <option value="+1">+1 </option>
+                                                        <option value="+44">+44 </option>
+                                                        <option value="+61">+61 </option>
+                                                        <option value="+1">+1 </option>
+                                                        <option value="+91">+91 </option>
+                                                        <option value="+49">+49 </option>
+                                                        <option value="+33">+33 </option>
+                                                        <option value="+86">+86 </option>
+                                                        <option value="+81">+81 </option>
+                                                        <option value="+55">+55 </option>
+                                                        <option value="+27">+27 </option>
+                                                        <option value="+7">+7 </option>
+                                                        <option value="+52">+52 </option>
+                                                        <option value="+34">+34 </option>
+                                                        <option value="+39">+39 </option>
+                                                    </select>
+                                                </div>
+                                                {{ form.mobile_h(type="tel",class="form-control", placeholder="Phone Number") }}
+                                            </div>
+                                        </div>
+                       
+                                        <div class="form-group">
+                                            <p>{{ form.personal_mail.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                                </div>
+                                                {{ form.personal_mail(class="form-control", placeholder="test@test.com") }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p>{{ form.address_home.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                                                </div>
+                                                {{ form.address_home(class="form-control", placeholder="home address") }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p>{{ form.passport_no.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-passport"></i></span>
+                                                </div>
+                                                {{ form.passport_no(class="form-control", placeholder="passport no") }}
+                                            </div>
+                                        </div>
+                                            
+                                        
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="form-group">
+                                            <p>{{ form.nationality.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                                                </div>
+                                                {{ form.nationality(class="form-control", placeholder="nationality") }}
+                                            </div>
+                                        </div>
+                                        <div class="form-check">
+                                            <p>{{ form.own_car.label() }}</p>
+                                            <label class="form-radio-label">
+                                                <input class="form-radio-input" type="radio" name="optionsRadios" value=""  checked="">
+                                                {{ form.own_car() }}
+                                                <span class="form-radio-sign">Yes</span>
+                                            </label>
+                                            <label class="form-radio-label ml-3">
+                                                <input class="form-radio-input" type="radio" name="optionsRadios" value="">
+                                                <span class="form-radio-sign">No</span>
+                                            </label>
+                                        </div>
+
+                                        
+                                        <div class="form-check">
+                                            <p>{{ form.car_rent.label() }}</p>
+                                            <label class="form-radio-label">
+                                                <input class="form-radio-input" type="radio" name="car_option" value="car_rent">
+                                                {{ form.car_rent() }}
+                                                <span class="form-radio-sign" style="margin-left: 5px;">Yes</span>
+                                            </label>
+                                            <label class="form-radio-label ml-3">
+                                                <input class="form-radio-input" type="radio" name="car_option" value="no_rent">
+                                                <span class="form-radio-sign" style="margin-left: 5px;">No</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p>{{ form.company_laptop.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-laptop"></i></span>
+                                                </div>
+                                                {{ form.company_laptop(class="form-control", placeholder="laptop details") }}
+                                            </div>
+                                        </div>
+                                            
+                                        <div class="form-group">
+                                            <p>{{ form.company_mobile.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" style="transform: scaleX(-1);"><i class="fa fa-phone"></i></span>
+                                                </div>
+                                                {{ form.company_mobile(class="form-control", placeholder="mobile details") }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
-      <h5>{{ form.submit }}</h5>
+     
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <div class="card-title">Emergency Contact Details</div><br>
+                                                        <h4><strong>UAE</strong></h4>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6 col-lg-4">
+                                                
+                                                                <div class="form-group">
+                                                                    <p>{{ form.e_uae_name.label() }}</p>
+                                                                    <div class="input-icon">
+                                                                        <span class="input-icon-addon">
+                                                                            <i class="fa fa-user"></i>
+                                                                        </span>
+                                                                        {{ form.e_uae_name(class="form-control", placeholder="name") }}
+                                                                    </div>
+                                                                </div>
+                
+                                                                    <div class="form-group">
+                                                                        <p>{{ form.e_uae_rel.label() }}</p>
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text" ><i class="fa fa-heart"></i></span>
+                                                                            </div>
+                                                                            {{ form.e_uae_rel(class="form-control", placeholder="relationship") }}
+                                                                        </div>
+                                                                    </div>
+                
+                                                                    <div class="form-group">
+                                                                        <p>{{ form.e_uae_addr.label() }}</p>
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                                                                            </div>
+                                                                            {{ form.e_uae_addr(class="form-control", placeholder="Address") }}
+                                                                        </div>
+                                                                    </div>
+                
+                                                                    
+                                                                <div class="form-group">
+                                                                    <p>{{ form.e_uae_mob.label() }}</p>
+                                                                    <div class="input-group">
+                                                                        <div class="input-group-prepend">
+                                                                            <select class="form-control form-control" id="defaultSelect" >
+                                                                                <option value="+1">+1 </option>
+                                                                                <option value="+44">+44 </option>
+                                                                                <option value="+61">+61 </option>
+                                                                                <option value="+1">+1 </option>
+                                                                                <option value="+91">+91 </option>
+                                                                                <option value="+49">+49 </option>
+                                                                                <option value="+33">+33 </option>
+                                                                                <option value="+86">+86 </option>
+                                                                                <option value="+81">+81 </option>
+                                                                                <option value="+55">+55 </option>
+                                                                                <option value="+27">+27 </option>
+                                                                                <option value="+7">+7 </option>
+                                                                                <option value="+52">+52 </option>
+                                                                                <option value="+34">+34 </option>
+                                                                                <option value="+39">+39 </option>
+                                                                            </select>
+                                                                        </div>
+                                                                        {{ form.e_uae_mob(type="tel",class="form-control", placeholder="mobile number") }}
+                                                                    </div>
+                                                                </div>
+                
+                                                                <div class="form-group">
+                                                                    <p>{{ form.e_uae_hom.label() }}</p>
+                                                                    <div class="input-group">
+                                                                        <div class="input-group-prepend">
+                                                                            <select class="form-control form-control" id="defaultSelect" >
+                                                                                <option value="+1">+1 </option>
+                                                                                <option value="+44">+44 </option>
+                                                                                <option value="+61">+61 </option>
+                                                                                <option value="+1">+1 </option>
+                                                                                <option value="+91">+91 </option>
+                                                                                <option value="+49">+49 </option>
+                                                                                <option value="+33">+33 </option>
+                                                                                <option value="+86">+86 </option>
+                                                                                <option value="+81">+81 </option>
+                                                                                <option value="+55">+55 </option>
+                                                                                <option value="+27">+27 </option>
+                                                                                <option value="+7">+7 </option>
+                                                                                <option value="+52">+52 </option>
+                                                                                <option value="+34">+34 </option>
+                                                                                <option value="+39">+39 </option>
+                                                                            </select>
+                                                                        </div>
+                                                                        {{ form.e_uae_hom(type="tel",class="form-control", placeholder="home number") }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <p>{{ form.origin_country.label() }}</p>
+                                                                    <div class="input-group">
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                                                                        </div>
+                                                                        {{ form.origin_country(class="form-control", placeholder="nationality") }}
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>       
+
+                                                            <div class="col-md-6 col-lg-4">
+                                                        
+                
+                        
+                                                                <div class="form-group">
+                                                                    <p>{{ form.e_co_name.label() }}</p>
+                                                                    
+                                                                    <div class="input-icon">
+                                                                        <span class="input-icon-addon">
+                                                                        <i class="fa fa-user"></i>
+                                                                        </span>
+                                                                        {{ form.e_co_name(class="form-control", placeholder="name") }}
+                                                                    </div>
+                                                                    </div>
+                
+                                                                    <div class="form-group">
+                                                                        <p>{{ form.e_co_rel.label() }}</p>
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text" ><i class="fa fa-heart"></i></span>
+                                                                            </div>
+                                                                            {{ form.e_co_rel(class="form-control", placeholder="relationship") }}
+                                                                        </div>
+                                                                    </div>
+                
+                                                                    <div class="form-group">
+                                                                        <p>{{ form.e_co_addr.label() }}</p>
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                                                                            </div>
+                                                                            {{ form.e_co_addr(class="form-control", placeholder="Address") }}
+                                                                        </div>
+                                                                    </div>
+                
+                                                                    
+                                                                <div class="form-group">
+                                                                    <p>{{ form.e_co_mob.label() }}</p>
+                                                                    <div class="input-group">
+                                                                        <div class="input-group-prepend">
+                                                                            <select class="form-control form-control" id="defaultSelect" >
+                                                                                <option value="+1">+1 </option>
+                                                                                <option value="+44">+44 </option>
+                                                                                <option value="+61">+61 </option>
+                                                                                <option value="+1">+1 </option>
+                                                                                <option value="+91">+91 </option>
+                                                                                <option value="+49">+49 </option>
+                                                                                <option value="+33">+33 </option>
+                                                                                <option value="+86">+86 </option>
+                                                                                <option value="+81">+81 </option>
+                                                                                <option value="+55">+55 </option>
+                                                                                <option value="+27">+27 </option>
+                                                                                <option value="+7">+7 </option>
+                                                                                <option value="+52">+52 </option>
+                                                                                <option value="+34">+34 </option>
+                                                                                <option value="+39">+39 </option>
+                                                                            </select>
+                                                                        </div>
+                                                                        {{ form.e_co_mob(type="tel",class="form-control", placeholder="mobile number") }}
+                                                                    </div>
+                                                                </div>
+                
+                                                                <div class="form-group">
+                                                                    <p>{{ form.e_co_hom.label() }}</p>
+                                                                    <div class="input-group">
+                                                                        <div class="input-group-prepend">
+                                                                            <select class="form-control form-control" id="defaultSelect" >
+                                                                                <option value="+1">+1 </option>
+                                                                                <option value="+44">+44 </option>
+                                                                                <option value="+61">+61 </option>
+                                                                                <option value="+1">+1 </option>
+                                                                                <option value="+91">+91 </option>
+                                                                                <option value="+49">+49 </option>
+                                                                                <option value="+33">+33 </option>
+                                                                                <option value="+86">+86 </option>
+                                                                                <option value="+81">+81 </option>
+                                                                                <option value="+55">+55 </option>
+                                                                                <option value="+27">+27 </option>
+                                                                                <option value="+7">+7 </option>
+                                                                                <option value="+52">+52 </option>
+                                                                                <option value="+34">+34 </option>
+                                                                                <option value="+39">+39 </option>
+                                                                            </select>
+                                                                        </div>
+                                                                        {{ form.e_co_hom(type="tel",class="form-control", placeholder="home number") }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>       
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
 
+                                        
+                                        <div class="card-action">
+                                            <button class="btn btn-gray">Submit</button>
 
-  </form>
+                                        </div>
+                        </div>
+                    </div>                                      
+            </div>
+    {% endblock content %}
 
-
-{% include "footer.html" %}
-{% endblock %}

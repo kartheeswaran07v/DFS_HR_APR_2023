@@ -1,38 +1,74 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Department Report {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
+{% include "sweetalerts.html" %}
+<div class="content">
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title">Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home">
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="add_department">Department </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="department_report">Report </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+            </ul>
+        </div>
 
-
-
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
-
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Departments</h1>
-
-  <div class="row" style="margin-bottom: 50px; margin-left: 100px; font-size: 1.5rem; text-align: center;">
-    <div class="col-2"><p><em>S. No.</em></p></div>
-    <div class="col-2"><p><em>Department</em></p></div>
-<!--    <div class="col-2"><h3>ID</h3></div>-->
-    <div class="col-2"><h3>Edit</h3></div>
-    <div class="col-2"><h3>Delete</h3></div>
-    <div class="col-2"><h3>Employees</h3></div>
-  </div>
-  {% for i in len %}
-      <div class="row" style="margin-bottom: 50px; margin-left: 100px; text-align: center;">
-        <div class="col-2"><p>{{i + 1}}</p></div>
-        <div class="col-2"><p>{{ ts[i].name }}</p></div>
-<!--        <div class="col-2"><p>{{ ts[i].id }}</p></div>-->
-        <div class="col-2"><p><a href="{{url_for('edit_dept', dept_id=ts[i].id)}}">Edit</a></p></div>
-        <div class="col-2"><p><a href="{{url_for('del_dept', dept_id=ts[i].id)}}">Delete</a></p></div>
-        <div class="col-2"><p><a href="{{url_for('empl_dept', dept_id=ts[i].id)}}">Employees</a></p></div>
-      </div>
-  {% endfor %}
-
-
-
-{% include "footer.html" %}
-{% endblock %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Department Report</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="container bg-dark text-light" style="padding: 20px; border-radius: 10px;">
+                            <table class="table table-bordered mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>S. No.</th>
+                                        <th>Department</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                        <th>Employees</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for dept in ts %}
+                                        <tr>
+                                            <td>{{ loop.index }}</td>
+                                            <td>{{ dept.name }}</td>
+                                            <td><a href="{{ url_for('edit_dept', dept_id=dept.id) }}">Edit</a></td>
+                                            <td><a href="{{ url_for('del_dept', dept_id=dept.id) }}">Delete</a></td>
+                                            <td><a href="{{ url_for('empl_dept', dept_id=dept.id) }}">Employees</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                    
+{% endblock content%}

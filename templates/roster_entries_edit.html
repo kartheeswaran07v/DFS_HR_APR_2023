@@ -1,37 +1,233 @@
-{% extends 'bootstrap/base.html' %}
+{% extends 'layouts/base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
-
+{% block title %} Roster Archives Edit {% endblock %} 
 {% block content %}
-{% include "header.html" %}
+<div class="content">
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
-
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Roster Archives Edit</h1>
-  <!-- buttons -->
-  <div class="row" style="text-align: center;">
-    <div class="col-2">
-      <img src="{{ url_for('static', filename='images/Sign.png')}}" alt="" style="width: 100%; padding-top:35px;">
-    </div>
-    <div class="col-10">
-      <div class="row">
-        <div class="col-12">
-          <h3>Duty Roster</h3>
-        </div>
+  <div class="page-inner">
+      <div class="page-header">
+          <h4 class="page-title" >Forms</h4>
+          <ul class="breadcrumbs">
+              <li class="nav-home">
+                  <a href="home" >
+                      <i class="flaticon-home"></i>
+                  </a>
+              </li>
+              <li class="separator">
+                  <i class="flaticon-right-arrow"></i>
+              </li> 
+              <li class="nav-item">
+                  <a href="">Roster Archives Edit </a>
+                  
+              </li>
+              <li class="separator">
+                  <i class="flaticon-right-arrow"></i>
+              </li>
+            
+          </ul>
       </div>
       <div class="row">
-        <div class="col-2">
-          <h3>Date</h3>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Duty Roster</div>
+                </div>
+                <div class="card-body">
+                <div class="container bg-dark text-light" style="padding: 20px; border-radius: 10px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="text-center">Date: {{ day }}, {{ date }}</h3>
+                        </div>
+                      </div>
+                      <h4 class="update-heading">Update Existing Entries</h4>
+                      <div class="table-responsive">
+                        <table class="table table-bordered mt-4" style="border-top: 1px solid #f0f0f0;">
+                        <thead>
+                            <tr>
+                                <th >Name</th>
+                                <th>Hotel</th>
+                                <th>TimeIn1</th>
+                                <th>TimeOut1</th>
+                                <th>Pick Up</th>
+                                <th>TimeIn2</th>
+                                <th >TimeOut2</th>
+                                <th>Pick Up 2</th>
+                                <th >Remarks</th>
+                                <th>Absence Reason</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in len %}
+                                <tr>
+                                    <form action="{{ url_for('update_roster_element', roster_entry_id=entries[i].id) }}" method="post">
+                                        <td>
+                                            <select name="name" style="width: 160%;">
+                                                {% for employee in data[0] %}
+                                                    <option value="{{ employee.name }}" {% if employee.name == employees[i] %} selected {% endif %}>{{ employee.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="hotel" style="width: 90px;">
+                                                {% for hotel in data[1] %}
+                                                    <option value="{{ hotel.name }}" {% if hotel.name == hotels[i] %} selected {% endif %}>{{ hotel.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td><input type="time" name="timeIn1" style="width: 90px;" value="{{ time_data[i].timeIn1 }}"></td>
+                                        <td><input type="time" name="timeOut1" style="width: 90px;" value="{{ time_data[i].timeOut1 }}"></td>
+                                        <td><input type="time" name="pickUp" style="width: 90px;" value="{{ time_data[i].pickUp }}"></td>
+                                        <td><input type="time" name="timeIn2" style="width: 90px;" value="{{ time_data[i].timeIn2 }}"></td>
+                                        <td><input type="time" name="timeOut2" style="width: 90px;" value="{{ time_data[i].timeOut2 }}"></td>
+                                        <td><input type="time" name="pickUp2" style="width: 90px;" value="{{ time_data[i].pickUp2 }}"></td>
+                                        <td><input type="text" name="remarks" style="width: 90px;" value="{{ entries[i].remark }}"></td>
+                                        <td>
+                                            <select name="absent" style="width: 90px;">
+                                                {% for k in ab %}
+                                                    {% if k == entries[i].absent %}
+                                                        <option value="{{ k }}" selected>{{ k }}</option>
+                                                    {% else %}
+                                                        <option value="{{ k }}">{{ k }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input class="updateButton" type="submit" value="Update" style="width: 90px;">
+                                            <a  class="delButton" href="{{ url_for('del_roster_element', entry_id=entries[i].id) }}">Delete</a>
+                                        </td>
+                                    </form>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        
+                      </table>
+                    </div>
+                </div><hr>
+                
+                    <div class="container bg-dark text-light" style="padding: 20px; border-radius: 10px;">
+                        
+                          <h4 class="update-heading">Add New Entry</h4>
+                          <div class="table-responsive">
+                
+                        <table class="table table-bordered mt-4" style="border-top: 1px solid #f0f0f0;">
+                        <thead>
+                            <tr>
+                                <th >Name</th>
+                                <th>Hotel</th>
+                                <th>TimeIn1</th>
+                                <th>TimeOut1</th>
+                                <th>Pick Up</th>
+                                <th>TimeIn2</th>
+                                <th >TimeOut2</th>
+                                <th>Pick Up 2</th>
+                                <th >Remarks</th>
+                                <th>Absence Reason</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                     
+                                <tr>
+                                    <form action="/add_roster_element/{{entries[0].rosterID}}" method="post">
+             
+                                        <td>
+                                             <select name="name" id="name" class="name" style="width: 90px;">
+                                              {% for i in data[0] %}
+                                                <option value="{{i.name}}">{{i.name}}</option>
+                                              {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="hotel" id="hotel" style="width: 90px;">
+                                                {% for i in data[1] %}
+                                                  <option value="{{i.name}}">{{i.name}}</option>
+                                                {% endfor %}
+                                              </select>
+                                        </td>
+
+                                        <td><input type="time" id="timeIn1" name="timeIn1" style="width: 90px;" value="00:00"></td>
+                                        <td><input type="time" id="timeOut1" name="timeOut1" style="width: 90px;" value="00:00"></td>
+                                        <td><input type="time" id="pickUp" name="pickUp" style="width: 90px;" value="00:00"><br></td>
+                                        <td><input type="time" id="timeIn2" name="timeIn2" style="width: 90px;" value="00:00"></td>
+                                        <td><input type="time" id="timeOut2" name="timeOut2" style="width: 90px;" value="00:00"></td>
+                                        <td><input type="time" id="pickUp2" name="pickUp2" style="width: 90px;" value="00:00"><br></td>
+                                        <td><input type="text" id="remarks" name="remarks" style="width: 90px;" value="-"><br></td>
+                                        <td>
+                                            <select name="absent" id="absent" style="width: 90px;">
+                                              <option value="none">--None--</option>
+                                              <option value="Off">Off</option>
+                                              <option value="Absent">Absent</option>
+                                              <option value="Sick">Sick</option>
+                                              <option value="Vacation">Vacation</option>
+                                              <option value="Office">Office</option>
+                                            </select>
+                                        </td>
+                                        <td><input class="updateButton" type="submit" value="Submit" style="width: 90px;"></td>
+                                    </div>
+                                    </form>
+                                </tr>
+                            
+                        </tbody>
+                        
+                      </table>
+            
+            
+            
+                  
+            
+            </div>
+                </div>
+                </form>
+              </div>
+            </div>
         </div>
-        <div class="col-10">
-          <h3>{{day}}, {{date}}</h3>
-        </div>
+             
+                  
+       </div>
+       </div>
       </div>
     </div>
-  </div>
-  <hr>
+   
+    </div>
+</div>
+</div>
+</div>            
+    <style>
+        .updateButton {
+      /* Your styles for the Update button */
+      background-color: #FFA620;
+      color: black;
+      border: none;
+      padding: 3px 14px;
+      border-radius: 50px;
+      display: block;
+      margin: 0 auto;
+      font-size: 10px;
+      font-weight: bold;
+      margin-top: 1px;
+    }
+    .delButton {
+        background-color: #FFA620;
+        color: black;
+        border: none;
+        padding: 3px 28px;
+        border-radius: 50px;
+        display: block;
+        margin: 0 auto;
+        font-size: 10px;
+        font-weight: bold;
+        margin-top: 1px;
+        
+        }
+        .delButton:hover {
+            text-decoration: none; 
+            color: black; /* Change the text color if needed */
+}
+    </style>
+
+
 <!--  <div class="row">-->
 <!--    <div class="col-1"><p>S. No.</p></div>-->
 <!--    <div class="col-2"><p>Staff</p></div>-->
@@ -64,110 +260,7 @@
 <!--    {% endfor %}-->
 <!--  </div>-->
 
-  <div class="row">
-      <h4>Update Existing Entries</h4>
-      <div class="row">
-          <div class="col-1"><label for="name">Name:</label></div>
-          <div class="col-1"><label for="hotel">Hotel:</label></div>
-          <div class="col-1"><label for="timeIn1">TimeIn1:</label></div>
-          <div class="col-1"><label for="timeOut1">TimeOut1:</label></div>
-          <div class="col-1"><label for="pickUp">Pick Up:</label></div>
-          <div class="col-1"><label for="timeIn2">TimeIn2:</label></div>
-          <div class="col-1"><label for="timeOut2">TimeOut2:</label></div>
-          <div class="col-1"><label for="pickUp2">Pick Up 2:</label></div>
-          <div class="col-1"><label for="remarks">Remarks:</label></div>
-          <div class="col-1"><label for="absent">Absence Reason: </label></div>
-      </div>
-        {% for i in len %}
-            <form action="{{url_for('update_roster_element', roster_entry_id=entries[i].id)}}" method="post">
-                  <div class="row">
-                      <div class="col-1">
-                          <input type="text" value="{{employees[i]}}" readonly style="width: 90px;">
-                      </div>
-                      <div class="col-1">
-                          <input type="text" value="{{hotels[i]}}" readonly style="width: 90px;">
-                      </div>
-                      <div class="col-1"><input type="time" id="timeIn1_" name="timeIn1" style="width: 90px;" value="{{ time_data[i].timeIn1 }}"></div>
-                      <div class="col-1"><input type="time" id="timeOut1_" name="timeOut1" style="width: 90px;" value="{{ time_data[i].timeOut1 }}"></div>
-                      <div class="col-1"><input type="time" id="pickUp_" name="pickUp" style="width: 90px;" value="{{ time_data[i].pickUp }}"><br></div>
-                      <div class="col-1"><input type="time" id="timeIn2_" name="timeIn2" style="width: 90px;" value="{{time_data[i].timeIn2}}"></div>
-                      <div class="col-1"><input type="time" id="timeOut2_" name="timeOut2" style="width: 90px;" value="{{time_data[i].timeOut2}}"></div>
-                      <div class="col-1"><input type="time" id="pickUp2_" name="pickUp2" style="width: 90px;" value="{{ time_data[i].pickUp2 }}"><br></div>
-                      <div class="col-1"><input type="text" id="remarks_" name="remarks" style="width: 90px;" value="{{entries[i].remark}}"><br></div>
-                      <div class="col-1">
-                          <select name="absent" id="absent_" style="width: 90px;">
-                              {% for k in ab %}
-                                {% if k == entries[i].absent %}
-                                    <option value="{{k}}" selected>{{k}}</option>
-                                {% else %}
-                                    <option value="{{k}}">{{k}}</option>
-                                {% endif %}
-                              {% endfor %}
-                          </select>
-                      </div>
-                      <div class="col-1"><input type="submit" value="Update" style="width: 90px;"></div>
-                      <div class="col-1"><a href="{{url_for('del_roster_element', entry_id=entries[i].id)}}">Delete</a></div>
-                  </div>
-            </form>
-        {% endfor %}
-  </div>
-  <hr>
-  <div class="row">
-
-      <form action="/add_roster_element/{{entries[0].rosterID}}" method="post">
-          <h4>Add New Entry</h4>
-          <div class="row">
-              <div class="col-1"><label for="name">Name:</label></div>
-              <div class="col-1"><label for="hotel">Hotel:</label></div>
-              <div class="col-1"><label for="timeIn1">TimeIn1:</label></div>
-              <div class="col-1"><label for="timeOut1">TimeOut1:</label></div>
-              <div class="col-1"><label for="pickUp">Pick Up:</label></div>
-              <div class="col-1"><label for="timeIn2">TimeIn2:</label></div>
-              <div class="col-1"><label for="timeOut2">TimeOut2:</label></div>
-              <div class="col-1"><label for="pickUp2">Pick Up 2:</label></div>
-              <div class="col-1"><label for="remarks">Remarks:</label></div>
-              <div class="col-1"><label for="absent">Absence Reason: </label></div>
-          </div>
-          <div class="row">
-              <div class="col-1">
-                  <select name="name" id="name" class="name" style="width: 90px;">
-                    {% for i in data[0] %}
-                      <option value="{{i.name}}">{{i.name}}</option>
-                    {% endfor %}
-                  </select>
-              </div>
-              <div class="col-1">
-                  <select name="hotel" id="hotel" style="width: 90px;">
-                    {% for i in data[1] %}
-                      <option value="{{i.name}}">{{i.name}}</option>
-                    {% endfor %}
-                  </select>
-              </div>
-              <div class="col-1"><input type="time" id="timeIn1" name="timeIn1" style="width: 90px;" value="00:00"></div>
-              <div class="col-1"><input type="time" id="timeOut1" name="timeOut1" style="width: 90px;" value="00:00"></div>
-              <div class="col-1"><input type="time" id="pickUp" name="pickUp" style="width: 90px;" value="00:00"><br></div>
-              <div class="col-1"><input type="time" id="timeIn2" name="timeIn2" style="width: 90px;" value="00:00"></div>
-              <div class="col-1"><input type="time" id="timeOut2" name="timeOut2" style="width: 90px;" value="00:00"></div>
-              <div class="col-1"><input type="time" id="pickUp2" name="pickUp2" style="width: 90px;" value="00:00"><br></div>
-              <div class="col-1"><input type="text" id="remarks" name="remarks" style="width: 90px;" value="-"><br></div>
-              <div class="col-1">
-                  <select name="absent" id="absent" style="width: 90px;">
-                    <option value="none">--None--</option>
-                    <option value="Off">Off</option>
-                    <option value="Absent">Absent</option>
-                    <option value="Sick">Sick</option>
-                    <option value="Vacation">Vacation</option>
-                    <option value="Office">Office</option>
-                  </select>
-              </div>
-              <div class="col-1"><input type="submit" value="Submit" style="width: 90px;"></div>
-          </div>
-      </form>
-  </div>
 
 
 
-
-
-{% include "footer.html" %}
 {% endblock %}

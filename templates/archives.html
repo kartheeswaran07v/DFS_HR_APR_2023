@@ -1,30 +1,65 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Reports {% endblock %} 
+
+{% block stylesheets %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-3d"></script>
+
+
+{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
+ 
+<div class="content">
 
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li> 
+                <li class="nav-item">
+                    <a href="archives">Archives </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                
+                
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" style=" display: flex; justify-content: center;align-items: center;">
+                        <div class="card-title" style="font-size: 24px;" >Archives</div>
+                    </div>
+                    <div class="card-body">
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
-
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Archives</h1>
   <!-- buttons -->
-  <div class="row reports" style="margin-bottom: 50px; margin-left: 150px;">
-    <div class="col-lg-6 buttonMain">
-      <form>
-        <button formaction="{{url_for('roster_archive')}}" class="button" style="padding: 80px 92px;width: 70%;">Rosters</button>
-      </form>
+  <div class="row reports" style="margin-bottom: 50px; margin-top: 50px; margin-left: 150px;">
+    <div class="col-lg-6 mb-4 buttonMain">
+        <form>
+            <button formaction="{{url_for('roster_archive')}}" class="container bg-dark text-light" style="padding: 70px 80px; width: 70%;">Rosters</button>
+        </form>
+    </div><br>
+    <div class="col-lg-6  mb-4 buttonMain">
+        <form>
+            <button formaction="{{url_for('timesheet_archive')}}" class="container bg-dark text-light" style="padding:  70px 80px; width: 70%;">Timesheets</button>
+        </form>
     </div>
-    <div class="col-lg-6 buttonMain">
-      <form>
-        <button formaction="{{url_for('timesheet_archive')}}" class="button" style="padding: 80px 92px; width: 70%;">Timesheets</button>
-      </form>
-    </div>
+</div>
 
-  </div>
+
   <form action="" method="post">
       {{form.hidden_tag()}}
       {{ form.csrf_token }}
@@ -34,8 +69,5 @@
 
   </form>
 
-
-
-
-{% include "footer.html" %}
+  
 {% endblock %}

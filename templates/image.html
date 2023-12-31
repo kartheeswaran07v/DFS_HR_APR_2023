@@ -1,47 +1,71 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Reports {% endblock %} 
+
+{% block stylesheets %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-3d"></script>
+
+
+{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
+ 
+<div class="content">
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
-
-
-
-
-  <!-- <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Duty Roster</h1>
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">{{date}}- {{day}}</h1> -->
-
-  <div class="row" style="text-align: center;">
-    <div class="col-2">
-      <img src="{{ url_for('static', filename='images/Sign.png')}}" alt="" style="width: 100%; padding-top:35px;">
-    </div>
-  <div class="row">
-    <div class="col-2"><p>ID</p></div>
-    <div class="col-3"><p>Image</p></div>
-    <div class="col-3"><p>Name</p></div>
-    <div class="col-2"><p>MimeType</p></div>
-    <div class="col-2"><p>Employee ID</p></div>
-  </div>
-
-  <div class="row">
-    {% for i in data %}
-      <div class="col-2"><p>{{i.id}}</p></div>
-      <div class="col-3"><p>{{i.img[:20]}}</p></div>
-      <div class="col-3"><p>{{i.name}}</p></div>
-      <div class="col-2"><p>{{i.mimetype}}</p></div>
-      <div class="col-2"><p>{{i.employeeID}}</p></div>
-    {% endfor %}
-  </div>
-
-
-
-
-
-
-
-{% include "footer.html" %}
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                  <i class="flaticon-right-arrow"></i>
+              </li>
+              
+              
+          </ul>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Department Report</div>
+                </div>
+                <div class="card-body">
+                  <div class="container bg-dark text-light" style="padding: 20px; border-radius: 10px; overflow-x: auto;">
+                    <table class="table table-bordered mt-4" style="min-width: 100px;">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>MimeType</th>
+                                    <th>Employee ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              {% for i in data %}
+                                    <tr>
+                                        <td>{{i.id}}</td>
+                                        <td>{{i.img[:20]}}</td>
+                                        <td>{{i.name}}</td>
+                                        <td>{{i.mimetype}}</td>
+                                        <td>{{i.employeeID}}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </div>
+          </div>
+          </div>
+</div>
 {% endblock %}

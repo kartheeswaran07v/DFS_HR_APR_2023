@@ -1,36 +1,85 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Edit Department {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
+{% include "sweetalerts.html" %}
+<div class="content">
+
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li> 
+                <li class="nav-item">
+                    <a href="add_department">Department </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="department_report">Report </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="/edit_dept/{{dept.id}}">Edit </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
 
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
+                
+            </ul>
+        </div>
+        <form action="/edit_dept/{{dept.id}}" method="post">
+         
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title" > Department Edit</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="name">Department Name: </label><br>
+                                        <div class="input-icon">
+                                            <span class="input-icon-addon">
+                                                <i class="fa fa-building"></i>
+                                            </span>
+                                        <input type="text" id="name" name="name" class="form-control"  value="{{dept.name}}">
+                                        </div>
+                                    </div>
+                       
+                            
+                            <div class="card-action">
+                                <button class="btn btn-gray">Submit</button>
+                            </div>
+                            
+                        </div>
+                  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
 
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Edit Department</h1>
-  <!-- buttons -->
-
-  </div>
-  <form action="/edit_dept/{{dept.id}}" method="post">
-      <div class="row" style="margin-bottom: 100px;">
-          <div class="col-2 abut">
-              <label for="name">Department Name: </label>
-          </div>
-          <div class="col-2 bbut">
-              <input type="text" id="name" name="name" value="{{dept.name}}">
-          </div>
-          <div class="col-2">
-              <button type="submit">Edit Department</button>
-          </div>
-      </div>
-
-  </form>
-
-
-
-
-{% include "footer.html" %}
-{% endblock %}
+</div>
+{% endblock content %}

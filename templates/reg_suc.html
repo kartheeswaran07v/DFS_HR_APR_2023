@@ -1,32 +1,82 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} New Registration Forms {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
 
+<div class="content">
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="registration">New Registration</a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                  <a>Add Documents</a>
+              </li>
+              <li class="separator">
+                  <i class="flaticon-right-arrow"></i>
+              </li>
+              <li class="nav-item">
+                <a href="doc">Success</a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+               
+            </ul>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+              <div class="card">
+                  <div class="card-header" style="text-align: center;">
+                      <div class="card-title">
+                        <h3>Employee ID : {{employee.employeeID}}</h3>
+                        <h3>Employee Name : {{ name }}</h3>
+                      </div>
+                  
+                        <div class="container bg-dark text-light" style="text-align: center; padding: 20px; border-radius: 10px;">
+
+                
+                            <h1>Registration Successful</h1><br>
+
+                            
+                            <div class="card-action">
+                            <form action="{{ url_for('home') }}" style="display: inline;">
+                                <button type="submit" class="btn btn-dark"style="margin-right: 180px;">Home</button>
+                            </form>
+                            
+                            <form action="{{ url_for('registration') }}" style="display: inline;">
+                                <button type="submit" class="btn btn-dark">New Registration</button>
+                            </form>
+                            </div><br>
+                        </div><br><br>
+                        
+                  </div> 
+               </div>
+              </div>        
+              </div>
+            </div>
+    </div>
+    </div>
+    </div>
   </div>
 
-
-  <div class="reg_suc row">
-    <h1>Registration Successful</h1><br><br><br>
-    <h4>Employee ID: {{employee.employeeID}}</h4><br>
-    <h4>Employee Name: {{ name }}</h4><br><br><br>
-    <div class="col-lg-6 abut">
-      <form>
-        <button formaction="{{ url_for('home') }}">Home</button>
-      </form>
-    </div>
-    <div class="col-lg-6 bbut">
-      <form>
-        <button formaction="{{ url_for('registration') }}">New Registration</button>
-      </form>
-    </div>
-  </div>
-
-
-{% include "footer.html" %}
 {% endblock %}

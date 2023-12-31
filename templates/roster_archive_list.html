@@ -1,37 +1,67 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Roster_archive_list {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
+<div class="content">
 
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Roster Archives</h1>
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title" style="text-align: center;">
+                            <h2>Roster Archives</h2>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        
+                            <div class="container bg-dark text-light" style="text-align: center; padding: 20px; border-radius: 10px;">
+                            <table class="table table-bordered mt-4 ">
+                                <thead>
+                                  <tr>
+                                    <th>S. No.</th>
+                                    <th>Roster Date</th>
+                                    <th>View RT</th>
+                                    <th>Edit RT</th>
+                                    <th>Download</th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                          {% for i in len %}
+                                <tr>
+                                  <td>{{ i+1 }}</td>
+                                  <td>{{ date_list[i] }}</td>
+                                  <td><a href="{{url_for('roster_single', roster_id=rosters[i].id)}}">View</a></td>
+                                  <td><a href="{{url_for('roster_single_edit', roster_id=rosters[i].id)}}">Edit</a></td>
+                                  <td><a href="{{url_for('download_roster', roster_id=rosters[i].id)}}">Delete</a></td>
+                                </tr>
+                          {% endfor %}
+                      </tbody>
+       
+                  </table>
+                </div>
+            </div>
+        </div>
 
 
-  <div class="row" style="margin-bottom: 50px; margin-left: 100px; text-align: center;">
-    <div class="col-2"><h3>S. No. </h3></div>
-    <div class="col-2"><h3>Roster Date</h3></div>
-    <div class="col-2"><h3>View RT</h3></div>
-    <div class="col-2"><h3>Edit RT</h3></div>
-    <div class="col-2"><h3>Download</h3></div>
-  </div>
-  {% for i in len %}
-    <div class="row" style="margin-bottom: 30px; margin-left: 100px; text-align: center;">
-      <div class="col-2"><p>{{ i+1 }}</p></div>
-      <div class="col-2"><p>{{ date_list[i] }}</p></div>
-      <div class="col-2"><p><a href="{{url_for('roster_single', roster_id=rosters[i].id)}}">View</a></p></div>
-      <div class="col-2"><p><a href="{{url_for('roster_single_edit', roster_id=rosters[i].id)}}">Edit</a></p></div>
-      <div class="col-2"><p><a href="{{url_for('download_roster', roster_id=rosters[i].id)}}">Download</a></p></div>
-    </div>
-  {% endfor %}
-
-
-
-
-
-{% include "footer.html" %}
 {% endblock %}

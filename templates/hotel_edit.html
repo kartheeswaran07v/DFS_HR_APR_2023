@@ -1,63 +1,119 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+
+{% block title %} Edit Hotel {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
+{% include "sweetalerts.html" %}
+<div class="content">
 
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li> 
+                <li class="nav-item">
+                    <a href="/add_hotel">Hotel </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="/hotel_report">Hotel report </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="/edit_hotel/{{hotel.id}}"> Edit</a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
+                
+            </ul>
+        </div>
+        <form action="/edit_hotel/{{hotel.id}}" method="post">
+         
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title" > Hotel Edit</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="name">Hotel Name: </label>
+                                        <div class="input-icon">
+                                            <span class="input-icon-addon">
+                                                <i class="fa fa-hotel"></i>
+                                            </span>
+                                            <input type="text" id="name" required name="name" class="form-control" value="{{hotel.name}}">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address">Address: </label>
+                                        <div class="input-icon">
+                                            <span class="input-icon-addon">
+                                                <i class="fa fa-map-marker"></i>
+                                            </span>
+                                        <input type="text" id="address" required name="address" class="form-control" value="{{hotel.address}}">
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="interval">Interval: </label>
+                                        <select name="interval" id="interval" required class="form-control">
+                                            <option value="hourly">Hourly</option>
+                                            <option value="monthly">Monthly</option>
+                                        </select>
+                                    </div>
+                                
+                                    <div class="form-group">
+                                        <label for="rate">Rate: </label>
+                                        <div class="input-icon">
+                                            <span class="input-icon-addon">
+                                                <i class="fa fa-star"></i>
+                                            </span>
+                                        <input type="text" id="rate" required name="rate" class="form-control" value="{{hotel.rate}}">
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                                
 
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Edit Hotel</h1>
-  <!-- buttons -->
-
-  </div>
-  <form action="/edit_hotel/{{hotel.id}}" method="post">
-      <div class="row" style="margin-bottom: 100px;">
-          <div class="col-2 abut">
-              <label for="name">Hotel Name: </label>
-          </div>
-          <div class="col-2 bbut">
-              <input type="text" id="name" name="name" value="{{hotel.name}}">
-          </div>
-          <div class="col-2 abut">
-              <label for="address">Address: </label>
-          </div>
-          <div class="col-2 bbut">
-              <input type="text" id="address" name="address" value="{{hotel.address}}">
-          </div>
-          <div class="col-2 abut">
-              <label for="interval">Interval: </label>
-          </div>
-          <div class="col-2 bbut">
-              <select name="interval" id="interval">
-                  {% if hotel.interval == 'hourly' %}
-                      <option value="hourly" selected>Hourly</option>
-                      <option value="monthly">Monthly</option>
-                  {% else %}
-                      <option value="hourly">Hourly</option>
-                      <option value="monthly" selected>Monthly</option>
-                  {% endif %}
-              </select>
-          </div>
-          <br><br>
-          <div class="col-2 abut">
-              <label for="rate">Rate: </label>
-          </div>
-          <div class="col-2 bbut">
-              <input type="text" id="rate" name="rate" value="{{hotel.rate}}">
-          </div>
-          <div class="col-2" style="text-align: right">
-              <button type="submit">Submit</button>
-          </div>
-      </div>
-
-  </form>
-
-
-
-
-{% include "footer.html" %}
-{% endblock %}
+                            </div>
+                            <div class="card-action">
+                                <button class="btn btn-gray">Submit</button>
+                            </div>
+                            
+                        </div>
+                  
+                               
+                              
+            </div>                 
+        </form>
+        </div>
+        
+    </div>
+</div>
+</div>
+{% endblock content %}

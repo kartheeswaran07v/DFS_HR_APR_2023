@@ -1,72 +1,126 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} New Registration Forms {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
+<section>
+<div class="content">
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
+    
+  <div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title" >Forms</h4>
+        <ul class="breadcrumbs">
+            <li class="nav-home">
+                <a href="home" >
+                    <i class="flaticon-home"></i>
+                </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li> 
+            <li class="nav-item">
+                <a href="add_department">Department </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="department_report">Report </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="">Employees </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+              <a href="">Edit </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            
+        </ul>
+    </div>
+    <section class="bg-light">
+  
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12 mb-4 mb-sm-5">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex flex-column align-items-center text-center">
+                      <img src="{{img_url}}" alt="Profile pic" class="rounded-circle" width="150">
+                      
+                      <div class="mt-3">
+                        <p class="text-secondary mb-1">ID: {{ employee.employeeID }}</p>
+                        <h4>Name: {{employee.name}}</h4>
+                        <p class="text-secondary mb-1">Joining Date: {{date_str}}</p>
+                               
+                        <p class="text-muted font-size-sm">Addr: {{employee.addressUae}}</p>
+                       
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-  <div class="row reports" style="margin-bottom: 30px; margin-left: 70px; margin-top: 70px;">
-      <div class="col-3">
-        <h3>ID: {{ employee.employeeID }}</h3>
-      </div>
-      <div class="col-3">
-        <h3>Name: {{employee.name}}</h3>
-      </div>
-      <div class="col-3">
-        <h3>Joining Date: {{date_str}}</h3>
-      </div>
-      <div class="col-3">
-        <h3>Addr: {{employee.addressUae}}</h3>
-      </div>
-  </div>
   <hr>
   <form action="/employee_details/{{employee.id}}" method="post">
-      <div class="row">
-
-          <div class="col-6">
-            <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Worked Hours: {{ workedHours }}</p></div>
-            <div class="row" style="margin-bottom: 5px; margin-left: 70px;">
-                <div class="col-6"><label for="done">Payments Done:</label></div>
+    <div class="row">
+        <div class="col-6">
+            <!-- Worked Hours with different color -->
+            <div class="row" style="margin-bottom: 10px; margin-left: 20px; color: black;">
+                <p>Worked Hours:  {{ workedHours }}</p>
+            </div>
+            <!-- Payments Done -->
+            <div class="row" style="margin-bottom: 10px; margin-left: 5px;">
+                <div class="col-6"><label for="done" style="color: black !important;">Payments Done:</label></div>
                 <div class="col-6"><input type="text" id="done" name="done" value="{{details.payments_done}}"></div>
             </div>
-            <div class="row" style="margin-bottom: 5px; margin-left: 70px;">
-                <div class="col-6"><label for="pending_p">Payments Pending:</label></div>
+            <!-- Payments Pending -->
+            <div class="row" style="margin-bottom: 10px; margin-left: 5px;">
+                <div class="col-6"><label for="pending_p" style="color: black !important;">Payments Pending:</label></div>
                 <div class="col-6"><input type="number" id="pending_p" name="pending_p" value="{{details.payments_pending}}"></div>
-            </div><br>
-            <div class="row" style="margin-bottom: 5px; margin-left: 70px;">
-                <div class="col-6"><label for="pending_l">Total Leaves:</label></div>
+            </div>
+            <!-- Total Leaves -->
+            <div class="row" style="margin-bottom: 10px; margin-left: 5px;">
+                <div class="col-6"><label for="pending_l" style="color: black !important;">Total Leaves:</label></div>
                 <div class="col-6"><input type="number" id="pending_l" name="pending_l" value="{{details.total_leaves}}"></div>
             </div>
-            <div class="row" style="margin-bottom: 5px; margin-left: 70px;">
-                <div class="col-6"><label for="visa">Visa Expiry:</label></div>
+            <!-- Visa Expiry -->
+            <div class="row" style="margin-bottom: 10px; margin-left: 5px;">
+                <div class="col-6"><label for="visa" style="color: black !important;">Visa Expiry:</label></div>
                 <div class="col-6"><input type="text" id="visa" name="visa" value="{{details.visa_expiry}}"></div>
             </div>
-            <div class="row" style="margin-bottom: 5px; margin-left: 70px;"><p>Profile Completion: {{ profile }}%</p></div>
+            <!-- Profile Completion -->
+            <div class="row" style="margin-bottom: 10px; margin-left: 20px; color: black;">
+                <p>Profile Completion: {{ profile }}%</p>
+            </div>
 
-            <div class="row"><input type="submit" value="Sumbmit"></div>
+            <!-- Submit Button -->
+            <div><button type="submit" class="btn btn-gray" value="Submit">New Timesheet</button></div>
+        </div>
+    </div>
+</form>
 
-          </div>
-
-
-          <div class="col-6">
-            <img src="{{img_url}}" alt="Profile pic" style="width: 50%;">
-          </div>
-
-      </div>
-  </form>
-  <hr>
-
-
-
+</div>
+</div>
+        
+</section>
 
 
 
 
 
 
-{% include "footer.html" %}
+
+
 {% endblock %}

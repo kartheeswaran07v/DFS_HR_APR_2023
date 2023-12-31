@@ -1,66 +1,122 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% block title %} Employee Report {% endblock %} 
 
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
 {% block content %}
-{% include "header.html" %}
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load("current", {packages:["corechart"]});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            {% for key, value in data.items() %}
-                {% if value is string %}
-                    ['{{ key }}', '{{ value }}'],
-                {% else %}
-                    ['{{ key }}', {{ value }}],
-                {% endif %}
-            {% endfor %}
-        ]);
 
-        var options = {
-          title: 'Absent V. Present',
-          is3D: true,
-        };
+{% include "sweetalerts.html" %}
+<div class="content">
 
-        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
-        chart.draw(data, options);
-      }
-    </script>
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li> 
+                <li class="nav-item">
+                    <a href="add_department">Department </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="department_report">Report </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="">Employees </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>   
+            </ul>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-12">
+              <div class="card">
+                  <div class="card-header">
+                      <div class="card-title">Employees</div>
+                  </div>
+                  <div class="card-body">
+                    <div class="container bg-dark text-light" style="padding: 20px; border-radius: 10px; overflow-x: auto;">
+                        <table class="table table-bordered mt-4" style="min-width: 100px;">
+                            <thead>
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>View</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                          {% for i in len %}
+                                <tr>
+                                  <td>{{ ts[i].employeeID }}</td>
+                                  <td>{{ ts[i].name }}</td>
+                                  <td>{{ departments[i] }}</td>
+                                  <td><a href="{{url_for('employee_view', employee_id=ts[i].id)}}">View</a></td>
+                                  <td><a href="{{url_for('employee_edit', employee_id=ts[i].id)}}">Edit</a></td>
+                                  <td><a href="{{url_for('employee_delete', employee_id=ts[i].id)}}">Delete</a></td>
+                                </tr>
+                          {% endfor %}
+                      </tbody>
+       
+                  </table>
+                </div>
+            </div>
+        </div>
+    
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
+  
 
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Employees</h1>
-
-  <div class="row" style="margin-bottom: 50px; margin-left: 30px; font-size: 1.5rem; text-align: center;">
-    <div class="col-2"><p><em>Employee ID</em></p></div>
-    <div class="col-2"><p><em>Name</em></p></div>
-    <div class="col-2"><p><em>Department</em></p></div>
-    <div class="col-2"><p><em>View</em></p></div>
-    <div class="col-2"><p><em>Edit</em></p></div>
-    <div class="col-2"><p><em>Delete</em></p></div>
-  </div>
-  {% for i in len %}
-      <div class="row" style="margin-bottom: 50px; margin-left: 30px; text-align: center;">
-        <div class="col-2"><p>{{ ts[i].employeeID }}</p></div>
-        <div class="col-2"><p>{{ ts[i].name }}</p></div>
-        <div class="col-2"><p>{{ departments[i] }}</p></div>
-        <div class="col-2"><p><a href="{{url_for('employee_view', employee_id=ts[i].id)}}">View</a></p></div>
-        <div class="col-2"><p><a href="{{url_for('employee_edit', employee_id=ts[i].id)}}">Edit</a></p></div>
-        <div class="col-2"><p><a href="{{url_for('employee_delete', employee_id=ts[i].id)}}">Delete</a></p></div>
-      </div>
-  {% endfor %}
 
   <div style="margin: 50px 20px 0 10px;width: 1000px;margin-bottom: 50px; margin-left: 75px;">
       <h3>Absent v. Present</h3>
 
       <div id="piechart_3d" style="width: 450px; height: 250px;"></div>
   </div>
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load("current", {packages:["corechart"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+        {% for key, value in data.items() %}
+            {% if value is string %}
+                ['{{ key }}', '{{ value }}'],
+            {% else %}
+                ['{{ key }}', {{ value }}],
+            {% endif %}
+        {% endfor %}
+    ]);
+
+    var options = {
+      title: 'Absent V. Present',
+      is3D: true,
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+    chart.draw(data, options);
+  }
+</script>
 
 
-{% include "footer.html" %}
 {% endblock %}

@@ -1,37 +1,94 @@
+{% extends "layouts/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Roster Date {% endblock %} 
+
+{% block stylesheets %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.css" rel="stylesheet" />
+{% endblock stylesheets %}
 
 {% block content %}
-{% include "header.html" %}
-    <div class="row">
+ 
+<div class="content">
 
-
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li> 
+                <li class="nav-item">
+                    <a href="roster_date">Roster </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                
+                
+            </ul>
+        </div>
         <form action="/roster_date" method="post">
-            <label for="datepicker">Date: </label>
-            <input id="datepicker" name="date" />
-            <input type="submit"><br>
-            <p style="font-size: 15px; color: #526D82">Date Format: DD/MM/YYYY</p>
+          
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title" > Roster Details</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="datepicker">Date: </label>
+                                        
+                                        <input class="form-control" id="datepicker" name="date"/>
+                                    </div>
+                                    
+                                    
+                                    <div class="card-action">
+                                        <button class="btn btn-gray">Submit</button>
+                                    </div>
+                               
+                                    <p>{{ msg }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
-        <p>{{ msg }}</p>
-
+ 
+        {% block javascripts %}
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
+        <link href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" rel="stylesheet" />
+        <script src="/static/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+        <script type="text/javascript">
+            var array = {{ array|tojson }}
+            var trima = []
+            for (i = 0; i < array.length; i++) {
+                trima.push(array[i].substring(10, ""))
+            }
+            
+            $('#datepicker').datepicker({
+                beforeShowDay: function(date) {
+                    var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+                    return [trima.indexOf(string) == -1]
+                }
+            });
+        
+        </script>
+        {% endblock javascripts %}
+       
     </div>
-
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
-   <link href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" rel="stylesheet" />
-   <script type="text/javascript">
-
-        var array = {{ array|tojson }}
-        var trima = []
-        for (i = 0; i < array.length; i++) {
-          trima.push(array[i].substring(10, ""))
-        }
-        $('#datepicker').datepicker({
-          beforeShowDay: function(date) {
-            var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
-            return [trima.indexOf(string) == -1]
-          }
-        });
-   </script>
-
-{% include "footer.html" %}
-{% endblock %}
+</div>
+       
+{% endblock content %}       

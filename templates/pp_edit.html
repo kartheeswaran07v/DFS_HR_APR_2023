@@ -1,156 +1,401 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Passport Application Edit {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
+
+<div class="content">
+
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="passport">Passport </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="pp-list">Passport_list</a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="">Passport_edit</a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                
+            </ul>
+        </div>
+        <form action="" method="post">
+          {{form.hidden_tag()}} 
+          <div>
+              
+              <!-- basic details -->
+              <div class="row">
+                  <div class="col-md-12">
+                      <div class="card">
+                          <div class="card-header">
+                              <div class="card-title" > Basic Details</div>
+                          </div>
+                          <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <p>{{ form.date.label() }}</p>
+                                        <span class="input-group-addon">
+                                        </span>
+                                        {{ form.date(class="form-control", value=date_str[0]) }}
+                                    </div>
+                                    <div class="form-group">
+                                        <p>{{ form.name.label() }}</p>
+                                        <div class="input-icon">
+                                            <span class="input-icon-addon">
+                                            <i class="fa fa-user"></i>
+                                            </span>
+                                            {{ form.name(class="form-control",value=data.name)  }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <p>{{ form.pow.label() }}</p>
+                                        <div class="input-icon">
+                                            <span class="input-icon-addon">
+                                            <i class="fa fa-arrow-left"></i>
+                                            </span>
+                                            {{ form.pow(class="form-control" , value=data.pow)  }}
+                                        </div>
+                                    </div>
+                              
+                                
+                                    <div class="form-group">
+                                        <p>{{ form.remarks.label() }}</p>
+                                        <div class="input-icon">
+                                            <span class="input-icon-addon">
+                                            <i class="fa fa-quote-left"></i>
+                                            </span>
+                                            {{ form.remarks(class="form-control" , value=data.remarks)  }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <p>{{ form.emp_no.label() }}</p>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                                            </div>
+                                            {{ form.emp_no(class="form-control", value=data.emp_no) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <p>{{ form.days_req.label() }}</p>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                            {{ form.days_req(class="form-control", value=data.days_req) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                                    
+
+                      <!--Guarantors-->
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="card-title">Section 1: Guarantors</div><br>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <p>
+                                            This is to acknowledge that the udersigned herewith guarantees:
+                                        </p>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 col-lg-4">
+                                                <div class="form-group">
+                                                    <p>{{ form.g1_name.label() }}</p>
+                                                    <div class="input-icon">
+                                                        <span class="input-icon-addon">
+                                                        <i class="fa fa-user"></i>
+                                                        </span>
+                                                        {{ form.g1_name(class="form-control", value=data.g1_name, list="id_datalist")  }}
+                                                        <datalist id="id_datalist">
+                                                            {% for entry in entries %}
+                                                              <option value="{{ entry }}">
+                                                            {% endfor %}
+                                                          </datalist>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <p>{{ form.g1_dept.label() }}</p>
+                                                    <div class="input-icon">
+                                                        <span class="input-icon-addon">
+                                                        <i class="fa fa-building"></i>
+                                                        </span>
+                                                        {{ form.g1_dept(class="form-control",value=data.g1_dept)  }}
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <p>{{ form.g1_id_no.label() }}</p>
+                                                    <div class="input-icon">
+                                                        <span class="input-icon-addon">
+                                                        <i class="fa fa-id-badge"></i>
+                                                        </span>
+                                                        {{ form.g1_id_no(class="form-control",value=data.g1_id_no)  }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-4">
+
+                                                <div class="form-group">
+                                                    <p>{{ form.g2_name.label() }}</p>
+                                                    <div class="input-icon">
+                                                        <span class="input-icon-addon">
+                                                        <i class="fa fa-user"></i>
+                                                        </span>
+                                                        {{ form.g2_name(class="form-control", value=data.g2_name,list="id_datalist")  }}
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <p>{{ form.g2_dept.label() }}</p>
+                                                    <div class="input-icon">
+                                                        <span class="input-icon-addon">
+                                                        <i class="fa fa-building"></i>
+                                                        </span>
+                                                        {{ form.g2_dept(class="form-control",value=data.g2_dept)  }}
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <p>{{ form.g2_id_no.label() }}</p>
+                                                    <div class="input-icon">
+                                                        <span class="input-icon-addon">
+                                                        <i class="fa fa-id-badge"></i>
+                                                        </span>
+                                                        {{ form.g2_id_no(class="form-control",value=data.g2_id_no)  }}
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="col-lg-12"><br>
+                                                <p>
+                                                    The guarantors assures that incase the emloyee fails to return the passport on due date, the employee will bear the cost of absconding/visa charges/advances/loans any other dues from employee to company.
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
+                      <!-- Approval -->
 
-  <h2>Passport Request Form</h2>
-  <form action="" method="post">
-    {{form.hidden_tag()}} <!-- important tag-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="card-title">Section 2: Approval</div><br>
+                                    </div> 
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 col-lg-4">
 
-    <!-- basic details -->
-    <div class="firstDet row">
+                                                <div class="form-group">
+                                                    <p>{{ form.checked_by.label() }}</p>
+                                                    <div class="input-icon">
+                                                        <span class="input-icon-addon">
+                                                        <i class="fa fa-user"></i>
+                                                        </span>
+                                                        {{ form.checked_by(class="form-control", value=data.checked_by)  }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <p>{{ form.appr_by_lm.label() }}</p>
+                                                    <div class="input-icon">
+                                                        <span class="input-icon-addon">
+                                                        <i class="fa fa-user"></i>
+                                                        </span>
+                                                        {{ form.appr_by_lm(class="form-control", value=data.appr_by_lm)  }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-4">
+                                                <div class="form-group">
+                                                    <p>{{ form.appr_by_hr.label() }}</p>
+                                                    <div class="input-icon">
+                                                        <span class="input-icon-addon">
+                                                        <i class="fa fa-user"></i>
+                                                        </span>
+                                                        {{ form.appr_by_hr(class="form-control",value=data.appr_by_hr)  }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <p>{{ form.dir_op.label() }}</p>
+                                                    <div class="input-icon">
+                                                        <span class="input-icon-addon">
+                                                        <i class="fa fa-user"></i>
+                                                        </span>
+                                                        {{ form.dir_op(class="form-control", value=data.dir_op)  }}
+                                                    </div>
+                                                </div>
+                                            </div>
 
-      <div class="col-lg-3 con1">
-        <p>{{ form.date.label() }}</p>
-        <p>{{ form.name.label() }}</p>
-        <p>{{ form.pow.label() }}</p>
-        <p>{{ form.remarks.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.date(value=date_str[0]) }}</p>
-        <p>{{ form.name(value=data.name) }}</p>
-        <p>{{ form.pow(value=data.pw)  }}</p>
-        <p>{{ form.remarks(value=data.remarks)  }}</p>
-      </div>
-      <div class="col-lg-3 con2">
-        <br>
-        <p>{{ form.emp_no.label() }}</p>
-        <br>
-        <p>{{ form.days_req.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <br>
-        <p>{{ form.emp_no(value=data.emp_no)  }}</p>
-        <br>
-        <p>{{ form.days_req(value=data.days_req)  }}</p>
-      </div>
-    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-    <!--Guarantors-->
-    <h5>Section 1: Guarantors</h5>
-    <div class="persDet row">
-      <div class="col-lg-12">
-        <p>
-          This is to acknowledge that the undersigned herewith guarantees:
-        </p>
-      </div>
+                      <!-- passport issue -->
 
-      <div class="col-lg-3 con1">
-        <p>{{ form.g1_name.label() }}</p>
-        <p>{{ form.g1_dept.label() }}</p>
-        <p>{{ form.g1_id_no.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.g1_name(value=data.g1_name)  }}</p>
-        <p>{{ form.g1_dept(value=data.g1_dept)  }}</p>
-        <p>{{ form.g1_id_no(value=data.g1_id_no)  }}</p>
-      </div>
-      <div class="col-lg-3 con2">
-        <p>{{ form.g2_name.label() }}</p>
-        <p>{{ form.g2_dept.label() }}</p>
-        <p>{{ form.g2_id_no.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.g2_name(value=data.g2_name)  }}</p>
-        <p>{{ form.g2_dept(value=data.g2_dept)  }}</p>
-        <p>{{ form.g2_id_no(value=data.g2_id_no)  }}</p>
-      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Section 3: Passport Issue</div><br>
+                                </div> 
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-4">
 
-      <div class="col-lg-12">
-        <p>
-          The guarantors assures that incase the employee fails to return the passport on due date, the employee will bear the cost of absconding/visa charges/advances/loans any other dues from employee to company.
-        </p>
-      </div>
-    </div>
+                                            <div class="form-group">
+                                                <p>{{ form.pass_rec.label() }}</p>
+                                                <div class="input-icon">
+                                                    <span class="input-icon-addon">
+                                                    <i class="fa fa-user"></i>
+                                                    </span>
+                                                    {{ form.pass_rec(class="form-control",value=data.pass_rec)  }}
+                                                </div>
+                                            </div>
 
+                                            <div class="form-group">
+                                                <p>{{ form.date_pass_rec.label() }}</p>
+                                                <span class="input-group-addon">
+                                                </span>
+                                                {{ form.date_pass_rec(class="form-control", value=date_str[1]) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-4">
 
+                                            <div class="form-group">
+                                                <p>{{ form.lc_rec.label() }}</p>
+                                                <div class="input-icon">
+                                                    <span class="input-icon-addon">
+                                                    <i class="fa fa-user"></i>
+                                                    </span>
+                                                    {{ form.lc_rec(class="form-control", value=date_str[2])  }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <p>{{ form.date_lc_rec.label() }}</p>
+                                                <span class="input-group-addon">
+                                                </span>
+                                                {{ form.date_lc_rec(class="form-control", value=data.dir_op) }}
+                                            </div>
+                                        </div>
 
-    <!-- Approval -->
-    <h5>Section 2: Approval</h5>
-    <div class="persDet row">
-      <div class="col-lg-3 con1">
-        <p>{{ form.checked_by.label() }}</p>
-        <p>{{ form.appr_by_lm.label() }}</p>
-        <p>{{ form.appr_by_hr.label() }}</p>
-        <p>{{ form.dir_op.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.checked_by(value=data.checked_by)  }}</p>
-        <p>{{ form.appr_by_lm(value=data.appr_by_lm)  }}</p>
-        <p>{{ form.appr_by_hr(value=data.appr_by_hr)  }}</p>
-        <p>{{ form.dir_op(value=data.dir_op)  }}</p>
-      </div>
+                                    </div>
 
-
-
-    </div>
-
-    <!-- passport issue -->
-    <h5>Section 3: Passport Issue</h5>
-    <div class="hrDet row">
-
-      <div class="col-lg-3 con1">
-        <p>{{ form.pass_rec.label() }}</p>
-        <p>{{ form.date_pass_rec.label() }}</p>
-        <p>{{ form.lc_rec.label() }}</p>
-        <p>{{ form.date_lc_rec.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.pass_rec(value=data.pass_rec)  }}</p>
-        <p>{{ form.date_pass_rec(value=date_str[1])  }}</p>
-        <p>{{ form.lc_rec(value=date_str[2])  }}</p>
-        <p>{{ form.date_lc_rec(value=data.dir_op)  }}</p>
-      </div>
-
-    </div>
-
-
-    <!-- passport return -->
-    <h5>Section 4: Passport Return</h5>
-    <div class="noLeaveAp row">
-
-      <div class="col-lg-3 con1">
-        <p>{{ form.pass_rec_e.label() }}</p>
-        <p>{{ form.date_pass_rec_e.label() }}</p>
-        <p>{{ form.lc_rec_e.label() }}</p>
-        <p>{{ form.date_lc_rec_e.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.pass_rec_e(value=data.pass_rec_e) }}</p>
-        <p>{{ form.date_pass_rec_e(value=date_str[3]) }}</p>
-        <p>{{ form.lc_rec_e(value=data.lc_rec_e) }}</p>
-        <p>{{ form.date_lc_rec_e(value=date_str[4]) }}</p>
-      </div>
-
-    </div>
+                                </div>
+                            </div>
 
 
 
-    <h5>{{ form.submit }}</h5>
+                      <!-- passport return -->
 
+                      <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Section 4: Passport Return</div><br>
+                                </div> 
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-4">
 
+                                            <div class="form-group">
+                                                <p>{{ form.pass_rec_e.label() }}</p>
+                                                <div class="input-icon">
+                                                    <span class="input-icon-addon">
+                                                    <i class="fa fa-user"></i>
+                                                    </span>
+                                                    {{ form.pass_rec_e(class="form-control", value=data.pass_rec_e)  }}
+                                                </div>
+                                            </div>
 
-  </form>
+                                            <div class="form-group">
+                                                <p>{{ form.date_pass_rec_e.label() }}</p>
+                                                <span class="input-group-addon">
+                                                </span>
+                                                {{ form.date_pass_rec_e(class="form-control", value=date_str[3]) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-4">
 
+                                            <div class="form-group">
+                                                <p>{{ form.lc_rec_e.label() }}</p>
+                                                <div class="input-icon">
+                                                    <span class="input-icon-addon">
+                                                    <i class="fa fa-user"></i>
+                                                    </span>
+                                                    {{ form.lc_rec_e(class="form-control", value=data.lc_rec_e)  }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <p>{{ form.date_lc_rec_e.label() }}</p>
+                                                <span class="input-group-addon">
+                                                </span>
+                                                {{ form.date_lc_rec_e(class="form-control",value=date_str[4]) }}
+                                            </div>
 
+                                        
 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+</div>
+</div>
+<div class="card-action">
+<button class="btn btn-gray">Submit</button>
 
-{% include "footer.html" %}
-{% endblock %}
+</div>
+
+</div>
+
+</div>         
+</div>
+{% endblock content %}

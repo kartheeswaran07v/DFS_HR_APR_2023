@@ -1,48 +1,149 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Reports {% endblock %} 
+
+{% block stylesheets %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-3d"></script>
+
+
+{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
+ 
+<div class="content">
+
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li> 
+                <li class="nav-item">
+                    <a href="reports">Reports </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                
+                
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title" >Reports</div>
+                    </div>
+                    <div class="card-body">
+
+                    <div class="content" style="display: flex; justify-content: center;"><br>
+                        <!-- HTML Canvas Element -->
+                            <canvas id="myChart"  width="400" height="400"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  <script>
 
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
+var ctx = document.getElementById('myChart').getContext('2d');
+var shadesOfBlue = [
+    {
+        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+        borderColor: 'black', // Border color set to black
+        borderWidth: 1 // Border width (adjust as needed)
+    },
+    {
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'black',
+        borderWidth: 1
+    },
+    {
+        backgroundColor: 'rgba(54, 162, 235, 0.4)',
+        borderColor: 'black',
+        borderWidth: 1
+    },
+    {
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'black',
+        borderWidth: 1
+    },
+    {
+        backgroundColor: 'rgba(54, 162, 235, 0.5)', // Dark green
+        borderColor: 'black',
+        borderWidth: 1
+    }
+];
+
+
+var data = {
+    labels: ['Passport', 'Hotels', 'Departments', 'Leaves','Employees'],
+    datasets: [{
+        data: [20, 20, 20, 20,20],
+        backgroundColor: shadesOfBlue.map(color => color.backgroundColor), // Use shades of blue here
+        borderColor: shadesOfBlue.map(color => color.borderColor), // Set border colors
+        borderWidth: shadesOfBlue.map(color => color.borderWidth) // Set border widths
+    }]
+};
+var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(tooltipItem, data) {
+                    return tooltipItem.label;
+                  }
+                }
+              }
+            }
+        }
+    });
+
+
+
+    // Get the canvas element
+    var canvas = document.getElementById('myChart');
+
+    // Attach click event manually to the canvas
+    canvas.onclick = function(event) {
+        var activePoints = myPieChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, false);
+
+        if (activePoints.length > 0) {
+            var clickedLabel = data.labels[activePoints[0].index];
+            console.log("Label clicked:", clickedLabel);
+
+            if (clickedLabel === 'Passport') {
+                window.location.href = "{{ url_for('passportList') }}";
+            } else if (clickedLabel === 'Employees') {
+                window.location.href = "{{ url_for('employee_report') }}";
+
+            } else if (clickedLabel === 'Hotels') {
+                window.location.href = "{{ url_for('hotel_report') }}";
+            } else if (clickedLabel === 'Departments') {
+                window.location.href = "{{ url_for('department_report') }}";
+            } else if (clickedLabel === 'Leaves') {
+                window.location.href = "{{ url_for('leaveList') }}";
+            } 
+        }
+    };
+  </script>
+  
+  </div>
   </div>
 
-  <h1 style="margin-top: 30px; margin-bottom: 100px; text-align: center;">Reports</h1>
-  <!-- buttons -->
-  <div class="row reports" style="margin-bottom-200px;">
-    <div class="col-lg-4 buttonMain">
-      <form>
-        <button formaction="{{url_for('employee_report')}}" class="button" style="padding: 50px 132px;">Employees</button>
-      </form>
-    </div>
-    <div class="col-lg-4 buttonMain">
-      <form>
-        <button formaction="{{url_for('hotel_report')}}" class="button" style="padding: 50px 132px;">Hotels</button>
-      </form>
-    </div>
-    <div class="col-lg-4 buttonMain">
-      <form>
-        <button formaction="{{url_for('department_report')}}" class="button" style="padding: 50px 132px;">Departments</button>
-      </form>
-    </div>
-    <div class="col-lg-4 buttonMain">
-      <form>
-        <button formaction="{{url_for('leaveList')}}" class="button" style="padding: 50px 132px;">Leaves</button>
-      </form>
-    </div>
-    <div class="col-lg-4 buttonMain">
-      <form>
-        <button formaction="{{url_for('passportList')}}" class="button" style="padding: 50px 132px;">Passport</button>
-      </form>
-    </div>
-
-
-  </div>
-
-
-
-{% include "footer.html" %}
 {% endblock %}

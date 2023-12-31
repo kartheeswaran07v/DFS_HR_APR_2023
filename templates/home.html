@@ -1,67 +1,45 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Dashboard {% endblock %} 
 {% block content %}
-{% include "header.html" %}
+<div class="content">
+    <div class="card-body">
+        <div class="card-body">
+    
+<div class="dashboard-container">
+    <a href="registration" class="dashboard-box dark-color">
+        New Registration
+    </a>
+    <a href="leave" class="dashboard-box dark-color">
+        Leave Application
+    </a>
+    <a href="passport" class="dashboard-box dark-color">
+        Passport Req. Form
+    </a>
+    <a href="ts" class="dashboard-box dark-color">
+        Add Timesheet
+    </a>
+    <a href="roster_date" class="dashboard-box dark-color">
+        Add Roster
+    </a>
+    <a href="/add_hotel" class="dashboard-box dark-color">
+        Add Hotel
+    </a>
+    <a href="add_department" class="dashboard-box dark-color">
+        Add Department
+    </a>
+    <a href="/reports" class="dashboard-box dark-color">
+        Report
+    </a>
+    <a href="/archives" class="dashboard-box dark-color">
+        Archives
+    </a>
+</div>
+</div>
+    <!-- Add other dashboard boxes similarly -->
+    <!-- Repeat these anchor tags for each box you want -->
+</div>
+</div>
 
-      <div class="welcome">
-        <span>Dashfix </span>
-        <span>Welcome: {{user.name}}</span>
-        <span><a href="{{ url_for('logout') }}">Log Out</a></span>
-      </div>
-
-      <!-- buttons -->
-      <div class="row">
-        <div class="col-lg-4 buttonMain">
-          <form>
-            <button formaction="{{ url_for('registration') }}" class="button">New Registration</button>
-          </form>
-        </div>
-        <div class="col-lg-4 buttonMain">
-          <form>
-            <button formaction="{{ url_for('leave') }}" class="button">Leave Application</button>
-          </form>
-        </div>
-        <div class="col-lg-4 buttonMain">
-          <form>
-            <button formaction="{{ url_for('passport') }}" class="button">Passport Req. Form</button>
-          </form>
-        </div>
-        <div class="col-lg-4 buttonMain">
-          <form>
-            <button formaction="{{ url_for('timesheet') }}" class="button">Add Timesheet</button>
-          </form>
-        </div>
-        <div class="col-lg-4 buttonMain">
-          <form>
-            <button formaction="{{ url_for('roster_date') }}" class="button">Add Roster</button>
-          </form>
-        </div>
-        <div class="col-lg-4 buttonMain">
-          <form>
-            <button formaction="{{ url_for('add_hotel') }}" class="button">Add Hotel</button>
-          </form>
-        </div>
-        <div class="col-lg-4 buttonMain">
-          <form>
-            <button formaction="{{ url_for('add_department') }}" class="button">Add Dept.</button>
-          </form>
-        </div>
-        <div class="col-lg-4 buttonMain">
-          <form>
-            <button formaction="{{ url_for('reports') }}" class="button">Go to Reports</button>
-          </form>
-        </div>
-        <div class="col-lg-4 buttonMain">
-          <form>
-            <button formaction="{{ url_for('archives') }}" class="button">Archives</button>
-          </form>
-        </div>
-      </div>
-
-
-
-
-
-{% include "footer.html" %}
 {% endblock %}

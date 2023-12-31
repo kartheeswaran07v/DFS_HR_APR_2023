@@ -1,71 +1,127 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Timesheet Entries Edit{% endblock %}
+
 {% block content %}
-{% include "header.html" %}
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
+<div class="content">
+  <div class="page-inner">
+      <div class="page-header">
+          <h4 class="page-title">Forms</h4>
+          <ul class="breadcrumbs">
+              <li class="nav-home">
+                  <a href="home">
+                      <i class="flaticon-home"></i>
+                  </a>
+              </li>
+              <li class="separator">
+                  <i class="flaticon-right-arrow"></i>
+              </li>
+              <li class="nav-item">
+                  <a href="">Timesheet Entries Edit</a>
+              </li>
+              <li class="separator">
+                  <i class="flaticon-right-arrow"></i>
+              </li>
+          </ul>
+      </div>
 
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Timesheet Entry Edit</h1>
-  <!-- buttons -->
-  <div class="row" style="margin-bottom: 50px; margin-left: 50px; text-align: center;">
-    <div class="col-6"><h1>Sheet No.: {{ sheet }}</h1></div>
-    <div class="col-6"><h1>Timesheet Date: {{ date__ }}</h1></div>
-  </div>
-
-
-  <div class="row" style="margin-bottom: 50px; margin-left: 70px; text-align: center;">
-    <div class="col-2"><h3>S. No.</h3></div>
-    <div class="col-3"><h3>Staff</h3></div>
-    <div class="col-3"><h3>Hotel</h3></div>
-    <div class="col-3"><h3>Duty Time</h3></div>
-  </div>
-
-  <div class="row" style="margin-bottom: 50px; margin-left: 70px; text-align: center;">
-    {% for i in len %}
-      <div class="col-2"><p>{{ i + 1 }}</p></div>
-      <div class="col-3"><p>{{ employees[i] }}</p></div>
-      <div class="col-3"><p>{{ hotel_name }}</p></div>
-      {% if time_data[i].timeIn2 == '00:00' %}
-        <div class="col-3"><p>{{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}</p></div>
-      {% else %}
-        <div class="col-3"><p>{{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}/{{ time_data[i].timeIn2 }} - {{ time_data[i].timeOut2 }}</p></div>
-      {% endif %}
-    {% endfor %}
-  </div>
-
-  <div>
-      <form action="/add_ts_element/{{entries[0].timesheetID}}" method="post">
-          <div class="row" style="margin-bottom: 10px; margin-left: 70px; text-align: center;">
-              <div class="col-2"><label for="name">Name:</label></div>
-              <div class="col-2"><label for="timeIn1">TimeIn1:</label></div>
-              <div class="col-2"><label for="timeOut1">TimeOut1:</label></div>
-              <div class="col-2"><label for="timeIn2">TimeIn2:</label></div>
-              <div class="col-2"><label for="timeOut2">TimeOut2:</label></div>
-          </div>
-          <div class="row" style="margin-bottom: 50px; margin-left: 70px; text-align: center;">
-              <div class="col-2">
-                  <select name="name" id="name" class="name">
-                    {% for i in data[0] %}
-                      <option value="{{i.name}}">{{i.name}}</option>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+                <div class="card-title">Timesheet Entry Edit</div>
+            </div>
+            <div class="card-body">
+              <div class="container bg-dark text-light" style="text-align: center; padding: 20px; border-radius: 10px;">
+                
+                 <h3>Sheet No.: {{ sheet }} | Timesheet Date: {{ date__ }}</h3>
+              
+                <table class="table table-bordered mt-4">
+                  <thead>
+                      <tr>
+                          <th>S.No.</th>
+                          <th>Staff</th>
+                          <th>Hotel</th>
+                          <th>Duty Time</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for i in len %}
+                       
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ employees[i] }}</td>
+                                <td>{{ hotel_name}}</td>
+                                <td>
+                                    {% if time_data[i].timeIn2 == '00:00' %}
+                                        {{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}
+                                    {% else %}
+                                        {{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }} / {{ time_data[i].timeIn2 }} - {{ time_data[i].timeOut2 }}
+                                    {% endif %}
+                                </td>
+                                
+                            </tr>
                     {% endfor %}
-                  </select>
-              </div>
-              <div class="col-2"><input type="time" id="timeIn1" name="timeIn1" style="width: 90px;" value='00:00'></div>
-              <div class="col-2"><input type="time" id="timeOut1" name="timeOut1" style="width: 90px;" value="00:00"></div>
-              <div class="col-2"><input type="time" id="timeIn2" name="timeIn2" style="width: 90px;" value="00:00"></div>
-              <div class="col-2"><input type="time" id="timeOut2" name="timeOut2" style="width: 90px;" value="00:00"></div>
-              <div class="col-2"><input type="submit" value="Add" style="width: 90px;"></div>
+                </tbody>
+            </table>
+            </div>
+            </div>
+           
+            <div class="container bg-dark text-light" style="padding: 20px; border-radius: 10px;margin-bottom: 20px;">
+                        
+              <h4 class="update-heading">Add New Entry</h4>
+              <div class="table-responsive">
+                <table class="table table-bordered mt-4" style="border-top: 1px solid #f0f0f0;">
+                  <thead>
+                      <tr>
+                          <th >Name</th>
+                          <th>TimeIn1</th>
+                          <th>TimeOut1</th>
+                          <th>TimeIn2</th>
+                          <th >TimeOut2</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <form action="/add_ts_element/{{entries[0].timesheetID}}" method="post">
+
+                          <td>
+ 
+                            <select name="name" id="name" class="name">
+                              {% for i in data[0] %}
+                                <option value="{{i.name}}">{{i.name}}</option>
+                              {% endfor %}
+                            </select>
+                          </td>
+                          <td><input type="time" id="timeIn1" name="timeIn1" style="width: 90px;" value='00:00'></td>
+                          <td><input type="time" id="timeOut1" name="timeOut1" style="width: 90px;" value="00:00"></td>
+                          <td><input type="time" id="timeIn2" name="timeIn2" style="width: 90px;" value="00:00"></td>              <td><input type="time" id="timeOut2" name="timeOut2" style="width: 90px;" value="00:00"></td>
+                          <td><input type="submit" value="Add" style="width: 90px;"></td>
+                          
+                        </form>
+                      </tr>
+                  
+              </tbody>
+              
+            </table>
           </div>
+      </div>
       </form>
-  </div>
+      </div>
+      </div>
+      </div>
+      
+        
+      </div>
+      </div>
+      </div>
+      
+      </div>  
+      
+      </div>
+      </div> 
 
 
-
-
-
-{% include "footer.html" %}
 {% endblock %}

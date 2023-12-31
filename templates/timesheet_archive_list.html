@@ -1,38 +1,76 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Timesheet Archives list {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
-
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
-
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Timesheet Archives</h1>
 
 
-  <div class="row" style="margin-bottom: 50px; margin-left: 100px; text-align: center;">
-    <div class="col-2"><p>S. No. </p></div>
-    <div class="col-2"><p>Timesheet Date</p></div>
-    <div class="col-2"><p>Hotel</p></div>
-    <div class="col-2"><p>View TS</p></div>
-    <div class="col-2"><p>Edit TS</p></div>
-  </div>
-  {% for i in len %}
-    <div class="row" style="margin-bottom: 30px; margin-left: 100px; text-align: center;">
-      <div class="col-2"><p>{{ i+1 }}</p></div>
-      <div class="col-2"><p>{{ date_list[i] }}</p></div>
-      <div class="col-2"><p>{{ hotels[i] }}</p></div>
-      <div class="col-2"><p><a href="{{url_for('timesheet_single', timesheet_id=ts[i].id)}}">View</a></p></div>
-      <div class="col-2"><p><a href="{{url_for('timesheet_single_edit', timesheet_id=ts[i].id)}}">Edit</a></p></div>
+<div class="content">
+
+  <div class="page-inner">
+      <div class="page-header">
+          <h4 class="page-title" >Forms</h4>
+          <ul class="breadcrumbs">
+              <li class="nav-home">
+                  <a href="home" >
+                      <i class="flaticon-home"></i>
+                  </a>
+              </li>
+              <li class="separator">
+                  <i class="flaticon-right-arrow"></i>
+              </li> 
+              <li class="nav-item">
+                  <a href="/timesheet_archive">timesheet archives </a>
+              </li>
+              <li class="separator">
+                  <i class="flaticon-right-arrow"></i>
+              </li>
+          </ul>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title" style="text-align: center;">
+                        <h2>Timesheet Archives</h2>
+                    </div>
+                </div>
+                <div class="card-body">
+                      
+                  <div class="container bg-dark text-light" style="text-align: center; padding: 20px; border-radius: 10px;">
+                  <table class="table table-bordered mt-4 ">
+                      <thead>
+                        <tr>
+                          <th>S. No.</th>
+                          <th>Timesheet Date</th>
+                          <th>Hotel</th>
+                          <th>View TS</th>
+                          <th>Edit TS</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for i in len %}
+                        <tr>
+                            <td>{{ i+1 }}</td>
+                            <td>{{ date_list[i] }}</td>
+                            <td>{{ hotels[i] }}</td>
+                            <td><a href="{{url_for('timesheet_single', timesheet_id=ts[i].id)}}">View</a></td>
+                            <td><a href="{{url_for('timesheet_single_edit', timesheet_id=ts[i].id)}}">Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+                
+        </div>
     </div>
-  {% endfor %}
+</div>
+</div>
 
 
 
-
-
-
-{% include "footer.html" %}
 {% endblock %}

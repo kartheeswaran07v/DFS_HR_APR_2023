@@ -48,8 +48,8 @@ def admin_only(f):
         for i in admin:
             id_ = i.id
             admin_id.append(id_)
-
-        if current_user.id not in admin_id:
+        print(admin_id)
+        if current_user not in admin:
             return abort(403)
         # Otherwise, continue with the route function
         return f(*args, **kwargs)
@@ -685,6 +685,11 @@ def login():
             return redirect(url_for('home'))
 
     return render_template("login.html", form=form)
+
+
+@app.route('/profile', methods=["GET", "POST"])
+def profile():
+    return render_template("profile.html", user=current_user)
 
 
 @app.route('/logout')
@@ -1474,7 +1479,7 @@ def archives():
                     roster_element = db.session.query(rosterMaster).filter_by(date=ts_list[j].date).first()
                     if not roster_element:
                         hours = "N/A"
-                        
+
                         hotel = hotels[0]
                     else:
                         rs_entry_element = db.session.query(rosterEntryMaster).filter_by(employeeID=employee_list[i].id,
@@ -1538,6 +1543,7 @@ def archives():
 @admin_only
 def roster_archive():
     rosters_list = rosterMaster.query.order_by(rosterMaster.date.asc()).all()
+    # date_list = [datetime.datetime.strptime(entry.date, '%d%m%Y')'%Y-%m-%d' for entry in rosters_list]
     date_list = [parse(entry.date).strftime("%d/%m/%Y") for entry in rosters_list]
     return render_template("roster_archive_list.html", rosters=rosters_list, len=range(len(rosters_list)),
                            user=current_user, date_list=date_list)
@@ -1983,7 +1989,7 @@ def employee_view(employee_id):
             print('image elemement is there')
             img_id = int(img_element.id)
             # img_url = doc_element.documentName
-            img_url = f"https://dfshr.herokuapp.com/image/{img_id}"
+            img_url = f"http://127.0.0.1:5000/image/{img_id}"
             # http://127.0.0.1:5000
             # https://dfshr.herokuapp.com
         else:

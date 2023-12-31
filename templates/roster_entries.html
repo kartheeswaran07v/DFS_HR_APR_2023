@@ -1,78 +1,125 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Roster Date {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.css" rel="stylesheet" />
+{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
+<style>
+  .hotel:not(:last-child) {
+    border-bottom: 1px solid #000; /* Change the color or style as needed */
+    padding-bottom: 20px; /* Adjust spacing between hotels */
+    margin-bottom: 20px; /* Adjust margin between hotels */
+  }
+</style>
+<div class="content">
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
-
-
-
-
-  <!-- <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Duty Roster</h1>
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">{{date}}- {{day}}</h1> -->
-
-  <div class="row" style="text-align: center;">
-    <div class="col-2">
-      <img src="{{ url_for('static', filename='images/Sign.png')}}" alt="" style="width: 100%; padding-top:35px;">
-    </div>
-    <div class="col-10">
-      <div class="row">
-        <div class="col-12">
-          <h3>Duty Roster</h3>
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li> 
+                <li class="nav-item">
+                    <a href="roster_date">Roster </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                  <a>Roster Details </a>
+              </li>
+              <li class="separator">
+                  <i class="flaticon-right-arrow"></i>
+              </li>
+              <li class="nav-item">
+                <a>Duty Roster </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+                
+            </ul>
         </div>
+        <div class="row">
+          <div class="col-md-12">
+              <div class="card">
+                  <div class="card-header">
+                      <div class="card-title">Duty Roster</div>
+                  </div>
+                  <div class="card-body">
+                  <div class="container bg-dark text-light" style="padding: 20px; border-radius: 10px;">
+                      <div class="row">
+                          <div class="col-md-6">
+                              <h3 class="text-center">Date: {{ day }}, {{ date }}</h3>
+                          </div>
+                          <div class="col-md-6 text-right">
+                              <h3><a href="{{ url_for('del_roster', roster_id=roster_id) }}">Delete</a></h3>
+                          </div>
+                      </div>
+                      <table class="table table-bordered mt-4">
+                          <thead>
+                              <tr>
+                                  <th>S.No.</th>
+                                  <th>Staff</th>
+                                  <th>Hotel</th>
+                                  <th>Duty Time</th>
+                                  <th>Pick-Up Time</th>
+                                  <th>Remark</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for i in len %}
+                                  {% if entries[i].absent == 'none' %}
+                                      <tr>
+                                          <td>{{ i + 1 }}</td>
+                                          <td>{{ employees[i] }}</td>
+                                          <td>{{ hotels[i] }}</td>
+                                          <td>
+                                              {% if time_data[i].timeIn2 == '00:00' %}
+                                                  {{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}
+                                              {% else %}
+                                                  {{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }} / {{ time_data[i].timeIn2 }} - {{ time_data[i].timeOut2 }}
+                                              {% endif %}
+                                          </td>
+                                          <td>{{ time_data[i].pickUp }}</td>
+                                          <td>{{ entries[i].remark }}</td>
+                                      </tr>
+                                  {% else %}
+                                      <tr>
+                                          <td>{{ i + 1 }}</td>
+                                          <td>{{ employees[i] }}</td>
+                                          <td colspan="4" style="text-align: center; background-color: {{ color[entries[i].absent] }};">
+                                              {{ entries[i].absent }}
+                                          </td>
+                                      </tr>
+                                  {% endif %}
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+            </div>
+          </div>
       </div>
-      <div class="row">
-        <div class="col-2">
-          <h3>Date</h3>
-        </div>
-        <div class="col-8">
-          <h3>{{day}}, {{date}}</h3>
-        </div>
-        <div class="col-2">
-          <h3><a href="{{url_for('del_roster', roster_id=roster_id)}}">Delete</a></h3>
-        </div>
-      </div>
+           
+                
+     </div>
+     </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-1"><p>S. No.</p></div>
-    <div class="col-3"><p>Staff</p></div>
-    <div class="col-3"><p>Hotel</p></div>
-    <div class="col-2"><p>Duty Time</p></div>
-    <div class="col-2"><p>Pick-Up Time</p></div>
-    <div class="col-1">Remark</div>
-  </div>
-
-  <div class="row">
-    {% for i in len %}
-      {% if entries[i].absent == 'none' %}
-        <div class="col-1"><p>{{ i + 1 }}</p></div>
-        <div class="col-3"><p>{{ employees[i] }}</p></div>
-        <div class="col-3"><p>{{ hotels[i] }}</p></div>
-        {% if time_data[i].timeIn2 == '00:00' %}
-          <div class="col-2"><p>{{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}</p></div>
-        {% else %}
-          <div class="col-2"><p>{{ time_data[i].timeIn1 }} - {{ time_data[i].timeOut1 }}/{{ time_data[i].timeIn2 }} - {{ time_data[i].timeOut2 }}</p></div>
-        {% endif %}
-        <div class="col-2"><p>{{ time_data[i].pickUp }}</p></div>
-        <div class="col-1">{{ entries[i].remark }}</div>
-      {% else %}
-        <div class="col-1"><p>{{ i + 1 }}</p></div>
-        <div class="col-3"><p>{{ employees[i] }}</p></div>
-        <div class="col-8" style="text-align: center; background-color: {{color[entries[i].absent]}};"><p>{{ entries[i].absent }}</p></div>
-      {% endif %}
-    {% endfor %}
+</div>
+ 
   </div>
 
 
-
-
-
-
-
-{% include "footer.html" %}
 {% endblock %}

@@ -1,161 +1,386 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Passport Application {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
+
+<div class="content">
+
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title" >Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home" >
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li> 
+                <li class="nav-item">
+                    <a href="passport">Passport </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                
+            </ul>
+        </div>
+        <form action="" method="post">
+            {{form.hidden_tag()}} 
+            <div>
+                 <!-- basic details -->
+                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title" > Basic Details</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="form-group">
+                                            <p>{{ form.date.label() }}</p>
+                                            <span class="input-group-addon">
+                                            </span>
+                                            {{ form.date(class="form-control", value='2023-01-01') }}
+                                        </div>
+                                        <div class="form-group">
+                                            <p>{{ form.name.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-user"></i>
+                                                </span>
+                                                {{ form.name(class="form-control")  }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="form-group">
+                                            <p>{{ form.pow.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-arrow-left"></i>
+                                                </span>
+                                                {{ form.pow(class="form-control" , placeholder="purpose of withdrawal")  }}
+                                            </div>
+                                        </div>
+                                   
+                                    
+                                        <div class="form-group">
+                                            <p>{{ form.remarks.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-quote-left"></i>
+                                                </span>
+                                                {{ form.remarks(class="form-control" , placeholder="remark")  }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="form-group">
+                                            <p>{{ form.emp_no.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                                                </div>
+                                                {{ form.emp_no(class="form-control", placeholder="employee no") }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <p>{{ form.days_req.label() }}</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                                {{ form.days_req(class="form-control", placeholder="days required") }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!--Guarantors-->
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Section 1: Guarantors</div><br>
+                            </div>
+                            <div class="col-lg-12">
+                                <p>
+                                    This is to acknowledge that the udersigned herewith guarantees:
+                                </p>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="form-group">
+                                            <p>{{ form.g1_name.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-user"></i>
+                                                </span>
+                                                {{ form.g1_name(class="form-control", placeholder="name", list="id_datalist")  }}
+                                                <datalist id="id_datalist">
+                                                    {% for entry in entries %}
+                                                      <option value="{{ entry }}">
+                                                    {% endfor %}
+                                                  </datalist>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <p>{{ form.g1_dept.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-building"></i>
+                                                </span>
+                                                {{ form.g1_dept(class="form-control", placeholder="department")  }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p>{{ form.g1_id_no.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-id-badge"></i>
+                                                </span>
+                                                {{ form.g1_id_no(class="form-control", placeholder="id ")  }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-4">
+
+                                        <div class="form-group">
+                                            <p>{{ form.g2_name.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-user"></i>
+                                                </span>
+                                                {{ form.g2_name(class="form-control", placeholder="name",list="id_datalist")  }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p>{{ form.g2_dept.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-building"></i>
+                                                </span>
+                                                {{ form.g2_dept(class="form-control", placeholder="department")  }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p>{{ form.g2_id_no.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-id-badge"></i>
+                                                </span>
+                                                {{ form.g2_id_no(class="form-control", placeholder="id ")  }}
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-lg-12"><br>
+                                        <p>
+                                            The guarantors assures that incase the emloyee fails to return the passport on due date, the employee will bear the cost of absconding/visa charges/advances/loans any other dues from employee to company.
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
-  <div class="welcome">
-    <span>Dashfix | <a href="{{url_for('home')}}">Home</a></span>
-    <span>Welcome: {{user.name}}</span>
-  </div>
+            <!-- Approval -->
+            
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Section 2: Approval</div><br>
+                            </div> 
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-4">
 
-  <h2>Passport Request Form</h2>
-  <form action="" method="post">
-    {{form.hidden_tag()}} <!-- important tag-->
+                                        <div class="form-group">
+                                            <p>{{ form.checked_by.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-user"></i>
+                                                </span>
+                                                {{ form.checked_by(class="form-control", placeholder="name")  }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <p>{{ form.appr_by_lm.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-user"></i>
+                                                </span>
+                                                {{ form.appr_by_lm(class="form-control", placeholder="line manager")  }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="form-group">
+                                            <p>{{ form.appr_by_hr.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-user"></i>
+                                                </span>
+                                                {{ form.appr_by_hr(class="form-control", placeholder="HR manager")  }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <p>{{ form.dir_op.label() }}</p>
+                                            <div class="input-icon">
+                                                <span class="input-icon-addon">
+                                                <i class="fa fa-user"></i>
+                                                </span>
+                                                {{ form.dir_op(class="form-control", placeholder="CEO")  }}
+                                            </div>
+                                        </div>
+                                    </div>
 
-    <!-- basic details -->
-    <div class="firstDet row">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-      <div class="col-lg-3 con1">
-        <p>{{ form.date.label() }}</p>
-        <p>{{ form.name.label() }}</p>
-        <p>{{ form.pow.label() }}</p>
-        <p>{{ form.remarks.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.date(value='2023-01-01') }}</p>
-        <p>{{ form.name }}</p>
-        <p>{{ form.pow(value='-') }}</p>
-        <p>{{ form.remarks(value='-') }}</p>
-      </div>
-      <div class="col-lg-3 con2">
-        <br>
-        <p>{{ form.emp_no.label() }}</p>
-        <br>
-        <p>{{ form.days_req.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <br>
-        <p>{{ form.emp_no(value=0) }}</p>
-        <br>
-        <p>{{ form.days_req(value=0) }}</p>
-      </div>
+            <!-- passport issue -->
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Section 3: Passport Issue</div><br>
+                        </div> 
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4">
+
+                                    <div class="form-group">
+                                        <p>{{ form.pass_rec.label() }}</p>
+                                        <div class="input-icon">
+                                            <span class="input-icon-addon">
+                                            <i class="fa fa-user"></i>
+                                            </span>
+                                            {{ form.pass_rec(class="form-control", placeholder="name")  }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <p>{{ form.date_pass_rec.label() }}</p>
+                                        <span class="input-group-addon">
+                                        </span>
+                                        {{ form.date_pass_rec(class="form-control", value='2023-01-01') }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+
+                                    <div class="form-group">
+                                        <p>{{ form.lc_rec.label() }}</p>
+                                        <div class="input-icon">
+                                            <span class="input-icon-addon">
+                                            <i class="fa fa-user"></i>
+                                            </span>
+                                            {{ form.lc_rec(class="form-control", placeholder="HRD")  }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <p>{{ form.date_lc_rec.label() }}</p>
+                                        <span class="input-group-addon">
+                                        </span>
+                                        {{ form.date_lc_rec(class="form-control", value='2023-01-01') }}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+              
+           
+
+            <!-- passport return -->
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Section 4: Passport Return</div><br>
+                        </div> 
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4">
+
+                                    <div class="form-group">
+                                        <p>{{ form.pass_rec_e.label() }}</p>
+                                        <div class="input-icon">
+                                            <span class="input-icon-addon">
+                                            <i class="fa fa-user"></i>
+                                            </span>
+                                            {{ form.pass_rec_e(class="form-control", placeholder="name")  }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <p>{{ form.date_pass_rec_e.label() }}</p>
+                                        <span class="input-group-addon">
+                                        </span>
+                                        {{ form.date_pass_rec_e(class="form-control", value='2023-01-01') }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+
+                                    <div class="form-group">
+                                        <p>{{ form.lc_rec_e.label() }}</p>
+                                        <div class="input-icon">
+                                            <span class="input-icon-addon">
+                                            <i class="fa fa-user"></i>
+                                            </span>
+                                            {{ form.lc_rec_e(class="form-control", placeholder="employee")  }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <p>{{ form.date_lc_rec_e.label() }}</p>
+                                        <span class="input-group-addon">
+                                        </span>
+                                        {{ form.date_lc_rec_e(class="form-control", value='2023-01-01') }}
+                                    </div>
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-action">
+            <button class="btn btn-gray">Submit</button>
+            
+        </div>
+
     </div>
-
-    <!--Guarantors-->
-    <h5>Section 1: Guarantors</h5>
-    <div class="persDet row">
-      <div class="col-lg-12">
-        <p>
-          This is to acknowledge that the udersigned herewith guarantees:
-        </p>
-      </div>
-
-      <div class="col-lg-3 con1">
-        <p>{{ form.g1_name.label() }}</p>
-        <p>{{ form.g1_dept.label() }}</p>
-        <p>{{ form.g1_id_no.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.g1_name(list="id_datalist") }}</p>
-        <datalist id="id_datalist">
-          {% for entry in entries %}
-            <option value="{{ entry }}">
-          {% endfor %}
-        </datalist>
-        <p>{{ form.g1_dept(value='-') }}</p>
-        <p>{{ form.g1_id_no(value=0) }}</p>
-      </div>
-      <div class="col-lg-3 con2">
-        <p>{{ form.g2_name.label() }}</p>
-        <p>{{ form.g2_dept.label() }}</p>
-        <p>{{ form.g2_id_no.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.g2_name(list="id_datalist") }}</p>
-        <p>{{ form.g2_dept(value='-') }}</p>
-        <p>{{ form.g2_id_no(value=0) }}</p>
-      </div>
-
-      <div class="col-lg-12">
-        <p>
-          The guarantors assures that incase the emloyee fails to return the passport on due date, the employee will bear the cost of absconding/visa charges/advances/loans any other dues from employee to company.
-        </p>
-      </div>
-    </div>
-
-
-
-    <!-- Approval -->
-    <h5>Section 2: Approval</h5>
-    <div class="persDet row">
-      <div class="col-lg-3 con1">
-        <p>{{ form.checked_by.label() }}</p>
-        <p>{{ form.appr_by_lm.label() }}</p>
-        <p>{{ form.appr_by_hr.label() }}</p>
-        <p>{{ form.dir_op.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.checked_by(list="id_datalist") }}</p>
-        <p>{{ form.appr_by_lm(list="id_datalist") }}</p>
-        <p>{{ form.appr_by_hr(list="id_datalist") }}</p>
-        <p>{{ form.dir_op(list="id_datalist") }}</p>
-      </div>
-
-
-
-    </div>
-
-    <!-- passport issue -->
-    <h5>Section 3: Passport Issue</h5>
-    <div class="hrDet row">
-
-      <div class="col-lg-3 con1">
-        <p>{{ form.pass_rec.label() }}</p>
-        <p>{{ form.date_pass_rec.label() }}</p>
-        <p>{{ form.lc_rec.label() }}</p>
-        <p>{{ form.date_lc_rec.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.pass_rec(list="id_datalist") }}</p>
-        <p>{{ form.date_pass_rec(value='2023-01-01') }}</p>
-        <p>{{ form.lc_rec(list="id_datalist") }}</p>
-        <p>{{ form.date_lc_rec(value='2023-01-01') }}</p>
-      </div>
-
-    </div>
-
-
-    <!-- passport return -->
-    <h5>Section 4: Passport Return</h5>
-    <div class="noLeaveAp row">
-
-      <div class="col-lg-3 con1">
-        <p>{{ form.pass_rec_e.label() }}</p>
-        <p>{{ form.date_pass_rec_e.label() }}</p>
-        <p>{{ form.lc_rec_e.label() }}</p>
-        <p>{{ form.date_lc_rec_e.label() }}</p>
-      </div>
-      <div class="col-lg-3">
-        <p>{{ form.pass_rec_e(list="id_datalist") }}</p>
-        <p>{{ form.date_pass_rec_e(value='2023-01-01') }}</p>
-        <p>{{ form.lc_rec_e(list="id_datalist") }}</p>
-        <p>{{ form.date_lc_rec_e(value='2023-01-01') }}</p>
-      </div>
-
-    </div>
-
-
-
-    <h5>{{ form.submit }}</h5>
-
-
-
-  </form>
-
-
-
-
-{% include "footer.html" %}
-{% endblock %}
+            
+   </div>         
+</div>
+{% endblock content %}
