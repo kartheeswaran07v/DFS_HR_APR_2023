@@ -648,6 +648,7 @@ def register():
             flash("You've already signed up with that email, login instead")
             return redirect(url_for('login'))
 
+   
         new_user = User(email=form.email.data,
                         password=generate_password_hash(form.password.data, method='pbkdf2:sha256', salt_length=8),
                         name=form.name.data,
@@ -661,7 +662,7 @@ def register():
     return render_template("admin_register.html", form=form)
 
 
-@app.route('/login', methods=["GET", "POST"])
+@app.route('/login/', methods=["GET", "POST"])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
