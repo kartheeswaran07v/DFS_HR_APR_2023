@@ -1,72 +1,84 @@
-{% extends 'layouts/base.html' %}
+{% extends "layouts/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block title %} Roster_archive_list {% endblock %} 
+
+<!-- Specific Page CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
 {% block content %}
-{% include "header.html" %}
 
-  <h1 style="margin-top: 30px; margin-bottom: 50px; text-align: center;">Master Timesheet</h1>
-  <div class="masterTs" >
-      <div class="row">
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>Employee Name/Dates</p>
+<div class="content">
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title">Forms</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="home">
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="">Master ts </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+            </ul>
         </div>
-        {% for i in dates %}
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>{{ i }}</p>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Master Timesheet</div>
+                    </div>
+                    <div class="card-body">
+                      <div class="container bg-dark text-light" style="padding: 20px; border-radius: 10px; overflow-x: auto;">
+                        <table class="table table-bordered mt-4" style="min-width: 100px;">
+                            <thead>
+                                    <tr>
+                                        <th>Employee Name/Dates</th>
+                                        {% for i in dates %}
+                                            <th>{{ i }}</th>
+                                        {% endfor %}
+                                        <th>Total Hours</th>
+                                        <th>Minimum Hours</th>
+                                        <th>Extra Hours</th>
+                                        <th>Rate</th>
+                                        <th>Total</th>
+                                        <th>Productivity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in range(data|length) %}
+                                    <tr>
+                                        <td>{{ data[i].name }}</td>
+                                        {% for j in range(data[i].hours|length) %}
+                                        <td>{{ data[i].hours[j] }}</td>
+                                        {% endfor %}
+                                        <td>{{ new_data[i]['total_hours'] }}</td>
+                                        <td>260</td>
+                                        <td>{{ new_data[i]['extra_hours'] }}</td>
+                                        <td>5</td>
+                                        <td>{{ new_data[i]['total_extra'] }}</td>
+                                        <td>{{ new_data[i]['productivity'] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% endfor %}
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>Total Hours</p>
-        </div>
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>Minimum Hours</p>
-        </div>
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>Extra Hours</p>
-        </div>
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>Rate</p>
-        </div>
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>Total</p>
-        </div>
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>Productivity</p>
-        </div>
-      </div>
-      {% for i in len %}
-      <div class="row">
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>{{ data[i].name }}</p>
-        </div>
-        {% for j in len %}
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>{{data[i].hours[j]}}</p>
-        </div>
-        {% endfor %}
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>{{new_data[i]['total_hours']}}</p>
-        </div>
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>260</p>
-        </div>
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>{{new_data[i]['extra_hours']}}</p>
-        </div>
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>5</p>
-        </div>
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>{{new_data[i]['total_extra']}}</p>
-        </div>
-        <div class="col-lg-1 hahaha" style="border-style: solid;">
-          <p>{{new_data[i]['productivity']}}</p>
-        </div>
-      </div>
-    {% endfor %}
-
-  </div>
-
-
+    </div>
+</div>
 
 {% endblock %}
+
+
+
+
