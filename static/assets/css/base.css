@@ -7647,7 +7647,7 @@ body {
     body[data-background-color="dark"] .main-header {
       box-shadow: 0px 0px 5px #121727; }
     body[data-background-color="dark"] .main-panel {
-      color: black !important; }
+      color: white !important; }
       body[data-background-color="dark"] .main-panel label {
         color: #fff !important; }
     body[data-background-color="dark"] .card, body[data-background-color="dark"] .row-card-no-pd, body[data-background-color="dark"] .list-group-item, body[data-background-color="dark"] .timeline > li > .timeline-panel {
@@ -7666,6 +7666,8 @@ body {
       border-right-color: #202940; }
     body[data-background-color="dark"] .page-title, body[data-background-color="dark"] .breadcrumbs li a {
       color: black; }
+      body[data-background-color="dark"] .page-title, body[data-background-color="dark"] .breadcrumbs li i {
+        color: black; }
     body[data-background-color="dark"] .page-category {
       color: #828282; }
     body[data-background-color="dark"] .card-title, body[data-background-color="dark"] .card-title a, body[data-background-color="dark"] .card-title a:hover, body[data-background-color="dark"] .card-title a:focus {
