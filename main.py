@@ -771,7 +771,7 @@ def registration():
 
         except:
             flash('Something went wrong')
-            pass
+            return redirect(url_for('registration'))
     return render_template("reg2.html", form=form, user=current_user, depts=department_name)
 
 
