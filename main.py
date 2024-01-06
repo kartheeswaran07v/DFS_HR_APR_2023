@@ -760,15 +760,18 @@ def registration():
             user=current_user,
             department=department
         )
+        try:
+            db.session.add(new_employee)
 
-        db.session.add(new_employee)
+            db.session.commit()
+            new_detail = employeeDetails(payments_done='', employee=new_employee)
+            db.session.add(new_detail)
+            db.session.commit()
+            return render_template("upload_doc.html", name=form.name.data, user=current_user, emp_id=new_employee.id)
 
-        db.session.commit()
-        new_detail = employeeDetails(payments_done='', employee=new_employee)
-        db.session.add(new_detail)
-        db.session.commit()
-        return render_template("upload_doc.html", name=form.name.data, user=current_user, emp_id=new_employee.id)
-
+        except:
+            flash('Something went wrong')
+            pass
     return render_template("reg2.html", form=form, user=current_user, depts=department_name)
 
 
