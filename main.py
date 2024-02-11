@@ -1483,7 +1483,7 @@ def archives():
                     if not roster_element:
                         hours = "N/A"
 
-                        hotel = hotels[0]
+                        hotel = hotels[0] # this is the issue
                     else:
                         rs_entry_element = db.session.query(rosterEntryMaster).filter_by(employeeID=employee_list[i].id,
                                                                                          rosterID=roster_element.id).first()
@@ -1495,7 +1495,7 @@ def archives():
                         try:
                             hotel = rs_entry_element.hotel
                         except:
-                            hotel = hotels[0]
+                            hotel = hotels[0] # THIS TOO
                         # hotel = "abc"
 
 
@@ -2207,6 +2207,6 @@ def delete_roster_timesheet():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=6060)
 
 # Jan 2023

@@ -7832,3 +7832,8 @@ body {
   text-decoration: none;
   color: white;
 }
+
+.rosterTable {
+    height: 500px;
+    overflow-y: scroll;
+}
