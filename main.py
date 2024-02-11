@@ -1683,6 +1683,8 @@ def update_roster_element(roster_entry_id):
     if request.method == 'POST':
         data = request.form.to_dict(flat=False)
         a = jsonify(data).json
+        print(a['hotel'][0])
+        hotel_element = db.session.query(hotelMaster).filter_by(name=a['hotel'][0]).first()
         roster_entry_element = rosterEntryMaster.query.get(int(roster_entry_id))
         roster_entry_element.timeIn1 = getTimeInt(a['timeIn1'][0])
         roster_entry_element.timeOut1 = getTimeInt(a['timeOut1'][0])
@@ -1692,6 +1694,7 @@ def update_roster_element(roster_entry_id):
         roster_entry_element.pickUp2 = getTimeInt(a['pickUp2'][0])
         roster_entry_element.remark = a['remarks'][0]
         roster_entry_element.absent = a['absent'][0]
+        roster_entry_element.hotel = hotel_element
         db.session.commit()
 
         return redirect(url_for("roster_single_edit", roster_id=roster_entry_element.rosterID))
